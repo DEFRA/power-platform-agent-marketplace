@@ -1,0 +1,16 @@
+{
+  "name": "power-platform-agent-marketplace",
+  "owner": {
+    "name": "DEFRA"
+  },
+  "metadata": {
+    "description": "Copilot agents and skills for Power Platform"
+  },
+  "plugins": [
+    {
+      "name": "power-platform-delivery",
+      "source": "./plugins/power-platform-delivery",
+      "description": "An agentic Power Platform delivery team: Product Analyst, Solution Architect, Developer, and Quality Engineer."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "power-platform-delivery",
+  "description": "An agentic Power Platform delivery team: Product Analyst, Solution Architect, Developer, and Quality Engineer.",
+  "version": "0.1.0",
+  "author": {
+    "name": "DEFRA"
+  },
+  "license": "OGL-UK-3.0",
+  "keywords": ["power-platform", "dataverse", "delivery", "alm", "copilot"],
+  "agents": "agents/",
+  "skills": "skills/"
+}
