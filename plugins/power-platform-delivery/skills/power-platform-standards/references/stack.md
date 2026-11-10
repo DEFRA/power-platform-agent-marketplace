@@ -20,6 +20,8 @@ Versions below are the known-good baseline. The skill that builds each toolchain
 | --- | --- | --- |
 | Unit and integration tests | MSTest | A preference. If the project uses another framework, follow it. |
 | Assertions | FluentAssertions **below v8** (`[7.0.0, 8.0.0)`) | v8 and later need a commercial licence. |
+| Mocking | Moq (4.20.2 or later) | A preference, pending open question O1. If the project uses another library, follow it. Avoid 4.20.0 and 4.20.1, which shipped SponsorLink. |
+| Test project target | `net48` | Matches the code under test, which references the same Dataverse SDK assemblies. |
 | Test data | ScenarioBuilder with Bogus (`en_GB` locale) | See the `scenario-builder` skill. |
 | Acceptance tests | Reqnroll with Power Playwright | See the `acceptance-testing` skill. |
 

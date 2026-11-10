@@ -241,7 +241,7 @@ public abstract class RecordFaker<TEntity> : Faker<TEntity>
 
 Record answers as decisions in §2.
 
-None at present. Add new questions here as `O<n>`.
+- **O1. Default mocking library for .NET unit tests.** D13 names MSTest and FluentAssertions but not a mocking library. The R2.1 examples and `stack.md` use Moq (4.20.2 or later, because 4.20.0 and 4.20.1 shipped SponsorLink), as the export did. *Recommendation:* make Moq the default, still subject to D13's rule that a project's own framework wins. If the answer differs, change `stack.md`, `unit-testing.md` and the two worked examples in `dataverse-plugins`.
 
 ---
 
@@ -278,7 +278,7 @@ Legend: `[ ]` not started · `[~]` in progress (add owner) · `[x]` done (add PR
 - [x] **R1.5** (`feature/power-platform-delivery-plugin`; PR link to follow) Define `.agent-config/power-platform.json`: schema, example, and the discover-then-confirm procedure (§3.4). (In `power-platform-standards`: `assets/power-platform.schema.json`, `assets/power-platform.example.json` and `references/project-facts.md`.)
 
 ### R2 — Developer
-- [ ] **R2.1** `dataverse-plugins` (D18), with C# polyfill assets (D12, D14) and unit-test guidance (D13).
+- [x] **R2.1** (`feature/power-platform-delivery-plugin`; PR link to follow) `dataverse-plugins` (D18), with C# polyfill asset (D12, D14) and unit-test guidance (D13). (Skill: `skills/dataverse-plugins/`. Worked examples are compiled and tested on net48 with C# 13. Open question: O1. The sketch base classes in `references/base-classes.md` are a proposal for projects with none, not shipped code.)
 - [ ] **R2.2** `web-resources`, with the toolchain assets (D20, §4.1), explicit mock guidance (D19) and the bundle contract test.
 - [ ] **R2.3** `customisation-xml`.
 - [ ] **R2.4** `dataverse-schema`: make the lookup scripts parameterised and add `pac modelbuilder` (D6).
