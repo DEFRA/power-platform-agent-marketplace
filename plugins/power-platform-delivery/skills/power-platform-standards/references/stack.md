@@ -12,6 +12,7 @@ Versions below are the known-good baseline. The skill that builds each toolchain
 | Language | C# 13 (`<LangVersion>13.0</LangVersion>`) | Features that need runtime support, such as default interface members, aren't available. Small polyfills cover some others, such as `IsExternalInit` for `init` and records (shipped by `dataverse-plugins`). |
 | Early-bound model | `pac modelbuilder` | Run by the `dataverse-schema` skill. |
 | Step configuration | `DataContractJsonSerializer` into a `[DataContract]` class | Used for any step configuration more complex than a simple value. |
+| Shared code | Shared projects for business logic, the model and queries | Plug-in packages don't support custom workflow activities. Unit tests build in a `UnitTest` configuration against a single shared-code assembly. See `dataverse-plugins`. |
 | Plug-in step registration | By the human, in the development environment | spkl and similar tools aren't used. |
 
 ## Tests (.NET)
@@ -20,7 +21,7 @@ Versions below are the known-good baseline. The skill that builds each toolchain
 | --- | --- | --- |
 | Unit and integration tests | MSTest | A preference. If the project uses another framework, follow it. |
 | Assertions | FluentAssertions **below v8** (`[7.0.0, 8.0.0)`) | v8 and later need a commercial licence. |
-| Mocking | Moq (4.20.2 or later) | A preference, pending open question O1. If the project uses another library, follow it. Avoid 4.20.0 and 4.20.1, which shipped SponsorLink. |
+| Mocking | Moq (4.20.2 or later) | A preference (D25). If the project uses another library, follow it. Avoid 4.20.0 and 4.20.1, which shipped SponsorLink. |
 | Test project target | `net48` | Matches the code under test, which references the same Dataverse SDK assemblies. |
 | Test data | ScenarioBuilder with Bogus (`en_GB` locale) | See the `scenario-builder` skill. |
 | Acceptance tests | Reqnroll with Power Playwright | See the `acceptance-testing` skill. |

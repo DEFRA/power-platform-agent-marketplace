@@ -2,6 +2,8 @@
 
 Tests drive the design. Frameworks and versions are in [stack.md](../../power-platform-standards/references/stack.md). The default is MSTest, FluentAssertions below v8 and Moq. **If the project already uses a different framework or mocking library, follow it.** The examples use the defaults. Test projects target `net48`, like the code they test, because they reference the same Dataverse SDK assemblies.
 
+One test project covers every plug-in and workflow project. Build and run it in the `UnitTest` configuration (`dotnet test -c UnitTest`), so that it sees each shared class once. See [project-structure.md](project-structure.md).
+
 ## Test-driven loop
 
 1. **Red.** Write one test that states a behaviour. Run it and confirm it fails for the right reason. A missing member is a compile failure, not a meaningful red, so add the smallest stub that lets the test fail on behaviour.

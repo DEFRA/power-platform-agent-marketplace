@@ -44,7 +44,7 @@ Never log secrets, secure configuration or personal data. `ITracingService.Trace
 - **No `async`, `Task`, parallel or threading code** in plug-ins, activities or anything they call. They run synchronously within a time limit.
 - **Stateless.** Instances are cached and invoked concurrently. Hold no per-invocation state in fields or statics. Immutable configuration set in the constructor is fine.
 - **Don't change identity or elevate privileges**, add retries, wrap transactions or defer writes without a reviewed design. Transaction control stays with Dataverse.
-- A plug-in assembly is registered on its own, so any dependency beyond the platform SDK must be merged into it or shipped in a plug-in package. Keep dependencies few and agree any new one with the human.
+- A plug-in assembly is registered on its own, so any dependency beyond the platform SDK must be merged into it or shipped in a plug-in package. Plug-in packages don't support CWAs, so code shared between assemblies goes in shared projects instead (see [project-structure.md](project-structure.md)). Keep dependencies few and agree any new one with the human.
 
 ## Data access
 

@@ -10,6 +10,7 @@ Intended for `developer` (and `developer-worker` on an approved brief), but usab
 | Reference | Load it when |
 | --- | --- |
 | [standards.md](references/standards.md) | Designing or reviewing any plug-in or custom workflow activity (CWA) |
+| [project-structure.md](references/project-structure.md) | Adding files or projects, setting up a new project, or building and testing (shared projects and the `UnitTest` configuration) |
 | [plugin-contract.md](references/plugin-contract.md) | Defining a plug-in step, writing its registration hand-off, or checking pitfalls |
 | [workflow-activity-contract.md](references/workflow-activity-contract.md) | Defining a CWA's inputs and outputs, writing its hand-off, or checking pitfalls |
 | [unit-testing.md](references/unit-testing.md) | Writing or reviewing the tests |
@@ -36,12 +37,13 @@ Detail and the reasons are in [standards.md](references/standards.md).
 - **SOLID and DRY, with constructor injection.** No DI container is required. Compose by hand in the entry point.
 - **Logging is always present**, through the project's logger.
 - **Stateless and synchronous.** No `async`, `Task` or threading.
+- **Shared projects for shared code.** Business logic, the model and queries live in shared projects, because plug-in packages don't support CWAs. Unit tests build in a `UnitTest` configuration against one shared-code assembly. See [project-structure.md](references/project-structure.md).
 - **Test first**, including a test with a second, different configuration.
 - **Stack:** .NET Framework 4.8 and C# 13. See [stack.md](../power-platform-standards/references/stack.md).
 
 ## Procedure
 
-1. **Discover the project.** Find the plug-in and workflow projects, any existing `IPlugin` and `CodeActivity` base classes and the logger, the early-bound model, the test project and its frameworks, and neighbouring plug-ins to copy conventions from. Confirm what you found (see [project-facts.md](../power-platform-standards/references/project-facts.md)). The project's own classes and conventions win. If it has no base class or logger, propose the minimal ones in [base-classes.md](references/base-classes.md) for the human to approve.
+1. **Discover the project.** Find the plug-in and workflow projects, the shared projects and shared-code assembly (see [project-structure.md](references/project-structure.md)), any existing `IPlugin` and `CodeActivity` base classes and the logger, the early-bound model, the test project and its frameworks, and neighbouring plug-ins to copy conventions from. Confirm what you found (see [project-facts.md](../power-platform-standards/references/project-facts.md)). The project's own classes and conventions win. If it has no base class or logger, propose the minimal ones in [base-classes.md](references/base-classes.md) for the human to approve.
 2. **Generalise first.** Restate the requirement as the general capability it is an instance of, and write down the proposed name. Look for an existing generic class to extend through configuration. Ask: "If a similar requirement arrived next month, would this need only a new step (or new inputs) and not new code?"
 3. **Capture the contract.** Use the table in [plugin-contract.md](references/plugin-contract.md) or [workflow-activity-contract.md](references/workflow-activity-contract.md). Agree each item with the user, and ask for any that are missing.
 4. **Check the model.** Every table and column the code names at compile time must exist in the early-bound model. If one is missing, stop and ask the human to regenerate it (see `dataverse-schema`). Don't work around the gap with late-bound names. Names that arrive through configuration or inputs are late-bound by design.
@@ -53,8 +55,8 @@ Detail and the reasons are in [standards.md](references/standards.md).
    - what the human must register or change in their development environment;
    - how the design meets each principle above.
 6. **Take a warnings baseline** before the first C# edit, using `dotnet-build-verification`.
-7. **Build test-first, one behaviour at a time.** Red, green, refactor. Order: configuration parsing, then the business logic class, then the thin entry point. If the code uses `init` or records, copy [IsExternalInit.cs](assets/IsExternalInit.cs) into the plug-in project once. Follow [unit-testing.md](references/unit-testing.md).
-8. **Verify.** Run the full build, test and warnings gate from `dotnet-build-verification`, and tick the checklist in [unit-testing.md](references/unit-testing.md). Work isn't done until the gate passes.
+7. **Build test-first, one behaviour at a time.** Red, green, refactor. Order: configuration parsing, then the business logic class (in the business logic shared project), then the thin entry point. If the code uses `init` or records, add [IsExternalInit.cs](assets/IsExternalInit.cs) to the business logic shared project once. Follow [unit-testing.md](references/unit-testing.md).
+8. **Verify.** Run the full build, test and warnings gate from `dotnet-build-verification`: unit tests in the `UnitTest` configuration, and the plug-in and workflow projects in a normal configuration. Tick the checklist in [unit-testing.md](references/unit-testing.md). Work isn't done until the gate passes.
 9. **Report and hand off.**
    - Say how the design meets the principles.
    - Give the configuration to supply and the registration hand-off (it's in the contract reference). The human registers steps and assemblies in the development environment. Never hand-write step XML.

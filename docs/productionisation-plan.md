@@ -62,7 +62,8 @@ Track progress in [§8](#8-plan-and-progress). Each task has an ID (for example 
 | D22 | **Bundle namespaces derive from the file name**: `contact.ribbon.ts` → `Contact.Ribbon`. No hard-coded map or config file. |
 | D23 | **There is no owning team yet.** The plugin author and marketplace owner are `Defra`, with the repository URL and no contact email. Revisit when a team takes ownership (this also fills in CODEOWNERS). The version stays `0.1.0` until v1.0 (R5.3). |
 | D24 | **The "do not carry over" list ([§3.5](#35-do-not-carry-over)) applies to this rewrite only.** It guards against project-specific content coming across from the export, so authors and reviewers check changes against it by hand. It isn't a long-term standard, so it isn't in the authoring guide and CI doesn't scan for it. It is retired in R5.3. |
-
+| D25 | **Moq (4.20.2 or later) is the default mocking library** for .NET unit tests. Avoid 4.20.0 and 4.20.1, which shipped SponsorLink. As with D13, a project's own library wins. (Was O1.) |
+| D26 | **Business logic, the model and queries live in shared projects** (`.shproj` and `.projitems`), because plug-in packages (dependent assemblies) don't support custom workflow activities. A shared-code assembly imports every shared project. In a `UnitTest` build configuration, the plug-in and workflow projects reference that assembly instead of importing the shared projects, so a single unit test project covers them all without naming clashes (CS0433) or duplicated code coverage. This is the default for new projects; an existing project's structure wins. |
 ---
 
 ## 3. Target plugin design
@@ -194,6 +195,7 @@ The export assumes PIMS-only code. The rewrite keeps the standards but ships ver
 - Code is SOLID and DRY. Dependencies are injected through constructors. **A DI container is not required**; composing dependencies by hand in the plug-in or CWA class is fine.
 - Observability and logging are always present: tracing through the project's logging abstraction, with enough context to diagnose failures from plug-in trace logs.
 - Configurable, generic and granular, with tests that cover a second configuration (kept from the export).
+- Shared code lives in shared projects, and unit tests build in a `UnitTest` configuration against one shared-code assembly (D26).
 
 `RecordFaker` asset (the full implementation):
 
@@ -241,7 +243,7 @@ public abstract class RecordFaker<TEntity> : Faker<TEntity>
 
 Record answers as decisions in §2.
 
-- **O1. Default mocking library for .NET unit tests.** D13 names MSTest and FluentAssertions but not a mocking library. The R2.1 examples and `stack.md` use Moq (4.20.2 or later, because 4.20.0 and 4.20.1 shipped SponsorLink), as the export did. *Recommendation:* make Moq the default, still subject to D13's rule that a project's own framework wins. If the answer differs, change `stack.md`, `unit-testing.md` and the two worked examples in `dataverse-plugins`.
+None at present. Add new questions here as `O<n>`.
 
 ---
 
@@ -278,7 +280,7 @@ Legend: `[ ]` not started · `[~]` in progress (add owner) · `[x]` done (add PR
 - [x] **R1.5** (`feature/power-platform-delivery-plugin`; PR link to follow) Define `.agent-config/power-platform.json`: schema, example, and the discover-then-confirm procedure (§3.4). (In `power-platform-standards`: `assets/power-platform.schema.json`, `assets/power-platform.example.json` and `references/project-facts.md`.)
 
 ### R2 — Developer
-- [x] **R2.1** (`feature/power-platform-delivery-plugin`; PR link to follow) `dataverse-plugins` (D18), with C# polyfill asset (D12, D14) and unit-test guidance (D13). (Skill: `skills/dataverse-plugins/`. Worked examples are compiled and tested on net48 with C# 13. Open question: O1. The sketch base classes in `references/base-classes.md` are a proposal for projects with none, not shipped code.)
+- [x] **R2.1** (`feature/power-platform-delivery-plugin`; PR link to follow) `dataverse-plugins` (D18), with C# polyfill asset (D12, D14) and unit-test guidance (D13, D25), and the shared-project structure (D26). (Skill: `skills/dataverse-plugins/`. Worked examples are compiled and tested on net48 with C# 13; the shared-project layout was verified in a scratch solution. The sketch base classes in `references/base-classes.md` are a proposal for projects with none, not shipped code.)
 - [ ] **R2.2** `web-resources`, with the toolchain assets (D20, §4.1), explicit mock guidance (D19) and the bundle contract test.
 - [ ] **R2.3** `customisation-xml`.
 - [ ] **R2.4** `dataverse-schema`: make the lookup scripts parameterised and add `pac modelbuilder` (D6).

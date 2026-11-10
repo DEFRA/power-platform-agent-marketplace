@@ -8,7 +8,7 @@ All notable changes to the `power-platform-delivery` plugin are recorded here. T
 
 - Plugin manifest for the Defra-wide rewrite (R1.1).
 - `power-platform-standards` skill with the shared house rules, the technology stack and the project-facts procedure (R1.4, R1.5).
-- `dataverse-plugins` skill for plug-ins and custom workflow activities, with tested worked examples, a minimal base-class sketch and the `IsExternalInit` polyfill asset (R2.1).
+- `dataverse-plugins` skill for plug-ins and custom workflow activities, with tested worked examples, a minimal base-class sketch, the shared-project and `UnitTest` configuration structure, and the `IsExternalInit` polyfill asset (R2.1).
 - Schema and example for `.agent-config/power-platform.json` (R1.5).
 - Authoring-rule lint and Pester tests under `tests/` (R1.3).
 
