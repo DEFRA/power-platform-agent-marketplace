@@ -27,18 +27,23 @@ Versions below are the known-good baseline. The skill that builds each toolchain
 
 | Area | Default |
 | --- | --- |
-| Language and target | TypeScript 5.9 (`^5.9.3`), strict, ES2022 |
-| Bundling | Rollup 4 (`^4.37.0`), one IIFE bundle per source file |
-| Unit tests | Jest 30 (`^30.2.0`) with ts-jest 29 (`^29.4.6`) and `@types/jest` 29 |
-| Linting | ESLint 9 flat config (`^9.39`), typescript-eslint 8 (`^8.49`), `eslint-plugin-jest` 28 |
-| Formatting | Prettier 3: 100 columns, single quotes, ES5 trailing commas |
-| Xrm types | `@types/xrm` |
+| Language and target | TypeScript 6.0 (`^6.0.3`), strict, ES2022 |
+| Bundling | Rollup 4 (`^4.68.0`), one IIFE bundle per source file |
+| Unit tests | Jest 30 (`^30.2.0`) with ts-jest 29 (`^29.4.6`) and `@types/jest` 30 (`^30.0.0`) |
+| Linting | ESLint 10 flat config (`^10.0.0`, with `@eslint/js` 10), typescript-eslint 8 (`^8.72.2`), `eslint-plugin-jest` 29 (`^29.0.0`) |
+| Formatting | Prettier 3 (`^3.9.0`): 100 columns, single quotes, ES5 trailing commas |
+| Xrm types | `@types/xrm` (`^9.0.97`) |
 | Build integration | An MSBuild `.proj` wrapper that runs `npm run build` |
 
 Notes:
 
-- Prettier moves from the export's v2 to v3. Set `trailingComma: 'es5'` explicitly, because v3 changed the default to `all`.
-- `@types/node` matches the major version of the Node.js LTS release the build uses. Don't pin to a release that is out of support.
+- These versions were tested on a real Power Platform repository: a clean install, lint, build, tests and the bundle output, plus the MSBuild wrapper. Bundle namespaces and compiled JavaScript were identical to the previous baseline.
+- **TypeScript 7 doesn't work yet.** `typescript-eslint` supports TypeScript below 6.1 and `ts-jest` supports below 7. Stay on 6.x until both do.
+- **TypeScript 6** no longer includes `@types/*` packages automatically. Set `"types": ["node", "xrm"]` inside `compilerOptions`. A top-level `types` property is ignored.
+- **ESLint 10** is flat config only. Don't use `@eslint/eslintrc` or `FlatCompat`; extend `js.configs.recommended` and typescript-eslint's `flat/recommended-type-checked` directly.
+- Prettier moves from the export's v2 to v3. Set `trailingComma: 'es5'` explicitly, because v3 changed the default to `all`. v3 also wraps constructor parameter properties and adds trailing commas in tuple types, and no option reverts this. Reformat once with `prettier --write` when adopting it.
+- **Node.js:** the build needs 22.13 or later on the 22 line, 20.19 or later on the 20 line, or 24 or later. These are the minimums for ESLint 10. `@types/node` matches the major version of the Node.js LTS release the build uses. Don't pin to a release that is out of support.
+- Declare `glob` in `devDependencies`. The Rollup config imports it, and without a declaration it only works because another package happens to hoist it.
 - There is no `@creedengo` ESLint plug-in and no TSLint.
 - Pin versions in `package.json`, committed with its lock file. Update the table here when the baseline moves.
 
