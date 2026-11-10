@@ -37,13 +37,9 @@ Versions below are the known-good baseline. The skill that builds each toolchain
 
 Notes:
 
-- These versions were tested on a real Power Platform repository: a clean install, lint, build, tests and the bundle output, plus the MSBuild wrapper. Bundle namespaces and compiled JavaScript were identical to the previous baseline.
-- **TypeScript 7 doesn't work yet.** `typescript-eslint` supports TypeScript below 6.1 and `ts-jest` supports below 7. Stay on 6.x until both do.
-- **TypeScript 6** no longer includes `@types/*` packages automatically. Set `"types": ["node", "xrm"]` inside `compilerOptions`. A top-level `types` property is ignored.
-- **ESLint 10** is flat config only. Don't use `@eslint/eslintrc` or `FlatCompat`; extend `js.configs.recommended` and typescript-eslint's `flat/recommended-type-checked` directly.
-- Prettier moves from the export's v2 to v3. Set `trailingComma: 'es5'` explicitly, because v3 changed the default to `all`. v3 also wraps constructor parameter properties and adds trailing commas in tuple types, and no option reverts this. Reformat once with `prettier --write` when adopting it.
-- **Node.js:** the build needs 22.13 or later on the 22 line, 20.19 or later on the 20 line, or 24 or later. These are the minimums for ESLint 10. `@types/node` matches the major version of the Node.js LTS release the build uses. Don't pin to a release that is out of support.
-- Declare `glob` in `devDependencies`. The Rollup config imports it, and without a declaration it only works because another package happens to hoist it.
+- This is a known-good baseline: the versions were tested together (clean install, lint, build and tests) on a real Power Platform repository. A project that already uses other versions keeps them.
+- TypeScript 7 isn't supported by the rest of the toolchain yet: `typescript-eslint` supports TypeScript below 6.1 and `ts-jest` below 7.
+- The build needs Node.js 22.13 or later on the 22 line, 20.19 or later on the 20 line, or 24 or later (the minimums for ESLint 10). `@types/node` matches the major version of the Node.js LTS release the build uses.
 - There is no `@creedengo` ESLint plug-in and no TSLint.
 - Pin versions in `package.json`, committed with its lock file. Update the table here when the baseline moves.
 
