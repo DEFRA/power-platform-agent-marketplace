@@ -219,7 +219,7 @@ public abstract class RecordFaker<TEntity> : Faker<TEntity>
 - **Only `developer-worker` sets `model`.** Every other agent inherits the user's choice.
 - **Pick a small, generally available model**, not a preview one. In VS Code, `model` can also be a priority list, so give a fallback.
 - **Set `user-invocable: false`** so the worker is only reached through the Developer's brief.
-- **Keep the model name in one place** and have CI check it against an allow-list (R1.3). Review it at each release, so the pin doesn't go out of date silently.
+- **Keep the model name in one place** and have CI check it against an allow-list (R1.3). The allow-list is `allowedModels` in `plugins/power-platform-delivery/tests/lint.config.json`. It starts empty, so R2.8 must add the chosen model. Review it at each release, so the pin doesn't go out of date silently.
 - **The Developer escalates rather than retries.** If the worker reports the brief is beyond it, the Developer does the work itself on the user's model.
 
 **To confirm in R5.1:** how each of the three supported tools behaves when the pinned model isn't available to the user (for example, blocked by org policy). If any tool fails rather than falling back, document the workaround (a fallback list, or the Developer doing the work itself) in the agent.
@@ -255,16 +255,16 @@ Legend: `[ ]` not started · `[~]` in progress (add owner) · `[x]` done (add PR
 
 ### R1 — Foundations
 - [x] **R1.1** (`feature/power-platform-delivery-plugin`) Replace the stub `plugin.json`, with the real author and owner, the version, and the `agents` and `skills` paths. Remove the stub agents. (Author and owner: D23.)
-- [~] **R1.2** (`feature/power-platform-delivery-plugin`) Add an authoring guide to this repo covering §1.1 and §3.4. Add CODEOWNERS and a CHANGELOG.
-- [~] **R1.3** (`feature/power-platform-delivery-plugin`) Add CI:
+- [x] **R1.2** (`feature/power-platform-delivery-plugin`; PR link to follow) Add an authoring guide to this repo covering §1.1 and §3.4. Add CODEOWNERS and a CHANGELOG. (Guide: `docs/authoring-guide.md`. CODEOWNERS has no rule until a team owns the plugin, D23. CHANGELOG: `plugins/power-platform-delivery/CHANGELOG.md`.)
+- [x] **R1.3** (`feature/power-platform-delivery-plugin`; PR link to follow) Add CI (`.github/workflows/ci.yml`, with the checks in `plugins/power-platform-delivery/tests/`):
   - frontmatter lint (name matches folder, description length);
   - line budgets;
   - an in-plugin link check;
   - JSON schema validation;
   - Pester tests on Windows and Linux;
   - a check that `model` appears only on `developer-worker` and names an allowed model (§5).
-- [ ] **R1.4** Write `power-platform-standards`, including `references/stack.md` (D14).
-- [ ] **R1.5** Define `.agent-config/power-platform.json`: schema, example, and the discover-then-confirm procedure (§3.4).
+- [x] **R1.4** (`feature/power-platform-delivery-plugin`; PR link to follow) Write `power-platform-standards`, including `references/stack.md` (D14).
+- [x] **R1.5** (`feature/power-platform-delivery-plugin`; PR link to follow) Define `.agent-config/power-platform.json`: schema, example, and the discover-then-confirm procedure (§3.4). (In `power-platform-standards`: `assets/power-platform.schema.json`, `assets/power-platform.example.json` and `references/project-facts.md`.)
 
 ### R2 — Developer
 - [ ] **R2.1** `dataverse-plugins` (D18), with C# polyfill assets (D12, D14) and unit-test guidance (D13).

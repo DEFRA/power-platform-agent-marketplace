@@ -17,11 +17,17 @@ The plugin is being rewritten, so it currently ships no agents or skills. They a
 
 The rewrite of `power-platform-delivery` as a Defra-wide plugin, informed by the reference export in `agents-export/`, is tracked in [docs/productionisation-plan.md](docs/productionisation-plan.md).
 
+## Contributing
+
+See the [authoring guide](docs/authoring-guide.md) for the rules every agent, skill and script follows. CI runs the checks on Windows and Linux.
+
 ## Layout
 
 ```
-.github/plugin/marketplace.json   Marketplace catalog
+.github/plugin/marketplace.json   Marketplace catalogue
+.github/workflows/ci.yml          Lint and Pester tests
 plugins/<plugin>/plugin.json      Plugin manifest
 plugins/<plugin>/agents/*.agent.md
 plugins/<plugin>/skills/<skill>/SKILL.md
+plugins/<plugin>/tests/           Lint, schemas and Pester tests
 ```
