@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0",
+  "azureBoards": {
+    "organization": "https://dev.azure.com/contoso",
+    "project": "Case Management",
+    "areaPath": "Case Management\\Delivery Team",
+    "workItemTypes": {
+      "epic": "Epic",
+      "feature": "Feature",
+      "story": "User Story",
+      "task": "Task"
+    }
+  }
+}
