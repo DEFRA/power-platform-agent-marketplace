@@ -1,0 +1,11 @@
+{
+  "maxDescriptionLength": 400,
+  "maxSkillNameLength": 64,
+  "maxAgentBodyLines": 100,
+  "maxSkillBodyLines": 150,
+  "agentToolAliases": ["read", "edit", "search", "execute", "web", "agent", "todo"],
+  "agentFrontmatterKeys": ["name", "description", "tools", "model", "user-invocable"],
+  "skillFrontmatterKeys": ["name", "description", "license", "compatibility", "metadata", "allowed-tools"],
+  "modelAgent": "developer-worker",
+  "allowedModels": []
+}

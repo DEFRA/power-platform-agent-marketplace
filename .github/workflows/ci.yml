@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate plugin (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      # Runs the authoring-rule lint (frontmatter, line budgets, in-plugin links, JSON schemas, the model
+      # allow-list) and every script's Pester tests. All live under plugins/power-platform-delivery/tests.
+      - name: Run Pester tests
+        shell: pwsh
+        run: |
+          Install-Module Pester -MinimumVersion 5.5.0 -MaximumVersion 5.99.99 -Scope CurrentUser -Force -SkipPublisherCheck
+          Import-Module Pester -MinimumVersion 5.5.0 -MaximumVersion 5.99.99
+          Invoke-Pester -Path plugins/power-platform-delivery/tests -Output Detailed -CI
