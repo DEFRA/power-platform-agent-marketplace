@@ -1,5 +1,5 @@
 // Lets C# 9 and later `init` accessors and records compile on .NET Framework 4.8.
-// Copy this file into the plug-in project once. It is internal, so each assembly carries its own copy.
+// It belongs in the Infrastructure shared project. It is internal, so each assembly that compiles it has its own copy.
 namespace System.Runtime.CompilerServices
 {
     using System.ComponentModel;
