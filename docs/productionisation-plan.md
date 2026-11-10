@@ -61,7 +61,7 @@ Track progress in [§8](#8-plan-and-progress). Each task has an ID (for example 
 | D21 | **No `@creedengo` ESLint plug-in** in the default toolchain. |
 | D22 | **Bundle namespaces derive from the file name**: `contact.ribbon.ts` → `Contact.Ribbon`. No hard-coded map or config file. |
 | D23 | **There is no owning team yet.** The plugin author and marketplace owner are `Defra`, with the repository URL and no contact email. Revisit when a team takes ownership (this also fills in CODEOWNERS). The version stays `0.1.0` until v1.0 (R5.3). |
-| D24 | **The "do not carry over" list ([§3.5](#35-do-not-carry-over)) is applied in review, not by CI.** Authors and reviewers check changes against it by hand. CI doesn't scan for banned tokens. |
+| D24 | **The "do not carry over" list ([§3.5](#35-do-not-carry-over)) applies to this rewrite only.** It guards against project-specific content coming across from the export, so authors and reviewers check changes against it by hand. It isn't a long-term standard, so it isn't in the authoring guide and CI doesn't scan for it. It is retired in R5.3. |
 
 ---
 
@@ -133,7 +133,7 @@ Agents discover what they can and ask only for the rest. Facts the repo can't gi
 
 ### 3.5 Do not carry over
 
-These must not appear in the plugin. Authors and reviewers check for them by hand (D24); CI doesn't.
+This list applies to the rewrite only (D24) and is retired in R5.3. These must not appear in the plugin. Authors and reviewers check for them by hand; CI doesn't.
 - PIMS names and identifiers: `Defra.Imports`, `defraimp_`, `defraexp_`, `defra_Imports`, `DefraImports`, `EU Imports`, `TradeImportsPims`, `PIMS`, `IMTA-`.
 - PIMS domain examples: Itahc, ImportRecord, animal or commodity examples.
 - Marktek and other legacy-migration rules, the CS0507 pitfall, and the struck-out TestCommon text.
@@ -266,7 +266,7 @@ Legend: `[ ]` not started · `[~]` in progress (add owner) · `[x]` done (add PR
 
 ### R1 — Foundations
 - [x] **R1.1** (`feature/power-platform-delivery-plugin`) Replace the stub `plugin.json`, with the real author and owner, the version, and the `agents` and `skills` paths. Remove the stub agents. (Author and owner: D23.)
-- [x] **R1.2** (`feature/power-platform-delivery-plugin`; PR link to follow) Add an authoring guide to this repo covering §1.1, §3.4 and §3.5. Add CODEOWNERS and a CHANGELOG. (Guide: `docs/authoring-guide.md`. CODEOWNERS has no rule until a team owns the plugin, D23. CHANGELOG: `plugins/power-platform-delivery/CHANGELOG.md`.)
+- [x] **R1.2** (`feature/power-platform-delivery-plugin`; PR link to follow) Add an authoring guide to this repo covering §1.1 and §3.4. Add CODEOWNERS and a CHANGELOG. (Guide: `docs/authoring-guide.md`. CODEOWNERS has no rule until a team owns the plugin, D23. CHANGELOG: `plugins/power-platform-delivery/CHANGELOG.md`.)
 - [x] **R1.3** (`feature/power-platform-delivery-plugin`; PR link to follow) Add CI (`.github/workflows/ci.yml`, with the checks in `plugins/power-platform-delivery/tests/`):
   - frontmatter lint (name matches folder, description length);
   - line budgets;
@@ -304,7 +304,7 @@ Legend: `[ ]` not started · `[~]` in progress (add owner) · `[x]` done (add PR
 ### R5 — Prove and release
 - [ ] **R5.1** Build a neutral sample Power Platform repo (D15) to evaluate against, with scripted scenarios for each agent: "add a configurable plug-in", "edit a form", "write BDD for story X", "triage a failing test".
 - [ ] **R5.2** Pilot with one Defra team outside PIMS and act on their feedback.
-- [ ] **R5.3** Update the README, publish v1.0, and remove `agents-export/`.
+- [ ] **R5.3** Update the README, publish v1.0, and remove `agents-export/` and the do-not-carry-over list (§3.5, D24, and its references in `.github/prompts/rewrite-task-prompt.prompt.md`).
 
 ---
 
