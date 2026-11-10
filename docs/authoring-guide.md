@@ -40,6 +40,10 @@ plugins/power-platform-delivery/
 
 The numbers and allowed values are in [lint.config.json](../plugins/power-platform-delivery/tests/lint.config.json), the single place CI reads them from.
 
+## Do not carry over
+
+Some things in the reference export must not appear in the plugin: project names and identifiers, project domain examples, legacy-migration rules, pipeline file paths, `+solutionVer`, spkl, `handoffs`, the removed helpers and links that leave the plugin. The full list is [section 3.5 of the plan](productionisation-plan.md#35-do-not-carry-over). CI doesn't check it, so check your own changes against it and expect reviewers to do the same.
+
 ## Project facts
 
 Agents and skills never hard-code solution names, prefixes, paths, project names or app names. They discover facts from the repository, confirm them with the user, and store only what can't be discovered in `.agent-config/power-platform.json`. The procedure, the sources for each fact and the config format are in the [project-facts reference](../plugins/power-platform-delivery/skills/power-platform-standards/references/project-facts.md). If you add a fact, add it there. Don't add it to a skill.
