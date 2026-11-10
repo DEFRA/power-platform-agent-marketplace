@@ -11,15 +11,7 @@ A GitHub Copilot plugin marketplace for Defra teams building and operating servi
 
 ## power-platform-delivery
 
-| Agent                | Role                                                     |
-| -------------------- | -------------------------------------------------------- |
-| `delivery-lead`      | Orchestrator; entry point that runs the four roles below |
-| `product-analyst`    | Requirements, user stories, acceptance criteria          |
-| `solution-architect` | Components, data model, security, ALM design             |
-| `developer`          | Builds the solution per the design                       |
-| `quality-engineer`   | Test plan, defects, release recommendation               |
-
-Flow: analyst -> architect -> developer -> quality engineer, with defects and gaps routed back upstream.
+The plugin is being rewritten, so it currently ships no agents or skills. They are added task by task; see [docs/productionisation-plan.md](docs/productionisation-plan.md) (§3.2 for the target agents).
 
 ## Roadmap
 

@@ -54,12 +54,14 @@ Track progress in [§8](#8-plan-and-progress). Each task has an ID (for example 
 | D14 | **The stack is recorded once** in `power-platform-standards/references/stack.md`. Plug-ins and custom workflow activities target **.NET Framework 4.8** with **C# 13** (`<LangVersion>13.0</LangVersion>`). Language features that need runtime support, such as default interface members, aren't available. Some features need small polyfills, such as `IsExternalInit` for `init` and records; ship these in the `dataverse-plugins` assets. **spkl is not used at all**: plug-in steps are registered in the development environment by the human (D3) and synchronised with the solution. |
 | D15 | **Neutral sample domain** for every example: *Case / Applicant / Inspection*, prefix `abc_`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | D16 | **Azure Boards is the only work tracker.**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| D17 | **ALM follows [power-pipelines](https://github.com/ewingjm/power-pipelines)**, the common Azure Pipelines library that PIMS also uses. It is the basis of our standards, and it lets us shift almost all QA left onto ephemeral environments. Agents design and work *within* this lifecycle; they don't run it (D5). Its preferred approach is described once in `power-platform-design/references/alm.md` and summarised in `power-platform-standards`. See [§3.6](#36-alm-approach).                                                                                                         |
+| D17 | **ALM follows [power-pipelines](https://github.com/ewingjm/power-pipelines)**, the common Azure Pipelines library that PIMS also uses. It is the basis of our standards, and it lets us shift almost all QA left onto ephemeral environments. Agents design and work *within* this lifecycle; they don't run it (D5). Its preferred approach is described once in `power-platform-design/references/alm.md` and summarised in `power-platform-standards`. See [§3.5](#35-alm-approach).                                                                                                         |
 | D18 | **Plug-ins and CWAs follow the export's standards, using the project's own conventions.** Use the project's `Plugin`, `WorkflowActivity` and logging classes; don't ship them. Classes are thin; business logic has no host dependency; code is SOLID and DRY; dependencies are injected without requiring a container; logging is always present. Parse complex step configuration with `DataContractJsonSerializer`. `FieldMappingConfigParser`, `GenericEntityMapper` and the configuration-parameter repository are not carried over. |
 | D19 | **No Xrm mock helper for web resource tests.** Set up mocks explicitly for the `formContext` and `Xrm` client API calls the code makes. |
 | D20 | **The TypeScript toolchain ships as `web-resources/assets/`** (TypeScript, rollup IIFE bundles, Jest with ts-jest, ESLint flat config, Prettier, and an MSBuild `.proj` wrapper so the solution build runs `npm run build`). It is adapted from `agents-export/typescript/` as described in [§4.1](#41-typescript-toolchain). |
 | D21 | **No `@creedengo` ESLint plug-in** in the default toolchain. |
 | D22 | **Bundle namespaces derive from the file name**: `contact.ribbon.ts` → `Contact.Ribbon`. No hard-coded map or config file. |
+| D23 | **There is no owning team yet.** The plugin author and marketplace owner are `Defra`, with the repository URL and no contact email. Revisit when a team takes ownership (this also fills in CODEOWNERS). The version stays `0.1.0` until v1.0 (R5.3). |
+| D24 | **There is no "do not carry over" list or banned-token CI check.** Principle 5 (no project history) is upheld in review. The reference material is the only place project-specific content exists, and it is removed in R5.3. |
 
 ---
 
@@ -129,18 +131,7 @@ Agents discover what they can and ask only for the rest. Facts the repo can't gi
 | Model-driven app name(s) and persona file for acceptance and integration tests | Discovered from `AppModule.xml` files and `Persona.cs` enum in `tests/*` source. |
 | `pac modelbuilder` environment URL and settings path                           | Ask each time (D6); don't store it                                               |
 
-### 3.5 Do not carry over
-
-These must not appear in the plugin; the CI added in R1.3 enforces this:
-- PIMS names and identifiers: `Defra.Imports`, `defraimp_`, `defraexp_`, `defra_Imports`, `DefraImports`, `EU Imports`, `TradeImportsPims`, `PIMS`, `IMTA-`.
-- PIMS domain examples: Itahc, ImportRecord, animal or commodity examples.
-- Marktek and other legacy-migration rules, the CS0507 pitfall, and the struck-out TestCommon text.
-- Project pipeline file paths (D5), the requirements corpus (D4) and the "Generate model" task (D6).
-- `+solutionVer` (D7), spkl (D14), VS Code-only tool IDs, `handoffs`, and model pins other than D11.
-- `FieldMappingConfigParser`, `GenericEntityMapper`, the configuration-parameter repository and the Xrm mock helper (D18, D19).
-- `../../../` links and `.github/skills/...` script paths.
-
-### 3.6 ALM approach
+### 3.5 ALM approach
 
 `power-platform-design/references/alm.md` describes the lifecycle that [power-pipelines](https://github.com/ewingjm/power-pipelines) implements. It covers only what affects how agents design, build and test; it doesn't document pipeline parameters. `power-platform-standards` summarises it in a few lines, and other skills link to it rather than repeating it.
 
@@ -263,12 +254,11 @@ Legend: `[ ]` not started · `[~]` in progress (add owner) · `[x]` done (add PR
 - [x] **R0.3** Resolve open decisions O1–O8 (recorded as D9–D16).
 
 ### R1 — Foundations
-- [ ] **R1.1** Replace the stub `plugin.json`, with the real author and owner, the version, and the `agents` and `skills` paths. Remove the stub agents.
-- [ ] **R1.2** Add an authoring guide to this repo covering §1.1, §3.4 and §3.5. Add CODEOWNERS and a CHANGELOG.
-- [ ] **R1.3** Add CI:
+- [x] **R1.1** (`feature/power-platform-delivery-plugin`) Replace the stub `plugin.json`, with the real author and owner, the version, and the `agents` and `skills` paths. Remove the stub agents. (Author and owner: D23.)
+- [~] **R1.2** (`feature/power-platform-delivery-plugin`) Add an authoring guide to this repo covering §1.1 and §3.4. Add CODEOWNERS and a CHANGELOG.
+- [~] **R1.3** (`feature/power-platform-delivery-plugin`) Add CI:
   - frontmatter lint (name matches folder, description length);
   - line budgets;
-  - a block on the §3.5 tokens;
   - an in-plugin link check;
   - JSON schema validation;
   - Pester tests on Windows and Linux;

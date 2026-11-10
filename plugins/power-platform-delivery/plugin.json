@@ -1,10 +1,13 @@
 {
   "name": "power-platform-delivery",
-  "description": "An agentic Power Platform delivery team: Product Analyst, Solution Architect, Developer, and Quality Engineer.",
+  "description": "An agentic Power Platform delivery team for Defra: Product Analyst, Solution Architect, Developer and Quality Engineer, with the skills they share.",
   "version": "0.1.0",
   "author": {
-    "name": "DEFRA"
+    "name": "Defra",
+    "url": "https://github.com/DEFRA/power-platform-agent-marketplace"
   },
+  "homepage": "https://github.com/DEFRA/power-platform-agent-marketplace",
+  "repository": "https://github.com/DEFRA/power-platform-agent-marketplace",
   "license": "OGL-UK-3.0",
   "keywords": ["power-platform", "dataverse", "delivery", "alm", "copilot"],
   "agents": "agents/",
