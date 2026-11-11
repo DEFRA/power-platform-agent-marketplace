@@ -4,7 +4,9 @@ All notable changes to the `power-platform-delivery` plugin are recorded here. T
 
 ## [Unreleased]
 
-The first release, version 0.1.0: an agentic team that Defra teams install to deliver Power Platform projects. It works in VS Code, Copilot CLI and the Copilot coding agent.
+## [0.1.0] - 2026-11-11
+
+The first release: an agentic team that Defra teams install to deliver Power Platform projects. It works in VS Code, Copilot CLI and the Copilot coding agent.
 
 ### Added
 
