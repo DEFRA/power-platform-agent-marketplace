@@ -1,7 +1,6 @@
 # Code owners for this repository.
 #
-# There is no owning team yet (see D23 in docs/productionisation-plan.md). Add a rule here when one takes
-# ownership, for example:
+# There is no owning team yet. Add a rule here when one takes ownership, for example:
 #
 #   * @DEFRA/<team-name>
 #

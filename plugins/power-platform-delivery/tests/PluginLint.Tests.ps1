@@ -56,6 +56,26 @@ Describe 'Read-Frontmatter' {
         $front.Fields['name'] | Should -Be 'x'
     }
 
+    It 'reads a map of scalars and an unindented block list' {
+        $path = Write-Fixture 'fm/f.md' @(
+            '---', 'name: x', 'metadata:', '  author: defra', "  version: '1.0'", 'tools:', '- read', '- search', 'license: OGL', '---', 'Body')
+        $front = Read-Frontmatter -Path $path
+
+        $front.Error | Should -BeNullOrEmpty
+        $front.Fields['metadata']['author'] | Should -Be 'defra'
+        $front.Fields['metadata']['version'] | Should -Be '1.0'
+        $front.Fields['tools'] | Should -Be @('read', 'search')
+        $front.Fields['license'] | Should -Be 'OGL'
+    }
+
+    It 'reports every line it cannot parse' {
+        $path = Write-Fixture 'fm/g.md' @('---', 'name: x', '  stray: one', '!bad', '---', 'Body')
+        $front = Read-Frontmatter -Path $path
+
+        $front.Error | Should -Match 'line 3'
+        $front.Error | Should -Match 'line 4'
+    }
+
     It 'counts body lines without leading or trailing blanks' {
         $path = Write-Fixture 'fm/c.md' @('---', 'name: x', '---', '', 'One', '', 'Two', '', '')
         (Read-Frontmatter -Path $path).BodyLineCount | Should -Be 3
@@ -105,6 +125,11 @@ Describe 'Test-AgentFile' {
         @(Test-AgentFile -Path $path -Config $Config) | Should -Match 'Quote it'
     }
 
+    It 'accepts a block-scalar description that contains a colon' {
+        $path = New-Agent -Frontmatter @('name: sample', 'description: >', '  Use this when: needed')
+        @(Test-AgentFile -Path $path -Config $Config) | Should -BeNullOrEmpty
+    }
+
     It 'rejects handoffs' {
         $path = New-Agent -Frontmatter @('name: sample', 'description: Fine.', 'handoffs:', '  - label: x')
         @(Test-AgentFile -Path $path -Config $Config) | Should -Match "'handoffs' isn't allowed"
@@ -149,6 +174,11 @@ Describe 'Test-AgentFile' {
 Describe 'Test-SkillFolder' {
     It 'accepts a valid skill' {
         @(Test-SkillFolder -Path (New-Skill) -Config $Config) | Should -BeNullOrEmpty
+    }
+
+    It 'accepts a skill with a metadata map' {
+        $root = New-Skill -Frontmatter @('name: sample-skill', 'description: Explains how to record an inspection.', 'metadata:', '  author: defra')
+        @(Test-SkillFolder -Path $root -Config $Config) | Should -BeNullOrEmpty
     }
 
     It 'rejects a missing SKILL.md' {

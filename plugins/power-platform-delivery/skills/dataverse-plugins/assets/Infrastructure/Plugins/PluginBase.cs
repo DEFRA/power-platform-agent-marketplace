@@ -50,7 +50,7 @@ namespace Abc.Infrastructure.Plugins
             try
             {
                 tracing = GetRequiredService<ITracingService>(serviceProvider);
-                tracing.Trace("Starting handler {0}.", typeof(THandler).FullName);
+                ExecutionGuard.TraceWithoutMasking(tracing, "Starting handler {0}.", typeof(THandler).FullName);
                 var scope = this.root.CreateExecutionScope();
                 Exception executionFailure = null;
                 try
@@ -86,55 +86,23 @@ namespace Abc.Infrastructure.Plugins
                     executionFailure = exception;
                 }
 
-                try
+                var failure = ExecutionGuard.DisposeScope(scope, executionFailure, tracing, "Cleanup after handler {0} failed: {1}", typeof(THandler).FullName);
+                if (failure != null)
                 {
-                    scope.Dispose();
-                }
-                catch (Exception cleanupFailure)
-                {
-                    if (executionFailure != null)
-                    {
-                        TraceWithoutMasking(tracing, "Cleanup after handler {0} failed: {1}", typeof(THandler).FullName, cleanupFailure);
-                    }
-                    else
-                    {
-                        ExceptionDispatchInfo.Capture(cleanupFailure).Throw();
-                    }
+                    ExceptionDispatchInfo.Capture(failure).Throw();
                 }
 
-                if (executionFailure != null)
-                {
-                    ExceptionDispatchInfo.Capture(executionFailure).Throw();
-                }
-
-                tracing.Trace("Completed handler {0}.", typeof(THandler).FullName);
+                ExecutionGuard.TraceWithoutMasking(tracing, "Completed handler {0}.", typeof(THandler).FullName);
             }
             catch (InvalidPluginExecutionException exception)
             {
-                TraceWithoutMasking(tracing, "Handler {0} failed: {1}", typeof(THandler).FullName, exception);
+                ExecutionGuard.TraceWithoutMasking(tracing, "Handler {0} failed: {1}", typeof(THandler).FullName, exception);
                 throw;
             }
             catch (Exception exception)
             {
-                TraceWithoutMasking(tracing, "Handler {0} failed: {1}", typeof(THandler).FullName, exception);
+                ExecutionGuard.TraceWithoutMasking(tracing, "Handler {0} failed: {1}", typeof(THandler).FullName, exception);
                 throw new InvalidPluginExecutionException("The plug-in could not complete. See the plug-in trace log for details.", exception);
-            }
-        }
-
-        private static void TraceWithoutMasking(ITracingService tracing, string format, params object[] args)
-        {
-            if (tracing == null)
-            {
-                return;
-            }
-
-            try
-            {
-                tracing.Trace(format, args);
-            }
-            catch (Exception)
-            {
-                // Diagnostics must not replace an execution or cleanup failure.
             }
         }
 

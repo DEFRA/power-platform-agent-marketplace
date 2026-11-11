@@ -1,6 +1,6 @@
 # Authoring guide
 
-How to add and change agents, skills and scripts in `power-platform-delivery`. The reasoning behind these rules is in [productionisation-plan.md](productionisation-plan.md). CI enforces the mechanical ones.
+How to add and change agents, skills and scripts in `power-platform-delivery`. CI enforces the mechanical ones.
 
 ## Principles
 
@@ -30,7 +30,7 @@ plugins/power-platform-delivery/
 | `SKILL.md` length                 | 150 lines of body at most. Move detail to `references/*.md`, one level deep                                                                                                                                                                    |
 | `description` (agents and skills) | Third person. Says what and when. 400 characters at most. No repo paths or project names. Quote it if it contains `: `                                                                                                                         |
 | Skill `name`                      | kebab-case and the same as the folder name                                                                                                                                                                                                     |
-| Agent frontmatter                 | `name` (the same as the file name), `description` and, only when restricting, `tools` using the portable aliases `read`, `edit`, `search`, `execute`, `web`, `agent` and `todo`. No `handoffs`. No `model`, except on `developer-worker` (D11) |
+| Agent frontmatter                 | `name` (the same as the file name), `description` and, only when restricting, `tools` using the portable aliases `read`, `edit`, `search`, `execute`, `web`, `agent` and `todo`. No `handoffs`. No `model`, except on `developer-worker`     |
 | Handoffs                          | In prose, naming agents by id: "hand off to `solution-architect` when…"                                                                                                                                                                        |
 | Ownership                         | Use soft "Intended for" wording. Never hard-gate a skill to one agent                                                                                                                                                                          |
 | Links                             | Relative links inside the plugin only. Never link to a path in a consumer repo                                                                                                                                                                 |
@@ -56,4 +56,4 @@ The checks cover frontmatter, line budgets, in-plugin links, the JSON schemas fo
 
 ## Commits and tracking
 
-Use Conventional Commits and the plan's task ID, for example `feat(skills): add dataverse-plugins skill (R2.1)`. Update the task in [section 8 of the plan](productionisation-plan.md#8-plan-and-progress) when you start it (`[~]`) and when you finish it (`[x]` with the pull request link). If the plan doesn't answer a question, add it to section 6 as `O<n>` with a recommendation rather than guessing.
+Use Conventional Commits, for example `feat(skills): add dataverse-plugins skill`, with the scopes `agents`, `skills`, `plugin`, `ci` and `docs`. Record every change under `[Unreleased]` in the plugin's `CHANGELOG.md`. If the docs don't answer a question, put the question and your recommendation in the pull request description rather than guessing.

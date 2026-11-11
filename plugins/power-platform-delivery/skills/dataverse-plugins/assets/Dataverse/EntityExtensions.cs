@@ -10,12 +10,13 @@ namespace Abc.Dataverse
     public static class EntityExtensions
     {
         /// <summary>
-        /// Creates a shallow copy of the entity. The attribute collection is new, so adding or replacing values never
-        /// changes the source. Attribute values are shared, so replace mutable values rather than changing them.
+        /// Creates a shallow copy of the entity. The attribute, formatted value, alternate key and related entity
+        /// collections are new, so adding or replacing values never changes the source. The values themselves are
+        /// shared, so replace mutable values rather than changing them.
         /// </summary>
         /// <typeparam name="T">The entity type.</typeparam>
         /// <param name="entity">The entity to copy.</param>
-        /// <returns>A new entity with the same identifier and attribute values.</returns>
+        /// <returns>A new entity with the same identifier, values, entity state and row version.</returns>
         public static T Clone<T>(this T entity)
             where T : Entity, new()
         {
@@ -37,6 +38,24 @@ namespace Abc.Dataverse
             {
                 clone.Id = entity.Id;
             }
+
+            foreach (var formatted in entity.FormattedValues)
+            {
+                clone.FormattedValues[formatted.Key] = formatted.Value;
+            }
+
+            foreach (var key in entity.KeyAttributes)
+            {
+                clone.KeyAttributes[key.Key] = key.Value;
+            }
+
+            foreach (var related in entity.RelatedEntities)
+            {
+                clone.RelatedEntities[related.Key] = related.Value;
+            }
+
+            clone.EntityState = entity.EntityState;
+            clone.RowVersion = entity.RowVersion;
 
             return clone;
         }

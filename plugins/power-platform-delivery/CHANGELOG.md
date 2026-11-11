@@ -4,29 +4,43 @@ All notable changes to the `power-platform-delivery` plugin are recorded here. T
 
 ## [Unreleased]
 
+The first release, version 0.1.0: an agentic team that Defra teams install to deliver Power Platform projects. It works in VS Code, Copilot CLI and the Copilot coding agent.
+
 ### Added
 
-- Plugin manifest for the Defra-wide rewrite (R1.1).
-- `power-platform-standards` skill with the shared house rules, the technology stack and the project-facts procedure (R1.4, R1.5).
-- `dataverse-plugins` skill for plug-ins and custom workflow activities (R2.1). It adopts the handler-first dependency injection scaffold (D27), shipped as tested assets: the infrastructure, the `IsExternalInit` polyfill, entity helpers, test support and 126 tests. It also covers data access, the shared-project and `UnitTest` configuration structure, and tested worked examples.
-- `dotnet-build-verification` skill with project discovery, a warning baseline and a build, warnings and tests gate (R2.6).
-- `web-resources` skill with the TypeScript toolchain as assets: namespaces derived from file names and a bundle contract test (R2.2).
-- `customisation-xml`, `dataverse-schema` (schema lookup scripts and `pac modelbuilder`), `package-deployer` and `commit-and-pull-request` skills (R2.3, R2.4, R2.5, R2.7).
-- `developer` agent and `developer-worker` subagent, which is pinned to a cheaper model (R2.8).
-- Schema and example for `.agent-config/power-platform.json` (R1.5).
-- Authoring-rule lint and Pester tests under `tests/` (R1.3).
-- `requirements-and-backlog` skill for discovery, backlog breakdown, acceptance criteria, readiness and prioritisation (R4.1).
-- `azure-boards` skill for reading and changing work items safely, configured from the shared project config (R4.2).
-- `bdd-scenarios` skill for deciding which acceptance criteria to automate and writing feature files, with the parameterised `Build-StepIndex.ps1` and `Build-ScenarioIndex.ps1` index scripts and their Pester tests (R4.3).
-- `architecture-review`, `power-platform-design` (including the ALM reference) and `adr` skills (R4.4). The project-facts reference gains a row for the architecture records.
-- `product-analyst` and `solution-architect` agents (R4.5).
-- `scenario-builder` skill for the shared test-data project: events, scenarios and fakers, with the `RecordFaker` asset (R3.1).
-- `test-foundations` skill for what acceptance and integration tests share: configuration, personas and pooled test users, the client factory, the run lifecycle with Reqnroll and MSTest hooks, and the common assertion, retry and logging conventions (R3.1, D28).
-- `acceptance-testing` skill for Reqnroll and Power Playwright automation, with the Reqnroll wiring, login and diagnostics guidance (R3.2).
-- `integration-testing` skill for tests of Dataverse and its boundaries below the UI (R3.3).
-- `test-quality-review`, `test-impact-analysis` and `test-failure-triage` skills (R3.4).
-- `quality-engineer` agent (R3.5). The project-facts reference gains a row for the test projects.
+#### Agents
 
-### Removed
+- `product-analyst`: turns business goals into epics, features, user stories and testable acceptance criteria, manages Azure Boards work items and writes BDD scenarios.
+- `solution-architect`: classifies the review level, compares options (including a lower-code one), designs within the ALM lifecycle and records decisions as ADRs.
+- `developer`: pro-code delivery for plug-ins, custom workflow activities, TypeScript web resources, supported customisation XML and package deployer projects. Low-code build stays with the human developer.
+- `developer-worker`: an internal subagent that carries out one bounded task from the developer's brief, pinned to a cheaper model. It isn't user-invocable.
+- `quality-engineer`: owns test strategy, acceptance and integration tests, test data, test review and failure triage.
 
-- The stub agents from the first scaffold, including `delivery-lead`.
+#### Skills
+
+- Shared: `power-platform-standards`, the house rules, the technology stack and how project facts are discovered and stored in `.agent-config/power-platform.json`, with a schema and an example.
+- Product analysis: `requirements-and-backlog`, `azure-boards` and `bdd-scenarios`.
+- Architecture: `architecture-review`, `power-platform-design` (including the ALM reference and a deprecated-components template) and `adr`.
+- Development: `dataverse-plugins`, `web-resources`, `customisation-xml`, `dataverse-schema`, `package-deployer`, `dotnet-build-verification` and `commit-and-pull-request`.
+- Quality: `test-foundations`, `acceptance-testing`, `integration-testing`, `scenario-builder`, `test-quality-review`, `test-impact-analysis` and `test-failure-triage`.
+
+#### Scripts
+
+PowerShell 7 and cross-platform. Every input is a parameter, each script has `-?` help, and each has Pester tests.
+
+- `dotnet-build-verification`: `Find-VerificationProject.ps1`, `New-WarningBaseline.ps1` and `Test-Change.ps1`. They discover the projects to build, take a warning baseline before the first C# edit, then gate a change on a rebuild, the warnings diff and the unit tests.
+- `dataverse-schema`: `Get-EntityFieldMetadata.ps1` and `Get-EntityPropertyClrType.ps1`, which report column constraints from the unpacked solution and the exact generated CLR types.
+- `bdd-scenarios`: `Build-StepIndex.ps1` and `Build-ScenarioIndex.ps1`, which index step bindings and scenarios so existing steps are reused.
+
+#### Code assets for reference
+
+Skills ship a small amount of code as `assets/`. CI doesn't build or test it, and it is expected to move to NuGet and npm packages with their own lifecycle.
+
+- `dataverse-plugins`: a handler-first dependency injection scaffold for plug-ins and custom workflow activities (the container, `PluginBase<THandler>`, `WorkflowActivityBase<THandler>`, execution services, logging, step constants and the `IsExternalInit` polyfill), entity helpers, test support and 137 unit tests that document its behaviour.
+- `web-resources`: the TypeScript toolchain (rollup IIFE bundles with namespaces derived from file names, Jest, ESLint, Prettier, an MSBuild wrapper and a bundle contract test).
+- `scenario-builder`: the `RecordFaker` base class for Bogus fakers.
+
+#### Plugin tooling
+
+- Plugin manifest and marketplace catalogue, with JSON schemas for both.
+- Authoring-rule lint (frontmatter, line budgets, in-plugin links and the model allow-list) and Pester tests under `tests/`, run by CI on Windows and Linux.

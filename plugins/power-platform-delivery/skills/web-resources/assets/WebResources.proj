@@ -2,18 +2,23 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 
   <PropertyGroup>
-    <NpmCommand Condition="'$(NpmCommand)' == '' and '$(OS)' == 'Windows_NT'">$(ProgramW6432)\nodejs\npm.cmd</NpmCommand>
+    <!-- Exec resolves npm (npm.cmd on Windows) from the PATH. Set NpmCommand to use another install. -->
     <NpmCommand Condition="'$(NpmCommand)' == ''">npm</NpmCommand>
     <NpmWorkingDirectory Condition="'$(NpmWorkingDirectory)' == ''">$(MSBuildThisFileDirectory)</NpmWorkingDirectory>
+    <NpmInstallVerb Condition="'$(NpmInstallVerb)' == '' and Exists('$(NpmWorkingDirectory)package-lock.json')">ci</NpmInstallVerb>
+    <NpmInstallVerb Condition="'$(NpmInstallVerb)' == ''">install</NpmInstallVerb>
   </PropertyGroup>
 
-  <Target Name="Build" DependsOnTargets="Restore">
+  <Target Name="Build" DependsOnTargets="NpmInstall">
     <Exec Command="&quot;$(NpmCommand)&quot; run build" WorkingDirectory="$(NpmWorkingDirectory)" />
   </Target>
 
-  <Target Name="Restore">
-    <Exec Command="&quot;$(NpmCommand)&quot; install" WorkingDirectory="$(NpmWorkingDirectory)" />
+  <!-- Not named Restore, so that "dotnet build" and "msbuild -restore" don't run it a second time. -->
+  <Target Name="NpmInstall">
+    <Exec Command="&quot;$(NpmCommand)&quot; $(NpmInstallVerb)" WorkingDirectory="$(NpmWorkingDirectory)" />
   </Target>
+
+  <Target Name="Restore" />
 
   <Target Name="GetProjectOutputPath" />
 

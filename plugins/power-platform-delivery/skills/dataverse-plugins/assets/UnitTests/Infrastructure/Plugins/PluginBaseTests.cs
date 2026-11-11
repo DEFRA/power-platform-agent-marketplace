@@ -134,6 +134,21 @@ namespace Abc.UnitTests.Infrastructure.Plugins
         }
 
         [TestMethod]
+        [DataRow("Starting handler")]
+        [DataRow("Completed handler")]
+        public void Execute_TracingFailsOnStartOrCompletion_DoesNotFailTheStep(string failingPrefix)
+        {
+            this.root.Register<RecordingHandler>();
+            this.runtime.Tracing.ThrowWhenMessageStartsWith(failingPrefix);
+            var plugin = new Adapter<RecordingHandler>(this.root);
+
+            Action execute = () => plugin.Execute(this.runtime.Provider.Object);
+
+            execute.Should().NotThrow();
+            this.runtime.OutputParameters[ServiceKey].Should().BeSameAs(this.runtime.Service.Object);
+        }
+
+        [TestMethod]
         public void Execute_PluginReusedAcrossInvocations_GivesEachInvocationItsOwnServices()
         {
             this.root.Register<RecordingHandler>();

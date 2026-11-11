@@ -92,13 +92,16 @@ function New-TestTrx {
 
         [string[]]$Failed = @(),
 
-        [int]$Skipped = 0
+        [int]$Skipped = 0,
+
+        [string[]]$Inconclusive = @()
     )
 
     $results = @(
         for ($i = 1; $i -le $Passed; $i++) { "<UnitTestResult testName=`"Passes$i`" outcome=`"Passed`" />" }
         foreach ($name in $Failed) { "<UnitTestResult testName=`"$name`" outcome=`"Failed`"><Output><ErrorInfo><Message>Expected True.`nSecond line.</Message></ErrorInfo></Output></UnitTestResult>" }
         for ($i = 1; $i -le $Skipped; $i++) { "<UnitTestResult testName=`"Skipped$i`" outcome=`"NotExecuted`" />" }
+        foreach ($name in $Inconclusive) { "<UnitTestResult testName=`"$name`" outcome=`"Inconclusive`" />" }
     )
 
     # Only the counters that every framework writes, to show that the error, timeout and aborted ones are optional.
@@ -109,7 +112,7 @@ function New-TestTrx {
     $($results -join "`n    ")
   </Results>
   <ResultSummary outcome="Completed">
-    <Counters total="$($Passed + $Failed.Count + $Skipped)" executed="$($Passed + $Failed.Count)" passed="$Passed" failed="$($Failed.Count)" />
+    <Counters total="$($Passed + $Failed.Count + $Skipped + $Inconclusive.Count)" executed="$($Passed + $Failed.Count + $Inconclusive.Count)" passed="$Passed" failed="$($Failed.Count)" />
   </ResultSummary>
 </TestRun>
 "@

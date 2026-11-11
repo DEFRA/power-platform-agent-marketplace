@@ -213,10 +213,11 @@ function Get-ProjectInfo {
 
     if ($configurations.Count -eq 0) {
         # Without <Configurations>, a project has Debug and Release, plus any configuration that a condition names,
-        # such as '$(Configuration)|$(Platform)' == 'Release|AnyCPU'.
+        # such as '$(Configuration)|$(Platform)' == 'Release|AnyCPU'. Only == declares one: a != condition
+        # excludes a configuration.
         $configurations.AddRange([string[]]@('Debug', 'Release'))
         foreach ($node in $xml.SelectNodes("//@*[local-name()='Condition']")) {
-            foreach ($match in [regex]::Matches($node.Value, "'\`$\(Configuration\)(?:\|\`$\(Platform\))?'\s*[!=]=\s*'(?<name>[^'|]+)")) {
+            foreach ($match in [regex]::Matches($node.Value, "'\`$\(Configuration\)(?:\|\`$\(Platform\))?'\s*==\s*'(?<name>[^'|]+)")) {
                 $configurations.Add($match.Groups['name'].Value)
             }
         }
@@ -465,27 +466,26 @@ function Read-TestResult {
     $namespaces.AddNamespace('t', 'http://microsoft.com/schemas/VisualStudio/TeamTest/2010')
     $counters = $trx.SelectSingleNode('//t:ResultSummary/t:Counters', $namespaces)
 
-    $failedTests = foreach ($result in $trx.SelectNodes('//t:Results/t:UnitTestResult[@outcome!="Passed" and @outcome!="NotExecuted"]', $namespaces)) {
-        $message = $result.SelectSingleNode('t:Output/t:ErrorInfo/t:Message', $namespaces)
-        [pscustomobject]@{
-            Name    = $result.GetAttribute('testName')
-            Message = if ($message) { ($message.InnerText.Trim() -split '\r?\n')[0] } else { '' }
-        }
-    }
-
-    $failed = 0
-    foreach ($counter in 'failed', 'error', 'timeout', 'aborted') {
-        $failed += [int]$counters.GetAttribute($counter)
-    }
+    $failedTests = @(foreach ($result in $trx.SelectNodes('//t:Results/t:UnitTestResult[@outcome!="Passed" and @outcome!="NotExecuted"]', $namespaces)) {
+            $message = $result.SelectSingleNode('t:Output/t:ErrorInfo/t:Message', $namespaces)
+            [pscustomobject]@{
+                Name    = $result.GetAttribute('testName')
+                Message = if ($message) { ($message.InnerText.Trim() -split '\r?\n')[0] } else { '' }
+            }
+        })
 
     # Some frameworks record skipped tests as NotExecuted results but leave the notExecuted counter at zero.
+    # Anything that ran and didn't pass counts as failed, whatever its outcome (failed, error, timeout, aborted,
+    # inconclusive and so on), so that the gate can't pass while FailedTests lists a test.
     $total = [int]$counters.GetAttribute('total')
+    $executed = [int]$counters.GetAttribute('executed')
+    $passed = [int]$counters.GetAttribute('passed')
     [pscustomobject]@{
         Total       = $total
-        Passed      = [int]$counters.GetAttribute('passed')
-        Failed      = $failed
-        Skipped     = $total - [int]$counters.GetAttribute('executed')
-        FailedTests = @($failedTests)
+        Passed      = $passed
+        Failed      = [Math]::Max($executed - $passed, $failedTests.Count)
+        Skipped     = $total - $executed
+        FailedTests = $failedTests
     }
 }
 

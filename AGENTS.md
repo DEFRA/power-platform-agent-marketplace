@@ -29,7 +29,7 @@ This repository is a GitHub Copilot plugin marketplace. It contains one plugin, 
 - **Scripts are PowerShell 7 and cross-platform.**
   - Every input is a parameter, with no project defaults.
   - Each script has `-?` help and Pester tests under `plugins/power-platform-delivery/tests/`, mirroring the skill's folder.
-- **Shipped code is minimal.** The plugin ships only the plug-in and workflow scaffold (`dataverse-plugins`), the TypeScript toolchain (`web-resources`) and `RecordFaker` (`scenario-builder`), as tested `assets/`. Don't add more shared code. Describe what a project's own implementation must do instead.
+- **Shipped code is minimal.** The plugin ships only the plug-in and workflow scaffold (`dataverse-plugins`), the TypeScript toolchain (`web-resources`) and `RecordFaker` (`scenario-builder`), as code `assets/` for reference. CI doesn't build or test them, and they are expected to move to NuGet and npm packages with their own lifecycle. Don't add more shared code. Describe what a project's own implementation must do instead.
 - **The test framework is a preference, not a requirement.** Defaults (MSTest, FluentAssertions below v8, Moq 4.20.2 or later) apply only when a project has no convention of its own. A project's existing framework wins.
 - **Agents don't run or edit pipelines, and low-code build stays with the human developer.** Skills describe what the human must change in the development environment. They don't automate it.
 

@@ -72,6 +72,37 @@ namespace Abc.UnitTests.Dataverse
         }
 
         [TestMethod]
+        public void Clone_Entity_CopiesFormattedValuesKeysRelatedEntitiesStateAndRowVersion()
+        {
+            var relationship = new Relationship("account_contacts");
+            var related = new EntityCollection();
+            var original = new Entity("account", this.id) { EntityState = EntityState.Changed, RowVersion = "42" };
+            original.FormattedValues["statuscode"] = "Active";
+            original.KeyAttributes["accountnumber"] = "A1";
+            original.RelatedEntities[relationship] = related;
+
+            var clone = original.Clone();
+
+            clone.FormattedValues["statuscode"].Should().Be("Active");
+            clone.KeyAttributes["accountnumber"].Should().Be("A1");
+            clone.RelatedEntities[relationship].Should().BeSameAs(related);
+            clone.EntityState.Should().Be(EntityState.Changed);
+            clone.RowVersion.Should().Be("42");
+        }
+
+        [TestMethod]
+        public void Clone_Entity_GivesTheCloneItsOwnFormattedValueCollection()
+        {
+            var original = new Entity("account", this.id);
+            original.FormattedValues["statuscode"] = "Active";
+
+            var clone = original.Clone();
+            clone.FormattedValues["extra"] = "Changed";
+
+            original.FormattedValues.ContainsKey("extra").Should().BeFalse();
+        }
+
+        [TestMethod]
         public void Clone_TypedEntityWithoutAnIdentifier_DoesNotAddAnIdentifierAttribute()
         {
             var original = new GeneratedCase { Name = "Name" };

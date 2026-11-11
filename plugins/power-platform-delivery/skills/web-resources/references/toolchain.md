@@ -4,7 +4,7 @@ The files in [assets/](../assets/) are the default toolchain. Versions are in [s
 
 ## Setting up
 
-Copy the assets into the web resource root the human agrees, and run `npm install` to create the lock file, which is committed. Then add the `WebResources.proj` to the solution's build so a normal build runs `npm run build`. It calls npm (with a Windows `npm.cmd` fallback) and its path is set by the project, not by this skill.
+Copy the assets into the web resource root the human agrees, and run `npm install` to create the lock file, which is committed. Then add the `WebResources.proj` to the solution's build so a normal build runs `npm run build`. It runs `npm ci` when the lock file exists (otherwise `npm install`), then `npm run build`. It finds npm on the PATH. A project that needs another install sets the `NpmCommand` property, not this skill.
 
 | Asset                                                 | Purpose                                                                                                                                                                                                                                   |
 | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -15,7 +15,7 @@ Copy the assets into the web resource root the human agrees, and run `npm instal
 | `.prettierrc.js`, `.prettierignore`                   | 100 columns, single quotes, ES5 trailing commas                                                                                                                                                                                           |
 | `src/global-types.ts`                                 | Imports the Xrm typings                                                                                                                                                                                                                   |
 | `tests/bundle.contract.test.ts`                       | Checks every script is built and exposes its namespace                                                                                                                                                                                    |
-| `WebResources.proj`                                   | MSBuild wrapper that restores and builds with npm                                                                                                                                                                                         |
+| `WebResources.proj`                                   | MSBuild wrapper that installs with npm and builds                                                                                                                                                                                         |
 
 ## Commands
 

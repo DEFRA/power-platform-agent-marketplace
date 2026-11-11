@@ -14,14 +14,14 @@ CopyFieldsToRelatedRecordPlugin        plug-in head: the registered class, with 
 
 ## What to copy
 
-The code ships as tested assets. Copy them rather than write your own.
+The code ships as assets for reference. CI doesn't build or test them, and they are expected to move to NuGet packages. Until then, copy them rather than write your own.
 
 | Asset                                                                                                                       | Copy into                                | What it is                                                                                     |
 | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | [Infrastructure/](../assets/Infrastructure/) and [IsExternalInit.cs](../assets/IsExternalInit.cs)                           | The Infrastructure shared project        | The container, base classes, handler contracts, identity providers, logging and step constants |
 | [Dataverse/](../assets/Dataverse/)                                                                                          | The Dataverse shared project             | `EntityExtensions` (`Clone` and `GetChanges`)                                                  |
 | [UnitTests/Support/](../assets/UnitTests/Support/)                                                                          | The unit test project's `Support` folder | The test base classes, simulated hosts and mock helpers                                        |
-| [UnitTests/Infrastructure/](../assets/UnitTests/Infrastructure/) and [UnitTests/Dataverse/](../assets/UnitTests/Dataverse/) | The unit test project                    | 126 tests that pin the behaviour described here                                                |
+| [UnitTests/Infrastructure/](../assets/UnitTests/Infrastructure/) and [UnitTests/Dataverse/](../assets/UnitTests/Dataverse/) | The unit test project                    | 137 tests that pin the behaviour described here                                                |
 
 - Replace the `Abc` root namespace with the project's, and keep the folders and namespaces below it. Change nothing else, because the tests pin the behaviour. A change to the infrastructure is a separate, reviewed change, never part of a feature.
 - In `SharedSourceAssemblyTests`, list a type from each shared project the solution has.

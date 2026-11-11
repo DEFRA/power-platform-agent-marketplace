@@ -66,32 +66,14 @@ namespace Abc.Infrastructure.Workflows
                 executionFailure = exception;
             }
 
-            if (scope != null)
+            var failure = ExecutionGuard.DisposeScope(scope, executionFailure, tracing, "Workflow handler {0} cleanup failed: {1}", typeof(THandler).FullName);
+            if (failure != null)
             {
-                try
-                {
-                    scope.Dispose();
-                }
-                catch (Exception cleanupFailure)
-                {
-                    if (executionFailure == null)
-                    {
-                        executionFailure = cleanupFailure;
-                    }
-                    else
-                    {
-                        TraceWithoutMasking(tracing, "Workflow handler {0} cleanup failed: {1}", typeof(THandler).FullName, cleanupFailure);
-                    }
-                }
+                ExecutionGuard.TraceWithoutMasking(tracing, "Workflow handler {0} failed: {1}", typeof(THandler).FullName, failure);
+                ExceptionDispatchInfo.Capture(failure).Throw();
             }
 
-            if (executionFailure != null)
-            {
-                TraceWithoutMasking(tracing, "Workflow handler {0} failed: {1}", typeof(THandler).FullName, executionFailure);
-                ExceptionDispatchInfo.Capture(executionFailure).Throw();
-            }
-
-            TraceWithoutMasking(tracing, "Completed workflow handler {0}.", typeof(THandler).FullName);
+            ExecutionGuard.TraceWithoutMasking(tracing, "Completed workflow handler {0}.", typeof(THandler).FullName);
         }
 
         private static TExtension GetRequiredExtension<TExtension>(CodeActivityContext context)
@@ -104,23 +86,6 @@ namespace Abc.Infrastructure.Workflows
             }
 
             return extension;
-        }
-
-        private static void TraceWithoutMasking(ITracingService tracing, string format, params object[] args)
-        {
-            if (tracing == null)
-            {
-                return;
-            }
-
-            try
-            {
-                tracing.Trace(format, args);
-            }
-            catch (Exception)
-            {
-                // Diagnostics must not replace an execution or cleanup failure.
-            }
         }
     }
 }

@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Authoring-rule checks for the power-platform-delivery plugin (docs/productionisation-plan.md, section 1.1).
+    Authoring-rule checks for the power-platform-delivery plugin (see docs/authoring-guide.md).
 
 .DESCRIPTION
     Dot-source this file to get the Test-* functions. Each returns an array of violation messages, which is
@@ -44,12 +44,12 @@ function Read-Frontmatter {
         Reads the YAML frontmatter and body size of a Markdown file.
     .DESCRIPTION
         Supports the subset of YAML that agent and skill files use: scalars, quoted scalars, flow lists
-        ([a, b]), block lists and folded or literal block scalars.
+        ([a, b]), block lists, maps of scalars (such as metadata) and folded or literal block scalars.
     .PARAMETER Path
         The Markdown file to read.
     .OUTPUTS
-        An object with Found, Error, Fields (ordered, key to string or string[]), Quoted (keys whose value
-        was quoted) and BodyLineCount (lines after the frontmatter, ignoring leading and trailing blanks).
+        An object with Found, Error, Fields (ordered, key to string, string[] or an ordered map), Quoted (keys
+        whose value was quoted or is a block scalar, so ': ' and ' #' are safe in it) and BodyLineCount (lines after the frontmatter, ignoring leading and trailing blanks).
     #>
     [CmdletBinding()]
     param(
@@ -85,7 +85,8 @@ function Read-Frontmatter {
             if ($line.Trim() -eq '' -or $line.TrimStart().StartsWith('#')) { $i++; continue }
 
             if ($line -notmatch '^([A-Za-z][\w-]*)\s*:\s*(.*)$') {
-                $result.Error = "Cannot parse frontmatter line $($i + 1): $line"
+                $problem = "Cannot parse frontmatter line $($i + 1): $line"
+                $result.Error = if ($result.Error) { "$($result.Error) $problem" } else { $problem }
                 $i++
                 continue
             }
@@ -102,14 +103,21 @@ function Read-Frontmatter {
                 }
                 $separator = if ($raw.StartsWith('>')) { ' ' } else { "`n" }
                 $result.Fields[$key] = ($parts -join $separator).Trim()
+                # A block scalar can contain ': ' and ' #' safely, as a quoted scalar can.
+                [void]$result.Quoted.Add($key)
             }
             elseif ($raw -eq '') {
+                # A block list (indented or not) or a map of scalars, such as the skill's metadata.
                 $items = [System.Collections.Generic.List[string]]::new()
-                while ($i -lt $end -and $lines[$i] -match '^\s+-\s+(.*)$') {
-                    $items.Add((ConvertFrom-YamlScalar $Matches[1]))
+                $map = [ordered]@{}
+                while ($i -lt $end) {
+                    $next = $lines[$i]
+                    if ($next -match '^\s*-\s+(.*)$') { $items.Add((ConvertFrom-YamlScalar $Matches[1])) }
+                    elseif ($next -match '^\s+([A-Za-z][\w-]*)\s*:\s*(.*)$') { $map[$Matches[1]] = ConvertFrom-YamlScalar $Matches[2] }
+                    elseif ($next.Trim() -ne '') { break }
                     $i++
                 }
-                $result.Fields[$key] = if ($items.Count -gt 0) { $items.ToArray() } else { '' }
+                $result.Fields[$key] = if ($items.Count -gt 0) { $items.ToArray() } elseif ($map.Count -gt 0) { $map } else { '' }
             }
             elseif ($raw.StartsWith('[') -and $raw.EndsWith(']')) {
                 $inner = $raw.Substring(1, $raw.Length - 2)

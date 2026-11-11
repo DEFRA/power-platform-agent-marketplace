@@ -176,6 +176,34 @@ Describe 'Read-TestResult' {
         $result.FailedTests.Name | Should -Be @('CreatesInspection', 'RejectsApplicant')
         $result.FailedTests[0].Message | Should -Be 'Expected True.'
     }
+
+    It 'counts an inconclusive test as failed, because it ran and did not pass' {
+        $trx = Join-Path $TestDrive 'inconclusive.trx'
+        [IO.File]::WriteAllText($trx, (New-TestTrx -Passed 2 -Inconclusive 'IsUnsure'))
+
+        $result = Read-TestResult -Path $trx
+
+        $result.Total | Should -Be 3
+        $result.Failed | Should -Be 1
+        $result.FailedTests.Name | Should -Be 'IsUnsure'
+    }
+}
+
+Describe 'Get-ProjectInfo' {
+    It 'takes configurations from == conditions and ignores != conditions' {
+        $project = Join-Path $TestDrive 'conditions.csproj'
+        @'
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging|AnyCPU'" />
+  <ItemGroup Condition="'$(Configuration)' != 'UnitTest'" />
+</Project>
+'@ | Set-Content -LiteralPath $project
+
+        $configurations = (Get-ProjectInfo -Path $project).Configurations
+
+        $configurations | Should -Contain 'Staging'
+        $configurations | Should -Not -Contain 'UnitTest'
+    }
 }
 
 Describe 'Remove-OldVerificationRun' {

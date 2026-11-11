@@ -51,7 +51,7 @@ The plugin assumes the ALM lifecycle of [power-pipelines](https://github.com/ewi
 
 ### Shipped code
 
-Skills ship a small amount of tested code as `assets/` for consumer repositories to copy:
+Skills ship a small amount of code as `assets/`, for reference. Consumer repositories can copy it, but CI doesn't build or test it, and it is expected to move to NuGet and npm packages with their own lifecycle:
 
 - `dataverse-plugins`: a handler-first dependency injection scaffold for plug-ins and custom workflow activities, with its infrastructure, entity helpers and unit test support.
 - `web-resources`: the TypeScript toolchain (rollup bundles, Jest, ESLint, Prettier and an MSBuild wrapper).
