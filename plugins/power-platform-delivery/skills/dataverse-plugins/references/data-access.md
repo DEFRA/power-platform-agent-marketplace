@@ -207,6 +207,18 @@ Prefer early-bound LINQ over `QueryExpression`, and `QueryExpression` over Fetch
 - The provider sends `RetrieveMultipleRequest` through `Execute`, not `RetrieveMultiple`. Test doubles must set up `Execute`, and must return generated types, not plain `Entity`.
 - The provider joins only related tables, and its outer-join support is unclear. Read an optional related record with a second query that runs only when the lookup has a value, as `GetCaseSummary` does. Use a `join` only where every row has the related record.
 
+- Document any paging or ordering assumption in the query's XML documentation, for example "only the first page is used".
+
+### Narrow input contexts
+
+When a service reads only a few attributes, pass it a small context rather than the whole typed entity. The service then needs no knowledge of the table, and its tests build the context directly.
+
+- The context is a `public sealed class` with one constructor and get-only properties, holding only what the service reads.
+- Project onto it with an extension method on the typed entity, such as `ToCreateInspectionContext()`. Put it in that table's own extensions class, never one class for several tables.
+- The projection copies values and doesn't check that they are present. A `Create` `Target` holds only the attributes supplied, so the rest must project as null.
+- When a service creates several records from one context, give each record its own `EntityReference` instance rather than sharing one.
+- Test every field mapping, that unsupplied attributes project as null, and that the source entity is unchanged.
+
 ## Writes
 
 - Write explicitly through `IOrganizationService`, so each write and its timing are visible and testable. Never add `SaveChanges()` on disposal, retries, transaction wrappers or deferred writes.

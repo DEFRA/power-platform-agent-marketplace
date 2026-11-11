@@ -51,6 +51,10 @@ Rules:
 
 Test each query class against a real context over a strict service mock, as [data-access.md](data-access.md#testing-data-access) shows. Cover the conditions, the columns read, the mapping to the result type, and the empty result.
 
+### Input contexts and projections
+
+Test each projection extension for every field mapping, that unsupplied attributes project as null, and that the source entity is unchanged (see [data-access.md](data-access.md#narrow-input-contexts)).
+
 ### Handlers
 
 Construct a plug-in handler directly, with a strict mock of its application service, `PluginRuntime.CreateExecution()` and a `PluginStepConfiguration`. Arrange the step on the `PluginRuntime` with `ForStep`, `WithTarget` and `WithPreImage` or `WithPostImage`. [plugin-example.md](plugin-example.md) shows the tests. Test:

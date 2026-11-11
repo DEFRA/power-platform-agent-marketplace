@@ -64,6 +64,36 @@ Describe 'Plugin links' {
     }
 }
 
+Describe 'Skill scripts' {
+    BeforeDiscovery {
+        $scriptFiles = @(Get-ChildItem (Join-Path (Split-Path -Parent $PSScriptRoot) 'skills/*/scripts/*') -File -ErrorAction SilentlyContinue |
+                Where-Object Extension -In '.ps1', '.psm1' |
+                ForEach-Object { @{ Skill = $_.Directory.Parent.Name; Name = $_.Name; Path = $_.FullName } })
+        $commandScripts = @($scriptFiles | Where-Object { $_.Name -like '*.ps1' })
+    }
+
+    It '<Skill>/<Name> requires PowerShell 7 and has help for every parameter' -ForEach $commandScripts {
+        $errors = $null
+        $ast = [Management.Automation.Language.Parser]::ParseFile($Path, [ref]$null, [ref]$errors)
+        $errors | Should -BeNullOrEmpty
+        $ast.ScriptRequirements.RequiredPSVersion | Should -BeGreaterOrEqual ([version]'7.0') -Because 'scripts start with #requires -Version 7.0'
+
+        $help = $ast.GetHelpContent()
+        $help.Synopsis | Should -Not -BeNullOrEmpty
+        $help.Description | Should -Not -BeNullOrEmpty
+        $help.Examples | Should -Not -BeNullOrEmpty
+        foreach ($parameter in @($ast.ParamBlock.Parameters)) {
+            $name = $parameter.Name.VariablePath.UserPath
+            $help.Parameters.Keys | Should -Contain $name.ToUpperInvariant() -Because "-$name needs a .PARAMETER entry"
+        }
+    }
+
+    It '<Skill>/<Name> has Pester tests' -ForEach $scriptFiles {
+        $testFile = Join-Path $PSScriptRoot "skills/$Skill/$([IO.Path]::GetFileNameWithoutExtension($Name)).Tests.ps1"
+        $testFile | Should -Exist -Because 'each script has a Pester test file at tests/skills/<skill>/<script>.Tests.ps1'
+    }
+}
+
 Describe 'Project configuration schema' {
     BeforeAll {
         $script:ConfigSchema = Join-Path $PluginRoot 'skills/power-platform-standards/assets/power-platform.schema.json'

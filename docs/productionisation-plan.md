@@ -246,7 +246,9 @@ public abstract class RecordFaker<TEntity> : Faker<TEntity>
 
 Record answers as decisions in §2.
 
-None at present. Add new questions here as `O<n>`.
+None unresolved except the one below. Add new questions here as `O<n>`.
+
+- **O2.** Resolved: the rewritten `csharp-source` and `unit-tests` instructions were supplied (read from the main checkout's `agents-export/instructions/`) and R2.9 is done. `dataverse-plugins` already covered nearly everything. The gaps (narrow input contexts and projections, paging notes, projection tests) were folded in. The rest of the two files is PIMS-specific.
 
 ---
 
@@ -284,14 +286,14 @@ Legend: `[ ]` not started · `[~]` in progress (add owner) · `[x]` done (add PR
 
 ### R2 — Developer
 - [x] **R2.1** (`feature/power-platform-delivery-plugin`; PR link to follow) `dataverse-plugins` (D18, D27), with the scaffold and C# polyfill assets (D12, D14), unit-test guidance (D13, D25) and the shared-project structure (D26). (Skill: `skills/dataverse-plugins/`. The scaffold assets include 126 tests. With the worked examples, all 203 tests pass on net48 with C# 13 in a scratch solution, and both heads build in Release with no warnings. `references/infrastructure.md` and `references/data-access.md` describe the scaffold, which replaces the earlier base-class sketch.)
-- [ ] **R2.2** `web-resources`, with the toolchain assets (D20, §4.1), explicit mock guidance (D19) and the bundle contract test.
-- [ ] **R2.3** `customisation-xml`.
-- [ ] **R2.4** `dataverse-schema`: make the lookup scripts parameterised and add `pac modelbuilder` (D6). The model lives in the Dataverse shared project (D26, D27), so discover its path rather than assume one.
-- [ ] **R2.5** `package-deployer`.
-- [ ] **R2.6** `dotnet-build-verification`, with scripts that discover projects and Pester tests. Start from the PIMS `refactor/plugin-implementation` version: build the heads in Release and the unit test project in the `UnitTest` configuration (D26), take a warning baseline before the first C# edit, and fail on any added warning. It normalises warnings to file, code and message, compares them as a multiset, and in the `UnitTest` build counts only the warnings attributed to the test project.
-- [ ] **R2.7** `commit-and-pull-request` (D7, D8).
-- [ ] **R2.8** The `developer` agent, and `developer-worker` with its model exception (D11, §5). Start from the PIMS `refactor/plugin-implementation` versions, which work within the scaffold (D27): take the warning baseline before the first C# edit, add no warnings and no unapproved suppressions, freeze behaviour when restructuring, and give the worker one bounded task per brief.
-- [ ] **R2.9** Check `dataverse-plugins` against the rewritten `csharp-source` and `unit-tests` instructions on the PIMS `refactor/plugin-implementation` branch, and fold in anything it lacks (D1, D27). R2.1 took the scaffold from ADR 0001 and the code, not from these instructions.
+- [x] **R2.2** (`claude/power-platform-delivery-r2-825118`; PR link to follow) (Done: `web-resources` (`skills/web-resources/`). The assets are the D20 toolchain at the `stack.md` baseline. A clean install, lint, format check, build and Jest run (including the bundle contract test and a worked handler with explicit mocks) pass on Node 26.) `web-resources`, with the toolchain assets (D20, §4.1), explicit mock guidance (D19) and the bundle contract test.
+- [x] **R2.3** (`claude/power-platform-delivery-r2-825118`; PR link to follow) (Done: `customisation-xml` (`skills/customisation-xml/`).) `customisation-xml`.
+- [x] **R2.4** (`claude/power-platform-delivery-r2-825118`; PR link to follow) (Done: `dataverse-schema` (`skills/dataverse-schema/`). `Get-EntityFieldMetadata.ps1` and `Get-EntityPropertyClrType.ps1` take the solution and model paths as parameters, with Pester tests. The skill documents `pac modelbuilder` (D6) and says to discover the model path.) `dataverse-schema`: make the lookup scripts parameterised and add `pac modelbuilder` (D6). The model lives in the Dataverse shared project (D26, D27), so discover its path rather than assume one.
+- [x] **R2.5** (`claude/power-platform-delivery-r2-825118`; PR link to follow) (Done: `package-deployer` (`skills/package-deployer/`).) `package-deployer`.
+- [x] **R2.6** (`claude/power-platform-delivery-r2-825118`; PR link to follow) `dotnet-build-verification`, with scripts that discover projects and Pester tests. Start from the PIMS `refactor/plugin-implementation` version: build the heads in Release and the unit test project in the `UnitTest` configuration (D26), take a warning baseline before the first C# edit, and fail on any added warning. It normalises warnings to file, code and message, compares them as a multiset, and in the `UnitTest` build counts only the warnings attributed to the test project.
+- [x] **R2.7** (`claude/power-platform-delivery-r2-825118`; PR link to follow) (Done: `commit-and-pull-request` (`skills/commit-and-pull-request/`).) `commit-and-pull-request` (D7, D8).
+- [x] **R2.8** (`claude/power-platform-delivery-r2-825118`; PR link to follow) (Done: `agents/developer.agent.md` and `agents/developer-worker.agent.md`. `allowedModels` in `tests/lint.config.json` now lists the worker's model and its fallback. R5.1 must still confirm behaviour when the model isn't available.) The `developer` agent, and `developer-worker` with its model exception (D11, §5). Start from the PIMS `refactor/plugin-implementation` versions, which work within the scaffold (D27): take the warning baseline before the first C# edit, add no warnings and no unapproved suppressions, freeze behaviour when restructuring, and give the worker one bounded task per brief.
+- [x] **R2.9** (`claude/power-platform-delivery-r2-825118`; PR link to follow) Check `dataverse-plugins` against the rewritten `csharp-source` and `unit-tests` instructions on the PIMS `refactor/plugin-implementation` branch, and fold in anything it lacks (D1, D27). R2.1 took the scaffold from ADR 0001 and the code, not from these instructions.
 
 ### R3 — Quality Engineer
 - [ ] **R3.1** `scenario-builder`, with the `RecordFaker` asset from §4 (D12).

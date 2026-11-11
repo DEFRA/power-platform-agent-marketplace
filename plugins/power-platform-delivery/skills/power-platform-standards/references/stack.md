@@ -44,6 +44,7 @@ Notes:
 - This is a known-good baseline: the versions were tested together (clean install, lint, build and tests) on a real Power Platform repository. A project that already uses other versions keeps them.
 - TypeScript 7 isn't supported by the rest of the toolchain yet: `typescript-eslint` supports TypeScript below 6.1 and `ts-jest` below 7.
 - The build needs Node.js 22.13 or later on the 22 line, 20.19 or later on the 20 line, or 24 or later (the minimums for ESLint 10). `@types/node` matches the major version of the Node.js LTS release the build uses.
+- The `web-resources` assets pin these versions, plus `glob` 11, `jest-junit` 17, `globals` 17 and `@types/node` 24. A clean install, lint, build and test run passes on Node 26.
 - There is no `@creedengo` ESLint plug-in and no TSLint.
 - Pin versions in `package.json`, committed with its lock file. Update the table here when the baseline moves.
 
