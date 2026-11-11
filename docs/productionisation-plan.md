@@ -301,11 +301,11 @@ Legend: `[ ]` not started · `[~]` in progress (add owner) · `[x]` done (add PR
 - [ ] **R3.5** The `quality-engineer` agent.
 
 ### R4 — Product Analyst and Solution Architect
-- [ ] **R4.1** `requirements-and-backlog`.
-- [ ] **R4.2** `azure-boards`, moving to the shared config file.
-- [ ] **R4.3** `bdd-scenarios`, with the index scripts parameterised.
-- [ ] **R4.4** `architecture-review`, `power-platform-design` (including `references/alm.md`, D17) and `adr`.
-- [ ] **R4.5** The `product-analyst` and `solution-architect` agents.
+- [x] **R4.1** (`agents/power-platform-delivery-plugin-setup-2b90d45a`; PR link to follow) `requirements-and-backlog`.
+- [x] **R4.2** (`agents/power-platform-delivery-plugin-setup-2b90d45a`; PR link to follow) `azure-boards`, moving to the shared config file.
+- [x] **R4.3** (`agents/power-platform-delivery-plugin-setup-2b90d45a`; PR link to follow) `bdd-scenarios`, with the index scripts parameterised. (`Build-StepIndex.ps1` and `Build-ScenarioIndex.ps1` take the folder to scan, write the index to a temporary file and have Pester tests under `tests/skills/bdd-scenarios/`.)
+- [x] **R4.4** (`agents/power-platform-delivery-plugin-setup-2b90d45a`; PR link to follow) `architecture-review`, `power-platform-design` (including `references/alm.md`, D17) and `adr`. (The project-facts reference gains an "Architecture records" row: the ADR folder, design documents and deprecation log, discovered from the repo.)
+- [x] **R4.5** (`agents/power-platform-delivery-plugin-setup-2b90d45a`; PR link to follow) The `product-analyst` and `solution-architect` agents.
 
 ### R5 — Prove and release
 - [ ] **R5.1** Build a neutral sample Power Platform repo (D15) to evaluate against, with scripted scenarios for each agent: "add a configurable plug-in", "edit a form", "write BDD for story X", "triage a failing test".

@@ -24,6 +24,7 @@ The plugin decides how work is done. The project supplies where things are and w
 | Repository host (whether `AB#` links apply) | Discover | `git remote get-url origin`: GitHub means `AB#` applies; Azure Repos means it doesn't |
 | Model-driven app names | Discover | `AppModule.xml` files |
 | Persona file for acceptance and integration tests | Discover | The `Persona` enum in the test projects' source |
+| Architecture records: ADRs, design documents and the deprecation log | Discover, then confirm | Find numbered Markdown files with a status line (often in an `adr` folder), the design documents beside them and the deprecation log. If there are none, propose a folder and confirm it |
 | Azure Boards organisation, project, area path, work item types | **Config** | Ask the user |
 | `pac modelbuilder` environment URL and settings path | **Ask each time** | Don't store them (see the `dataverse-schema` skill) |
 

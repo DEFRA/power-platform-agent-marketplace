@@ -1,0 +1,26 @@
+# ALM lifecycle
+
+Projects follow the [power-pipelines](https://github.com/ewingjm/power-pipelines) lifecycle. This describes the behaviour a design must fit, not how a project configures its pipelines.
+
+## Lifecycle
+
+| Stage | What happens | What it means for a design |
+| --- | --- | --- |
+| Work item environment | A development environment is created for one work item and one solution. Every other solution in the package is imported managed. The environment, and optionally a branch, are linked to the work item. | A work item changes one solution. Split work that spans solutions. |
+| Sync | The solution is exported and unpacked into the repository. Missing dependencies are split into separate files to reduce merge conflicts. | A change that isn't synced is lost when the environment is deleted. An unexpected missing dependency reveals a dependency on another solution, which the design must account for. |
+| Build | The package is built. Packing a solution maps in the pro-code build output, such as plug-in assemblies and web resources. | Assemblies and web resources reach other environments only inside the package, built from source. |
+| Pull request validation | The package is built and the changes analysed. Solution Checker runs if a solution changed. A fresh environment is created, the package is deployed and the tests run, then the change waits for manual validation. Stages are skipped when the solutions, package, web resources and assemblies they cover haven't changed. On GitHub, the work item is found from `AB#<id>` in the pull request title or description, the branch name or the commits. | The change must deploy unattended into an empty environment, and its tests must create their own data. |
+| Deploy | The managed package is deployed to each static environment, in the order their dependencies set. Environments without dependencies deploy in parallel, and the tests run after each deployment. Optional steps can run before and after. A package can depend on other packages. | Every environment receives the same package. Differences between environments go in environment variables, connection references and import configuration (see `package-deployer`). |
+| Versioning | GitVersion calculates the package version from the commit history, in mainline mode. PowerVersion sets the solution versions, separately from the pipeline. | Versions come from the commit history, so commit titles matter. |
+| Clean-up | The work item environment is deleted when the work item reaches a completed state. | Nothing of value may live only in an environment. |
+
+## Designing for the lifecycle
+
+Check that:
+
+- each component has one owning solution, and dependencies between solutions run one way;
+- a new solution is added to the package in dependency order;
+- values that differ between environments are environment variables, connection references or per-environment import configuration;
+- nothing relies on environment-specific IDs, or on records that exist only in some environments, because configuration data deploys with the package (see [non-breaking-change.md](non-breaking-change.md));
+- the tests run unattended against a fresh environment and create their own data (see `scenario-builder`);
+- recurring bulk-delete jobs are defined in source control and synced to environments by the pipeline, with the definition's version increased on each change, rather than created by hand.

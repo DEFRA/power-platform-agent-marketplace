@@ -11,6 +11,11 @@ All notable changes to the `power-platform-delivery` plugin are recorded here. T
 - `dataverse-plugins` skill for plug-ins and custom workflow activities (R2.1). It adopts the handler-first dependency injection scaffold (D27), shipped as tested assets: the infrastructure, the `IsExternalInit` polyfill, entity helpers, test support and 126 tests. It also covers data access, the shared-project and `UnitTest` configuration structure, and tested worked examples.
 - Schema and example for `.agent-config/power-platform.json` (R1.5).
 - Authoring-rule lint and Pester tests under `tests/` (R1.3).
+- `requirements-and-backlog` skill for discovery, backlog breakdown, acceptance criteria, readiness and prioritisation (R4.1).
+- `azure-boards` skill for reading and changing work items safely, configured from the shared project config (R4.2).
+- `bdd-scenarios` skill for deciding which acceptance criteria to automate and writing feature files, with the parameterised `Build-StepIndex.ps1` and `Build-ScenarioIndex.ps1` index scripts and their Pester tests (R4.3).
+- `architecture-review`, `power-platform-design` (including the ALM reference) and `adr` skills (R4.4). The project-facts reference gains a row for the architecture records.
+- `product-analyst` and `solution-architect` agents (R4.5).
 
 ### Removed
 
