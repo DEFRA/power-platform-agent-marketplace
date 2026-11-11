@@ -20,6 +20,12 @@ All notable changes to the `power-platform-delivery` plugin are recorded here. T
 - `bdd-scenarios` skill for deciding which acceptance criteria to automate and writing feature files, with the parameterised `Build-StepIndex.ps1` and `Build-ScenarioIndex.ps1` index scripts and their Pester tests (R4.3).
 - `architecture-review`, `power-platform-design` (including the ALM reference) and `adr` skills (R4.4). The project-facts reference gains a row for the architecture records.
 - `product-analyst` and `solution-architect` agents (R4.5).
+- `scenario-builder` skill for the shared test-data project: events, scenarios and fakers, with the `RecordFaker` asset (R3.1).
+- `test-foundations` skill for what acceptance and integration tests share: configuration, personas and pooled test users, the client factory, the run lifecycle with Reqnroll and MSTest hooks, and the common assertion, retry and logging conventions (R3.1, D28).
+- `acceptance-testing` skill for Reqnroll and Power Playwright automation, with the Reqnroll wiring, login and diagnostics guidance (R3.2).
+- `integration-testing` skill for tests of Dataverse and its boundaries below the UI (R3.3).
+- `test-quality-review`, `test-impact-analysis` and `test-failure-triage` skills (R3.4).
+- `quality-engineer` agent (R3.5). The project-facts reference gains a row for the test projects.
 
 ### Removed
 

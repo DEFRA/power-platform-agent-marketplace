@@ -17,6 +17,7 @@ The plugin decides how work is done. The project supplies where things are and w
 | --- | --- | --- |
 | Solutions, unique names, publisher prefix | Discover | Find `*.cdsproj`. Read `UniqueName` and the publisher's `CustomizationPrefix` from each solution's `Solution.xml` |
 | Plug-in, workflow, test and package projects | Discover, then confirm | Find `*.csproj` and `*.sln`. Classify by what each references (the Dataverse SDK for plug-ins and workflow activities, a test SDK for test projects, Package Deployer for packages) |
+| Acceptance, integration and shared test-data projects | Discover, then confirm | Find `*.csproj`. The acceptance project references Reqnroll and Power Playwright. The integration project references a test SDK and the Dataverse client. The shared test-data project references ScenarioBuilder and Bogus, and both test projects reference it |
 | Shared projects and the shared-code assembly | Discover, then confirm | Find `*.shproj` and the `*.projitems` each project imports. The shared-code assembly imports them all and is referenced in the `UnitTest` configuration |
 | Plug-in and workflow base classes | Discover, then confirm | Find classes that derive from `PluginBase<` or `WorkflowActivityBase<`, and the composition roots. Otherwise find the project's own `IPlugin` and `CodeActivity` base classes and logger |
 | Web resource root and JavaScript namespace | Discover, then confirm | Find `package.json` and the existing web resource source |
