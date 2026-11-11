@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Plugin manifest (plugin.json)",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "maxLength": 64 },
+    "description": { "type": "string", "minLength": 1, "maxLength": 1024 },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$" },
+    "author": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "email": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" }
+      },
+      "required": ["name"],
+      "additionalProperties": false
+    },
+    "homepage": { "type": "string", "format": "uri" },
+    "repository": { "type": "string", "format": "uri" },
+    "license": { "type": "string", "minLength": 1 },
+    "keywords": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "agents": { "type": "string", "minLength": 1 },
+    "skills": { "type": "string", "minLength": 1 }
+  },
+  "required": ["name", "description", "version", "author", "license", "agents", "skills"],
+  "additionalProperties": false
+}

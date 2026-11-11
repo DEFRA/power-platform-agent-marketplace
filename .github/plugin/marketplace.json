@@ -1,0 +1,17 @@
+{
+  "name": "power-platform-agent-marketplace",
+  "owner": {
+    "name": "Defra",
+    "url": "https://github.com/DEFRA/power-platform-agent-marketplace"
+  },
+  "metadata": {
+    "description": "Copilot agents and skills for Power Platform"
+  },
+  "plugins": [
+    {
+      "name": "power-platform-delivery",
+      "source": "./plugins/power-platform-delivery",
+      "description": "An agentic Power Platform delivery team for Defra: Product Analyst, Solution Architect, Developer and Quality Engineer, with the skills they share."
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "power-platform-standards/power-platform.schema.json",
+  "title": "Power Platform delivery project configuration",
+  "description": "Project facts the power-platform-delivery plugin can't discover from the repository. Stored at .agent-config/power-platform.json. Anything discoverable (solutions, projects, base branch and so on) must not be stored here.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Path or URI of the schema, for editor tooling.",
+      "minLength": 1
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Version of this schema the file was written against.",
+      "enum": ["1.0"]
+    },
+    "azureBoards": {
+      "type": "object",
+      "description": "Where work items are created and queried. Omit for a project that doesn't use Azure Boards.",
+      "properties": {
+        "organization": {
+          "type": "string",
+          "description": "Azure DevOps organisation URL (for example https://dev.azure.com/contoso) or organisation name.",
+          "minLength": 1
+        },
+        "project": {
+          "type": "string",
+          "description": "Azure DevOps project name.",
+          "minLength": 1
+        },
+        "areaPath": {
+          "type": "string",
+          "description": "Area path applied to new work items unless a more specific path is given.",
+          "minLength": 1
+        },
+        "workItemTypes": {
+          "type": "object",
+          "description": "Maps the plugin's work item roles to the process template's work item type names.",
+          "properties": {
+            "epic": { "type": "string", "minLength": 1 },
+            "feature": { "type": "string", "minLength": 1 },
+            "story": { "type": "string", "minLength": 1 },
+            "task": { "type": "string", "minLength": 1 }
+          },
+          "required": ["epic", "feature", "story", "task"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["organization", "project", "workItemTypes"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["schemaVersion"],
+  "additionalProperties": false
+}
