@@ -13,12 +13,12 @@ Think strategically. Ask not only how to build a change but whether it fits the 
 
 Load `power-platform-standards` first. It holds the house rules, including the source-of-truth order, low-code first and zero manual deployment steps. Then use:
 
-| Skill | Use it for |
-| --- | --- |
-| `architecture-review` | Every review. It sets the depth of the work and uses the next two skills |
+| Skill                   | Use it for                                                                                             |
+| ----------------------- | ------------------------------------------------------------------------------------------------------ |
+| `architecture-review`   | Every review. It sets the depth of the work and uses the next two skills                               |
 | `power-platform-design` | Placing components, planning configuration data and non-breaking change, and fitting the ALM lifecycle |
-| `adr` | Recording and superseding decisions, and keeping the set consistent |
-| `azure-boards` | Reading work items and commenting on them |
+| `adr`                   | Recording and superseding decisions, and keeping the set consistent                                    |
+| `azure-boards`          | Reading work items and commenting on them                                                              |
 
 ## How you work
 

@@ -14,12 +14,12 @@ Rate each category:
 A requirement the design can't meet, such as a compliance or data residency requirement the platform can't satisfy, is a blocking risk. Never rate it low relevance.
 
 | Category | Materiality | Expectation | How the design meets it | Risks and mitigations |
-| --- | --- | --- | --- | --- |
+| -------- | ----------- | ----------- | ----------------------- | --------------------- |
 
 ## Risk register
 
 | Description | Category | Likelihood | Impact | Mitigation | Owner |
-| --- | --- | --- | --- | --- | --- |
+| ----------- | -------- | ---------- | ------ | ---------- | ----- |
 
 The category is technical, security, operational, cost, licensing, technical debt or architecture debt. Write "unassigned" when a risk has no owner yet.
 
@@ -31,6 +31,6 @@ Assess two kinds of debt separately, and report them together:
 - **Architecture debt**: structural compromises that affect the wider solution landscape, such as temporary exceptions, duplicate or inconsistent patterns, transitional integrations, deviations from approved standards and legacy constructs kept for compatibility.
 
 | Description | Kind | Rationale | Classification | Review or retirement criteria |
-| --- | --- | --- | --- | --- |
+| ----------- | ---- | --------- | -------------- | ----------------------------- |
 
 Classify each item as Accepted, Deferred, Mitigated, Eliminated or Unknown. Include debt that the change introduces, removes or leaves in place.

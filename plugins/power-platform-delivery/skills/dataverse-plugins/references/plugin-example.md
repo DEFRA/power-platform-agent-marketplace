@@ -6,11 +6,11 @@ The code is taken unchanged from a solution with the structure in [project-struc
 
 ## Order of work
 
-| Step | Layer | What it adds |
-| --- | --- | --- |
-| 1. Settings | Application | `CopyFieldsSettings` reads and validates the configuration in one place |
-| 2. Application service | Application | `RelatedRecordFieldCopier` holds the rule, and knows nothing of plug-ins |
-| 3. Handler | Plug-in head | `CopyFieldsToRelatedRecordHandler` checks the step and calls the service |
+| Step                        | Layer        | What it adds                                                                |
+| --------------------------- | ------------ | --------------------------------------------------------------------------- |
+| 1. Settings                 | Application  | `CopyFieldsSettings` reads and validates the configuration in one place     |
+| 2. Application service      | Application  | `RelatedRecordFieldCopier` holds the rule, and knows nothing of plug-ins    |
+| 3. Handler                  | Plug-in head | `CopyFieldsToRelatedRecordHandler` checks the step and calls the service    |
 | 4. Plug-in and registration | Plug-in head | `CopyFieldsToRelatedRecordPlugin`, and both classes in the composition root |
 
 Run each test and confirm it fails for the right reason before writing its code.
@@ -802,13 +802,13 @@ namespace Abc.Plugins.FieldCopying
 
 Register one step against the plug-in assembly in the development environment:
 
-| Item | Value |
-| --- | --- |
-| Plug-in type | `Abc.Plugins.FieldCopying.CopyFieldsToRelatedRecordPlugin` |
-| Message and table | `Update` on `abc_inspection` |
-| Stage and mode | Post-operation, synchronous |
-| Filtering attributes | `abc_outcome` |
-| Image | A post-image named `PostImage`, with `abc_caseid` |
+| Item                   | Value                                                                                |
+| ---------------------- | ------------------------------------------------------------------------------------ |
+| Plug-in type           | `Abc.Plugins.FieldCopying.CopyFieldsToRelatedRecordPlugin`                           |
+| Message and table      | `Update` on `abc_inspection`                                                         |
+| Stage and mode         | Post-operation, synchronous                                                          |
+| Filtering attributes   | `abc_outcome`                                                                        |
+| Image                  | A post-image named `PostImage`, with `abc_caseid`                                    |
 | Unsecure configuration | `{"lookup":"abc_caseid","mappings":[{"from":"abc_outcome","to":"abc_lastoutcome"}]}` |
 
 To copy the outcome when an inspection is created as well, register a `Create` step with the same configuration. It needs no image. A second use is another step with its own configuration. The plug-in doesn't change.

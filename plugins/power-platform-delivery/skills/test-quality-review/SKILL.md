@@ -13,21 +13,21 @@ The standards to review against are in [common-conventions.md](../test-foundatio
 
 For each, look for the indicator and recommend the paired fix.
 
-| Dimension | Indicator | Fix |
-| --- | --- | --- |
-| Duplication | Near-identical steps, fixtures, events, fakers or helpers | One reusable, parameterised version |
-| Determinism | Fixed delays, ordering between tests, time or random data that isn't controlled | A bounded retry on the condition, and independent tests |
-| Isolation | A shared user, record or client. Reliance on leftover data. Roles assigned in a test | A user from the pool and data from builders, per test |
-| Portability | Hard-coded URLs, IDs, user names or app names | Configuration, builder outputs or seed data |
-| Setup | Direct client calls where a builder event exists. Setup inline in UI steps | Extend or add a builder event |
-| Persona | An administrator or the application user where a persona fits. More privilege than needed | The least privileged persona that meets the precondition |
-| Separation of concerns | Business rules coded in automation | Raise with `product-analyst`. Automation asserts behaviour |
-| Scenario integrity | A feature file edited to fit an implementation defect | Escalate. Don't accept the workaround |
-| Production boundary | Production code changed in a test-authoring task | Escalate to `developer` |
-| Assertions | Not FluentAssertions. Ungrouped assertions. Assertion exceptions in setup. No `because` | See [common-conventions.md](../test-foundations/references/common-conventions.md) |
-| Diagnostics | A null logger. Unlogged requests. Failures that don't say what or which record | Log requests with identifying values. Domain-language errors |
-| Naming and structure | Names and layout that differ across the suite | Align with the existing convention |
-| Run cost | A scenario or test that is slow for what it proves, or a cosmetic check run as a deployment gate | A cheaper layer: a unit or integration test, or a manual check (see `bdd-scenarios`) |
+| Dimension              | Indicator                                                                                        | Fix                                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| Duplication            | Near-identical steps, fixtures, events, fakers or helpers                                        | One reusable, parameterised version                                                  |
+| Determinism            | Fixed delays, ordering between tests, time or random data that isn't controlled                  | A bounded retry on the condition, and independent tests                              |
+| Isolation              | A shared user, record or client. Reliance on leftover data. Roles assigned in a test             | A user from the pool and data from builders, per test                                |
+| Portability            | Hard-coded URLs, IDs, user names or app names                                                    | Configuration, builder outputs or seed data                                          |
+| Setup                  | Direct client calls where a builder event exists. Setup inline in UI steps                       | Extend or add a builder event                                                        |
+| Persona                | An administrator or the application user where a persona fits. More privilege than needed        | The least privileged persona that meets the precondition                             |
+| Separation of concerns | Business rules coded in automation                                                               | Raise with `product-analyst`. Automation asserts behaviour                           |
+| Scenario integrity     | A feature file edited to fit an implementation defect                                            | Escalate. Don't accept the workaround                                                |
+| Production boundary    | Production code changed in a test-authoring task                                                 | Escalate to `developer`                                                              |
+| Assertions             | Not FluentAssertions. Ungrouped assertions. Assertion exceptions in setup. No `because`          | See [common-conventions.md](../test-foundations/references/common-conventions.md)    |
+| Diagnostics            | A null logger. Unlogged requests. Failures that don't say what or which record                   | Log requests with identifying values. Domain-language errors                         |
+| Naming and structure   | Names and layout that differ across the suite                                                    | Align with the existing convention                                                   |
+| Run cost               | A scenario or test that is slow for what it proves, or a cosmetic check run as a deployment gate | A cheaper layer: a unit or integration test, or a manual check (see `bdd-scenarios`) |
 
 ## Procedure
 

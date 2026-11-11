@@ -27,12 +27,12 @@ Applies to plug-ins, custom workflow activities (CWAs) and the code they call. W
 
 Anything that varies by table, column, key, threshold, message or environment is configuration, not code. Hard-code only what is structural.
 
-| Mechanism | Use it for |
-| --- | --- |
-| Step unsecure configuration | Per-step settings, visible to anyone who can read the step |
-| Step secure configuration | Secrets only. Never log it |
-| CWA inputs | Anything a maker should change per process (see [workflow-activity-contract.md](workflow-activity-contract.md)) |
-| Data | Reference or seed data the logic reads. Query it through a query class or the context (see [data-access.md](data-access.md)) |
+| Mechanism                   | Use it for                                                                                                                   |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Step unsecure configuration | Per-step settings, visible to anyone who can read the step                                                                   |
+| Step secure configuration   | Secrets only. Never log it                                                                                                   |
+| CWA inputs                  | Anything a maker should change per process (see [workflow-activity-contract.md](workflow-activity-contract.md))              |
+| Data                        | Reference or seed data the logic reads. Query it through a query class or the context (see [data-access.md](data-access.md)) |
 
 - Parse step configuration with `DataContractJsonSerializer` into a `[DataContract]` class. It is part of .NET Framework, so it adds no dependency to the assembly. The handler takes `PluginStepConfiguration` and passes its `Unsecure` string to the parser.
 - **Parse and validate in one place** (a static `Parse` method on the settings class). Fail with a clear message that says what to supply, and write nothing. Cover it with tests.

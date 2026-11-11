@@ -8,12 +8,12 @@ The code usually lives in the shared test-data project. How a test gets a client
 
 A persona is a named actor, such as `Applicant` or `Inspector`, defined by:
 
-| Setting | Meaning |
-| --- | --- |
-| Aliases | The names Gherkin uses ("an inspector"), so feature files never name a user or role. Not needed by tests that don't use Gherkin |
-| Roles, business unit, teams, column security profiles | What a user must have to act as the persona |
-| Static users (optional) | Users that permanently carry the persona |
-| Application ID (optional) | For a persona that is a service identity (an application user) rather than a person |
+| Setting                                               | Meaning                                                                                                                         |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Aliases                                               | The names Gherkin uses ("an inspector"), so feature files never name a user or role. Not needed by tests that don't use Gherkin |
+| Roles, business unit, teams, column security profiles | What a user must have to act as the persona                                                                                     |
+| Static users (optional)                               | Users that permanently carry the persona                                                                                        |
+| Application ID (optional)                             | For a persona that is a service identity (an application user) rather than a person                                             |
 
 - The persona list is an enum in the shared test-data project. The definitions live in non-secret configuration, such as `environment.json`, checked in.
 - Roles and teams come from the solution. The persona names them, and never invents a role.

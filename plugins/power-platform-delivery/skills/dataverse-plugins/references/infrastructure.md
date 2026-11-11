@@ -16,12 +16,12 @@ CopyFieldsToRelatedRecordPlugin        plug-in head: the registered class, with 
 
 The code ships as tested assets. Copy them rather than write your own.
 
-| Asset | Copy into | What it is |
-| --- | --- | --- |
-| [Infrastructure/](../assets/Infrastructure/) and [IsExternalInit.cs](../assets/IsExternalInit.cs) | The Infrastructure shared project | The container, base classes, handler contracts, identity providers, logging and step constants |
-| [Dataverse/](../assets/Dataverse/) | The Dataverse shared project | `EntityExtensions` (`Clone` and `GetChanges`) |
-| [UnitTests/Support/](../assets/UnitTests/Support/) | The unit test project's `Support` folder | The test base classes, simulated hosts and mock helpers |
-| [UnitTests/Infrastructure/](../assets/UnitTests/Infrastructure/) and [UnitTests/Dataverse/](../assets/UnitTests/Dataverse/) | The unit test project | 126 tests that pin the behaviour described here |
+| Asset                                                                                                                       | Copy into                                | What it is                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [Infrastructure/](../assets/Infrastructure/) and [IsExternalInit.cs](../assets/IsExternalInit.cs)                           | The Infrastructure shared project        | The container, base classes, handler contracts, identity providers, logging and step constants |
+| [Dataverse/](../assets/Dataverse/)                                                                                          | The Dataverse shared project             | `EntityExtensions` (`Clone` and `GetChanges`)                                                  |
+| [UnitTests/Support/](../assets/UnitTests/Support/)                                                                          | The unit test project's `Support` folder | The test base classes, simulated hosts and mock helpers                                        |
+| [UnitTests/Infrastructure/](../assets/UnitTests/Infrastructure/) and [UnitTests/Dataverse/](../assets/UnitTests/Dataverse/) | The unit test project                    | 126 tests that pin the behaviour described here                                                |
 
 - Replace the `Abc` root namespace with the project's, and keep the folders and namespaces below it. Change nothing else, because the tests pin the behaviour. A change to the infrastructure is a separate, reviewed change, never part of a feature.
 - In `SharedSourceAssemblyTests`, list a type from each shared project the solution has.
@@ -37,26 +37,26 @@ Dataverse creates an entry point once and may call it concurrently, so nothing a
 4. Calls the handler's `Execute()`.
 5. Disposes the scope, which disposes what it built, newest first.
 
-| Constructors can take | Plug-in | CWA |
-| --- | --- | --- |
-| `IOrganizationService`, running as the executing user | Yes | Yes |
-| `ITracingService` and `IOrganizationServiceFactory` | Yes | Yes |
-| `IExecutionServiceProvider` (see [Identity](#identity)) | Yes | Yes |
-| `IPluginExecutionContext`, and `IPluginExecution` (its `Context`, `Service` and `Tracing`) | Yes | No |
-| `PluginStepConfiguration` (`Unsecure` and `Secure`) | Yes | No |
-| `ILogger` (Application Insights) | Only when Dataverse supplies it | No |
-| `CodeActivityContext` and `IWorkflowContext` | No | Yes |
-| The activity, as its concrete type | No | Yes |
-| Anything registered in the composition root | Yes | Yes |
+| Constructors can take                                                                      | Plug-in                         | CWA |
+| ------------------------------------------------------------------------------------------ | ------------------------------- | --- |
+| `IOrganizationService`, running as the executing user                                      | Yes                             | Yes |
+| `ITracingService` and `IOrganizationServiceFactory`                                        | Yes                             | Yes |
+| `IExecutionServiceProvider` (see [Identity](#identity))                                    | Yes                             | Yes |
+| `IPluginExecutionContext`, and `IPluginExecution` (its `Context`, `Service` and `Tracing`) | Yes                             | No  |
+| `PluginStepConfiguration` (`Unsecure` and `Secure`)                                        | Yes                             | No  |
+| `ILogger` (Application Insights)                                                           | Only when Dataverse supplies it | No  |
+| `CodeActivityContext` and `IWorkflowContext`                                               | No                              | Yes |
+| The activity, as its concrete type                                                         | No                              | Yes |
+| Anything registered in the composition root                                                | Yes                             | Yes |
 
 ### Failures
 
-| | Plug-in (`PluginBase<THandler>`) | CWA (`WorkflowActivityBase<THandler>`) |
-| --- | --- | --- |
-| Traces | The handler's start, completion and failure | The handler's completion and failure |
-| `InvalidPluginExecutionException` | Rethrown unchanged | Rethrown unchanged |
-| Any other exception | Wrapped in `InvalidPluginExecutionException` ("The plug-in could not complete. See the plug-in trace log for details."), with the cause as its inner exception | Rethrown unchanged |
-| A host service is missing | `InvalidOperationException`, wrapped, before the handler runs | `InvalidOperationException`, before the handler runs |
+|                                   | Plug-in (`PluginBase<THandler>`)                                                                                                                               | CWA (`WorkflowActivityBase<THandler>`)               |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Traces                            | The handler's start, completion and failure                                                                                                                    | The handler's completion and failure                 |
+| `InvalidPluginExecutionException` | Rethrown unchanged                                                                                                                                             | Rethrown unchanged                                   |
+| Any other exception               | Wrapped in `InvalidPluginExecutionException` ("The plug-in could not complete. See the plug-in trace log for details."), with the cause as its inner exception | Rethrown unchanged                                   |
+| A host service is missing         | `InvalidOperationException`, wrapped, before the handler runs                                                                                                  | `InvalidOperationException`, before the handler runs |
 
 - Throw `InvalidPluginExecutionException` for a failure the user should see, with a message that says what to do. Throw anything else for a fault, and the trace log holds the detail.
 - An execution failure always wins. Cleanup is still attempted, and a cleanup failure is traced without replacing the execution failure. If execution succeeded, a cleanup failure fails the invocation. Several cleanup failures aggregate into an `AggregateException`. A failure while tracing never replaces either.
@@ -129,11 +129,11 @@ Entry points pass their head's root to the base class:
 
 ## Identity
 
-| Ask for | Plug-in | CWA |
-| --- | --- | --- |
-| `IOrganizationService`, `GetExecutingUserService()` or `CreateForExecutingUser()` | The user the step runs as (`UserId`) | The user the process runs as (`UserId`) |
-| `GetInitiatingUserService()` or `CreateForInitiatingUser()` | The user who started the operation (`InitiatingUserId`) | That user only when it's also the executing user, otherwise `NotSupportedException` |
-| `GetSystemService()` or `CreateForSystem()` | SYSTEM | Always `NotSupportedException` |
+| Ask for                                                                           | Plug-in                                                 | CWA                                                                                 |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `IOrganizationService`, `GetExecutingUserService()` or `CreateForExecutingUser()` | The user the step runs as (`UserId`)                    | The user the process runs as (`UserId`)                                             |
+| `GetInitiatingUserService()` or `CreateForInitiatingUser()`                       | The user who started the operation (`InitiatingUserId`) | That user only when it's also the executing user, otherwise `NotSupportedException` |
+| `GetSystemService()` or `CreateForSystem()`                                       | SYSTEM                                                  | Always `NotSupportedException`                                                      |
 
 - An unqualified `IOrganizationService` or context means the executing user. Never rebind or replace it.
 - A component that needs another identity takes `IExecutionServiceProvider` or the context factory and asks for that identity by name. SYSTEM needs a reviewed reason recorded in the design. Never retry an access-denied call as another user.

@@ -13,13 +13,13 @@ Intended for `quality-engineer` and `developer`, but usable by anyone. Load `pow
 
 All three assume what is here: a configured environment, a user for each persona and a client for each user. Tests run unattended against a freshly deployed environment (see [alm.md](../power-platform-design/references/alm.md)), so every test gets its own users, clients and data and leaves nothing behind.
 
-| Reference | Load it when |
-| --- | --- |
-| [users-and-personas.md](references/users-and-personas.md) | Defining a persona, or touching the user pool: leases, static and pooled users, verification, extensions |
-| [clients.md](references/clients.md) | Getting a Dataverse client for a persona or user, or deciding who disposes it |
-| [configuration.md](references/configuration.md) | Reading environment settings, personas or credentials, and keeping secrets out of the repository |
-| [run-lifecycle.md](references/run-lifecycle.md) | Setting up or releasing shared resources: run and test start-up and teardown, parallelism, framework hooks |
-| [common-conventions.md](references/common-conventions.md) | Writing any test code: assertions, defensive coding, waits and retries, logging |
+| Reference                                                 | Load it when                                                                                               |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [users-and-personas.md](references/users-and-personas.md) | Defining a persona, or touching the user pool: leases, static and pooled users, verification, extensions   |
+| [clients.md](references/clients.md)                       | Getting a Dataverse client for a persona or user, or deciding who disposes it                              |
+| [configuration.md](references/configuration.md)           | Reading environment settings, personas or credentials, and keeping secrets out of the repository           |
+| [run-lifecycle.md](references/run-lifecycle.md)           | Setting up or releasing shared resources: run and test start-up and teardown, parallelism, framework hooks |
+| [common-conventions.md](references/common-conventions.md) | Writing any test code: assertions, defensive coding, waits and retries, logging                            |
 
 ## Project's own implementation first
 

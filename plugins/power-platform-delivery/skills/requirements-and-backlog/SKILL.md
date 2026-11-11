@@ -7,11 +7,11 @@ description: Turns a business need into an implementation-ready backlog. Runs di
 
 Intended for `product-analyst`, but usable by anyone. Load `power-platform-standards` first. Read and write work items with `azure-boards`. Turn acceptance criteria into scenarios with `bdd-scenarios`.
 
-| Reference | Load it when |
-| --- | --- |
+| Reference                               | Load it when                                                                                               |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | [discovery.md](references/discovery.md) | Exploring a new or unclear need: the questions to ask, the non-functional prompts and the discovery output |
-| [backlog.md](references/backlog.md) | Breaking work into epics, features and stories, splitting a story or writing acceptance criteria |
-| [readiness.md](references/readiness.md) | Checking a story against INVEST and the readiness checklist, or prioritising and sequencing |
+| [backlog.md](references/backlog.md)     | Breaking work into epics, features and stories, splitting a story or writing acceptance criteria           |
+| [readiness.md](references/readiness.md) | Checking a story against INVEST and the readiness checklist, or prioritising and sequencing                |
 
 ## Principles
 

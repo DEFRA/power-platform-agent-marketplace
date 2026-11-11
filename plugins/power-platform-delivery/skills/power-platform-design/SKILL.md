@@ -7,12 +7,12 @@ description: Places a change on the Power Platform and fits it to the ALM lifecy
 
 Intended for `solution-architect`, but usable by anyone. Load `power-platform-standards` first: its low-code, future-proofing and ALM rules apply throughout and aren't repeated here. `architecture-review` uses this skill for the Power Platform part of a review.
 
-| Reference | Load it when |
-| --- | --- |
-| [design-guidance.md](references/design-guidance.md) | Deciding what to consider in each platform area the change touches |
-| [alm.md](references/alm.md) | Checking how the change moves through the power-pipelines lifecycle and what the design must do to fit it |
+| Reference                                                   | Load it when                                                                                               |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [design-guidance.md](references/design-guidance.md)         | Deciding what to consider in each platform area the change touches                                         |
+| [alm.md](references/alm.md)                                 | Checking how the change moves through the power-pipelines lifecycle and what the design must do to fit it  |
 | [non-breaking-change.md](references/non-breaking-change.md) | Adding configuration or reference data, or changing or retiring a component that something else depends on |
-| [deprecated-components.md](assets/deprecated-components.md) | Starting a deprecation log for a project that doesn't have one |
+| [deprecated-components.md](assets/deprecated-components.md) | Starting a deprecation log for a project that doesn't have one                                             |
 
 ## Placement principles
 

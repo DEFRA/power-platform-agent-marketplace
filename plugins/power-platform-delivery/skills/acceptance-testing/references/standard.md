@@ -32,11 +32,11 @@ Register shared services in the container hooks, in one place (see [runtime.md](
 
 ## Choosing the approach
 
-| | Pattern |
-| --- | --- |
-| **Preferred** | ScenarioBuilder for all data setup. Power Playwright abstractions for all UI work. FluentAssertions, in an `AssertionScope` where related. Plain domain-language exceptions in `Given` and `When`. Entity-centred, table-driven steps. A real logger for builders, with each setup call logged. Registrations in the hooks. Transformations for recurring conversions |
-| **Acceptable** | Direct client calls, through the client factory, for one-off reference or lookup data with no event yet. A bounded retry around an eventually consistent condition |
-| **Discouraged** | Raw Playwright locators or script evaluation where Power Playwright has an abstraction. `Task.Delay` as a wait. Assertion-library exceptions in `Given` or `When`. A null logger. Registrations scattered across step classes |
+|                 | Pattern                                                                                                                                                                                                                                                                                                                                                               |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Preferred**   | ScenarioBuilder for all data setup. Power Playwright abstractions for all UI work. FluentAssertions, in an `AssertionScope` where related. Plain domain-language exceptions in `Given` and `When`. Entity-centred, table-driven steps. A real logger for builders, with each setup call logged. Registrations in the hooks. Transformations for recurring conversions |
+| **Acceptable**  | Direct client calls, through the client factory, for one-off reference or lookup data with no event yet. A bounded retry around an eventually consistent condition                                                                                                                                                                                                    |
+| **Discouraged** | Raw Playwright locators or script evaluation where Power Playwright has an abstraction. `Task.Delay` as a wait. Assertion-library exceptions in `Given` or `When`. A null logger. Registrations scattered across step classes                                                                                                                                         |
 
 [anti-patterns.md](anti-patterns.md) gives the reasons and the alternatives.
 

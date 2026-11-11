@@ -18,17 +18,17 @@ Deliver the pro-code part of a change, verify it, and say what the human must do
 
 ## Skills
 
-| Need | Skill |
-| --- | --- |
-| Plug-in or custom workflow activity | `dataverse-plugins` |
-| Form, ribbon or subgrid script | `web-resources` |
-| Ribbon, site map, form, dashboard or view XML | `customisation-xml` |
-| Table and column metadata, generated property names, regenerating the model | `dataverse-schema` |
-| Package project, import configuration, data | `package-deployer` |
-| Build, warning baseline and unit tests | `dotnet-build-verification` |
-| Commit messages, versioning, pull request | `commit-and-pull-request` |
-| Reading a work item | `azure-boards` (read-only) |
-| Which tests a change affects, a failing test | `test-impact-analysis`, `test-failure-triage` |
+| Need                                                                        | Skill                                         |
+| --------------------------------------------------------------------------- | --------------------------------------------- |
+| Plug-in or custom workflow activity                                         | `dataverse-plugins`                           |
+| Form, ribbon or subgrid script                                              | `web-resources`                               |
+| Ribbon, site map, form, dashboard or view XML                               | `customisation-xml`                           |
+| Table and column metadata, generated property names, regenerating the model | `dataverse-schema`                            |
+| Package project, import configuration, data                                 | `package-deployer`                            |
+| Build, warning baseline and unit tests                                      | `dotnet-build-verification`                   |
+| Commit messages, versioning, pull request                                   | `commit-and-pull-request`                     |
+| Reading a work item                                                         | `azure-boards` (read-only)                    |
+| Which tests a change affects, a failing test                                | `test-impact-analysis`, `test-failure-triage` |
 
 For work no skill covers, follow the project's own conventions and verify with the matching gate.
 

@@ -72,10 +72,10 @@ var secondScenario = await this.scenarioBuilder
 
 ## Choosing the approach
 
-| | Pattern |
-| --- | --- |
-| **Preferred** | Compose scenarios with `scenarioBuilder.<Event>(...).BuildAsync()`. Drill into composite events with `AndAllPreviousSteps()`. Store and resume the scenario through the test context. Configure fakers through builder `With*` methods. Register builders with a real logger |
-| **Acceptable** | Direct `ServiceClient` calls, through the client factory, for one-off reference or lookup data that no event covers. If the same setup recurs, add a builder event |
-| **Discouraged** | Building a journey by hand with direct client calls when an event already exists. It duplicates setup, bypasses the captured outputs other steps rely on, and hides why a record is in its state. Registering builders with a null logger |
+|                 | Pattern                                                                                                                                                                                                                                                                      |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Preferred**   | Compose scenarios with `scenarioBuilder.<Event>(...).BuildAsync()`. Drill into composite events with `AndAllPreviousSteps()`. Store and resume the scenario through the test context. Configure fakers through builder `With*` methods. Register builders with a real logger |
+| **Acceptable**  | Direct `ServiceClient` calls, through the client factory, for one-off reference or lookup data that no event covers. If the same setup recurs, add a builder event                                                                                                           |
+| **Discouraged** | Building a journey by hand with direct client calls when an event already exists. It duplicates setup, bypasses the captured outputs other steps rely on, and hides why a record is in its state. Registering builders with a null logger                                    |
 
 Reference data that never changes, such as lists of categories or types, belongs in the package's seed data, not in a scenario. See `package-deployer`.

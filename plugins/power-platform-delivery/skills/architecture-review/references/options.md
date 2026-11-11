@@ -26,11 +26,11 @@ For each option, decide whether it's a reusable capability, an extension of an e
 
 ## Confidence
 
-| Rating | When |
-| --- | --- |
-| High | Validated requirements, established patterns, approved ADRs, enough context and little material uncertainty |
-| Medium | Sound, but relies on assumptions, incomplete information or areas to validate during delivery |
-| Low | Requirement gaps, architectural unknowns, external dependencies or open decisions materially affect it |
+| Rating | When                                                                                                        |
+| ------ | ----------------------------------------------------------------------------------------------------------- |
+| High   | Validated requirements, established patterns, approved ADRs, enough context and little material uncertainty |
+| Medium | Sound, but relies on assumptions, incomplete information or areas to validate during delivery               |
+| Low    | Requirement gaps, architectural unknowns, external dependencies or open decisions materially affect it      |
 
 Explain the main factors behind the rating, and separate confirmed facts from assumptions. For Medium or Low, recommend how to raise confidence, such as a spike or a question for the product owner. Still give your best recommendation: low confidence calls for transparency, not silence.
 

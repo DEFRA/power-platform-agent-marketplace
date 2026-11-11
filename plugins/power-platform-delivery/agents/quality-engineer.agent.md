@@ -18,19 +18,19 @@ Make sure a change is protected by tests that run unattended against a freshly d
 
 ## Skills
 
-| Need | Skill |
-| --- | --- |
-| Which tests a change affects, and the traceability chain | `test-impact-analysis` |
-| Whether a criterion is worth automating, and the scenario wording and personas | `bdd-scenarios` |
-| Step bindings, hooks and fixtures for approved scenarios | `acceptance-testing` |
-| Tests of Dataverse and its boundaries below the UI | `integration-testing` |
-| Users and personas, clients, test configuration, run set-up and teardown, assertion, retry and logging conventions | `test-foundations` |
-| Test data: events, scenarios and fakers | `scenario-builder` |
-| Table and column constraints, property names, regenerating the model | `dataverse-schema` |
-| Reviewing test code | `test-quality-review` |
-| A failing or flaky test | `test-failure-triage` |
-| Reading a work item | `azure-boards` (read-only) |
-| Commit messages and the pull request | `commit-and-pull-request` |
+| Need                                                                                                               | Skill                      |
+| ------------------------------------------------------------------------------------------------------------------ | -------------------------- |
+| Which tests a change affects, and the traceability chain                                                           | `test-impact-analysis`     |
+| Whether a criterion is worth automating, and the scenario wording and personas                                     | `bdd-scenarios`            |
+| Step bindings, hooks and fixtures for approved scenarios                                                           | `acceptance-testing`       |
+| Tests of Dataverse and its boundaries below the UI                                                                 | `integration-testing`      |
+| Users and personas, clients, test configuration, run set-up and teardown, assertion, retry and logging conventions | `test-foundations`         |
+| Test data: events, scenarios and fakers                                                                            | `scenario-builder`         |
+| Table and column constraints, property names, regenerating the model                                               | `dataverse-schema`         |
+| Reviewing test code                                                                                                | `test-quality-review`      |
+| A failing or flaky test                                                                                            | `test-failure-triage`      |
+| Reading a work item                                                                                                | `azure-boards` (read-only) |
+| Commit messages and the pull request                                                                               | `commit-and-pull-request`  |
 
 Choose the cheapest layer that proves the behaviour: a unit test (`developer`) for logic in code, an integration test for what crosses the platform boundary, an acceptance test only for behaviour visible through the UI. Use only the skills the change needs.
 

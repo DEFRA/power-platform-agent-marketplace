@@ -6,11 +6,11 @@ A design that adds a configuration or reference record isn't complete until the 
 
 Choose one path, prefer the one the project already uses, and state it in the ALM considerations:
 
-| Path | Use it for | Watch out for |
-| --- | --- | --- |
-| A core Configuration Migration data set that the package always imports | Records every environment needs, whatever the environment | Keep it separate from optional seed or test data, which isn't imported everywhere |
-| An environment variable | A single value that can differ by environment | It keeps no history of changes, which some rule tables need |
-| A setup routine in an existing flow, workflow or the package's import hooks | Records created conditionally or derived from other data | It runs on every deployment, so it must cope with records that already exist |
+| Path                                                                        | Use it for                                                | Watch out for                                                                     |
+| --------------------------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| A core Configuration Migration data set that the package always imports     | Records every environment needs, whatever the environment | Keep it separate from optional seed or test data, which isn't imported everywhere |
+| An environment variable                                                     | A single value that can differ by environment             | It keeps no history of changes, which some rule tables need                       |
+| A setup routine in an existing flow, workflow or the package's import hooks | Records created conditionally or derived from other data  | It runs on every deployment, so it must cope with records that already exist      |
 
 How the package imports data and runs its import hooks is covered by `package-deployer`. If none of these paths works, the design has a blocking gap. Never accept manual creation as the answer.
 

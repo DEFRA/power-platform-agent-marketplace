@@ -7,9 +7,9 @@ description: Reads, creates, updates, links and comments on Azure Boards work it
 
 Intended for `product-analyst` and `solution-architect`, but usable by anyone. Load `power-platform-standards` first. Azure Boards is the only work tracker this plugin supports. What goes into a work item is covered by `requirements-and-backlog`. This skill covers reading and writing it safely.
 
-| Reference | Load it when |
-| --- | --- |
-| [cli.md](references/cli.md) | Using the az CLI or the REST API: commands, field names and known quirks |
+| Reference                             | Load it when                                                                         |
+| ------------------------------------- | ------------------------------------------------------------------------------------ |
+| [cli.md](references/cli.md)           | Using the az CLI or the REST API: commands, field names and known quirks             |
 | [comments.md](references/comments.md) | Writing a comment or a rich-text field, such as a description or acceptance criteria |
 
 ## Configuration
@@ -39,12 +39,12 @@ If none works, say why and give the user the content to enter by hand.
 
 ## Before each operation
 
-| Operation | You need |
-| --- | --- |
-| Create | The type, title, description, acceptance criteria (for a story), parent and area path |
-| Update | The confirmed ID and the exact fields to change |
-| Link | Both IDs and the relationship: parent, child, related, predecessor or successor |
-| Comment | The target ID and content someone can act on |
+| Operation | You need                                                                              |
+| --------- | ------------------------------------------------------------------------------------- |
+| Create    | The type, title, description, acceptance criteria (for a story), parent and area path |
+| Update    | The confirmed ID and the exact fields to change                                       |
+| Link      | Both IDs and the relationship: parent, child, related, predecessor or successor       |
+| Comment   | The target ID and content someone can act on                                          |
 
 If anything is missing, ask for it. Don't create an item with placeholder content.
 

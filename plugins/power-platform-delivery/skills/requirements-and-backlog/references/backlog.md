@@ -2,12 +2,12 @@
 
 ## Hierarchy
 
-| Level | Describes | Example |
-| --- | --- | --- |
-| Business objective | The outcome the organisation wants | Applicants get inspection results sooner |
-| Epic | A large body of work towards the objective, often spanning several releases | Inspection outcomes |
-| Feature | A capability users get, deliverable within a release | Record inspection outcomes |
-| User story | One vertical slice of a feature, small enough for a sprint | Record a passed inspection |
+| Level              | Describes                                                                   | Example                                  |
+| ------------------ | --------------------------------------------------------------------------- | ---------------------------------------- |
+| Business objective | The outcome the organisation wants                                          | Applicants get inspection results sooner |
+| Epic               | A large body of work towards the objective, often spanning several releases | Inspection outcomes                      |
+| Feature            | A capability users get, deliverable within a release                        | Record inspection outcomes               |
+| User story         | One vertical slice of a feature, small enough for a sprint                  | Record a passed inspection               |
 
 Use the work item types configured for the project (see `azure-boards`), and link each item to its parent.
 

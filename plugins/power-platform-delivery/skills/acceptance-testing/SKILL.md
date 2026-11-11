@@ -9,13 +9,13 @@ Intended for `quality-engineer`, but usable by anyone. Load `power-platform-stan
 
 Acceptance tests run unattended against a freshly deployed environment in pull request validation, and after each deployment (see [alm.md](../power-platform-design/references/alm.md)). A flaky or order-dependent test therefore blocks releases.
 
-| Reference | Load it when |
-| --- | --- |
-| [standard.md](references/standard.md) | Writing or changing a step class, a transformation or the test layout |
-| [power-playwright.md](references/power-playwright.md) | Driving the app: sessions, forms, grids, command bar, waiting |
-| [recipes.md](references/recipes.md) | You need a worked step for a common need |
-| [anti-patterns.md](references/anti-patterns.md) | Writing or reviewing automation |
-| [runtime.md](references/runtime.md) | Touching Reqnroll hooks and their order, login and browser state, tracing or feature-flag tags |
+| Reference                                             | Load it when                                                                                   |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [standard.md](references/standard.md)                 | Writing or changing a step class, a transformation or the test layout                          |
+| [power-playwright.md](references/power-playwright.md) | Driving the app: sessions, forms, grids, command bar, waiting                                  |
+| [recipes.md](references/recipes.md)                   | You need a worked step for a common need                                                       |
+| [anti-patterns.md](references/anti-patterns.md)       | Writing or reviewing automation                                                                |
+| [runtime.md](references/runtime.md)                   | Touching Reqnroll hooks and their order, login and browser state, tracing or feature-flag tags |
 
 Shared with integration tests, in `test-foundations`: [common-conventions.md](../test-foundations/references/common-conventions.md) (assertions, defensive coding, retries, logging), [users-and-personas.md](../test-foundations/references/users-and-personas.md), [clients.md](../test-foundations/references/clients.md), [configuration.md](../test-foundations/references/configuration.md) and [run-lifecycle.md](../test-foundations/references/run-lifecycle.md).
 

@@ -13,33 +13,33 @@ The plugin decides how work is done. The project supplies where things are and w
 
 ## Facts and where they come from
 
-| Fact | Source | How |
-| --- | --- | --- |
-| Solutions, unique names, publisher prefix | Discover | Find `*.cdsproj`. Read `UniqueName` and the publisher's `CustomizationPrefix` from each solution's `Solution.xml` |
-| Plug-in, workflow, test and package projects | Discover, then confirm | Find `*.csproj` and `*.sln`. Classify by what each references (the Dataverse SDK for plug-ins and workflow activities, a test SDK for test projects, Package Deployer for packages) |
-| Acceptance, integration and shared test-data projects | Discover, then confirm | Find `*.csproj`. The acceptance project references Reqnroll and Power Playwright. The integration project references a test SDK and the Dataverse client. The shared test-data project references ScenarioBuilder and Bogus, and both test projects reference it |
-| Shared projects and the shared-code assembly | Discover, then confirm | Find `*.shproj` and the `*.projitems` each project imports. The shared-code assembly imports them all and is referenced in the `UnitTest` configuration |
-| Plug-in and workflow base classes | Discover, then confirm | Find classes that derive from `PluginBase<` or `WorkflowActivityBase<`, and the composition roots. Otherwise find the project's own `IPlugin` and `CodeActivity` base classes and logger |
-| Web resource root and JavaScript namespace | Discover, then confirm | Find `package.json` and the existing web resource source |
-| Base branch | Discover | `git symbolic-ref --short refs/remotes/origin/HEAD` |
-| Repository host (whether `AB#` links apply) | Discover | `git remote get-url origin`: GitHub means `AB#` applies; Azure Repos means it doesn't |
-| Model-driven app names | Discover | `AppModule.xml` files |
-| Persona file for acceptance and integration tests | Discover | The `Persona` enum in the test projects' source |
-| Architecture records: ADRs, design documents and the deprecation log | Discover, then confirm | Find numbered Markdown files with a status line (often in an `adr` folder), the design documents beside them and the deprecation log. If there are none, propose a folder and confirm it |
-| Azure Boards organisation, project, area path, work item types | **Config** | Ask the user |
-| `pac modelbuilder` environment URL and settings path | **Ask each time** | Don't store them (see the `dataverse-schema` skill) |
+| Fact                                                                 | Source                 | How                                                                                                                                                                                                                                                              |
+| -------------------------------------------------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Solutions, unique names, publisher prefix                            | Discover               | Find `*.cdsproj`. Read `UniqueName` and the publisher's `CustomizationPrefix` from each solution's `Solution.xml`                                                                                                                                                |
+| Plug-in, workflow, test and package projects                         | Discover, then confirm | Find `*.csproj` and `*.sln`. Classify by what each references (the Dataverse SDK for plug-ins and workflow activities, a test SDK for test projects, Package Deployer for packages)                                                                              |
+| Acceptance, integration and shared test-data projects                | Discover, then confirm | Find `*.csproj`. The acceptance project references Reqnroll and Power Playwright. The integration project references a test SDK and the Dataverse client. The shared test-data project references ScenarioBuilder and Bogus, and both test projects reference it |
+| Shared projects and the shared-code assembly                         | Discover, then confirm | Find `*.shproj` and the `*.projitems` each project imports. The shared-code assembly imports them all and is referenced in the `UnitTest` configuration                                                                                                          |
+| Plug-in and workflow base classes                                    | Discover, then confirm | Find classes that derive from `PluginBase<` or `WorkflowActivityBase<`, and the composition roots. Otherwise find the project's own `IPlugin` and `CodeActivity` base classes and logger                                                                         |
+| Web resource root and JavaScript namespace                           | Discover, then confirm | Find `package.json` and the existing web resource source                                                                                                                                                                                                         |
+| Base branch                                                          | Discover               | `git symbolic-ref --short refs/remotes/origin/HEAD`                                                                                                                                                                                                              |
+| Repository host (whether `AB#` links apply)                          | Discover               | `git remote get-url origin`: GitHub means `AB#` applies; Azure Repos means it doesn't                                                                                                                                                                            |
+| Model-driven app names                                               | Discover               | `AppModule.xml` files                                                                                                                                                                                                                                            |
+| Persona file for acceptance and integration tests                    | Discover               | The `Persona` enum in the test projects' source                                                                                                                                                                                                                  |
+| Architecture records: ADRs, design documents and the deprecation log | Discover, then confirm | Find numbered Markdown files with a status line (often in an `adr` folder), the design documents beside them and the deprecation log. If there are none, propose a folder and confirm it                                                                         |
+| Azure Boards organisation, project, area path, work item types       | **Config**             | Ask the user                                                                                                                                                                                                                                                     |
+| `pac modelbuilder` environment URL and settings path                 | **Ask each time**      | Don't store them (see the `dataverse-schema` skill)                                                                                                                                                                                                              |
 
 ## Config reference
 
 `.agent-config/power-platform.json` holds only the config-only rows above. [power-platform.schema.json](../assets/power-platform.schema.json) is the authority; unknown properties are invalid, not ignored.
 
-| Property | Required | Meaning |
-| --- | --- | --- |
-| `schemaVersion` | Yes | Schema version the file was written against (`1.0`) |
-| `azureBoards` | No | Omit if the project doesn't use Azure Boards |
-| `azureBoards.organization` | Yes, if `azureBoards` is present | Organisation URL or name |
-| `azureBoards.project` | Yes, if present | Project name |
-| `azureBoards.workItemTypes` | Yes, if present | Names of the `epic`, `feature`, `story` and `task` types in the project's process template |
-| `azureBoards.areaPath` | No | Default area path for new work items |
+| Property                    | Required                         | Meaning                                                                                    |
+| --------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------ |
+| `schemaVersion`             | Yes                              | Schema version the file was written against (`1.0`)                                        |
+| `azureBoards`               | No                               | Omit if the project doesn't use Azure Boards                                               |
+| `azureBoards.organization`  | Yes, if `azureBoards` is present | Organisation URL or name                                                                   |
+| `azureBoards.project`       | Yes, if present                  | Project name                                                                               |
+| `azureBoards.workItemTypes` | Yes, if present                  | Names of the `epic`, `feature`, `story` and `task` types in the project's process template |
+| `azureBoards.areaPath`      | No                               | Default area path for new work items                                                       |
 
 If the file's `schemaVersion` is older than the schema, tell the user which new required fields are missing and offer to fill them in. Don't default silently.

@@ -17,14 +17,14 @@ Find the package project (`*.csproj` that references Package Deployer, with a cl
 
 The common template is `Capgemini.PowerApps.PackageDeployerTemplate`. Names vary with the project.
 
-| Part | Purpose |
-| --- | --- |
-| The extension class | Deployment hooks: settings read with `GetSetting<T>`, solution import decisions, seed data import and other steps before or after the import |
-| The project file | The solution project references and their import order, dependency solutions, and the target that copies the data folder into the package |
-| `ImportConfig.xml` | The standard configuration: the data imports and the processes to activate or deactivate after import |
-| `ImportConfig.Standalone.xml` (or the project's equivalent) | The configuration for ephemeral development and test environments, selected by the pipeline |
-| The package manifest | Package metadata |
-| The data folder | Configuration Migration datasets, split into core and seed data |
+| Part                                                        | Purpose                                                                                                                                      |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| The extension class                                         | Deployment hooks: settings read with `GetSetting<T>`, solution import decisions, seed data import and other steps before or after the import |
+| The project file                                            | The solution project references and their import order, dependency solutions, and the target that copies the data folder into the package    |
+| `ImportConfig.xml`                                          | The standard configuration: the data imports and the processes to activate or deactivate after import                                        |
+| `ImportConfig.Standalone.xml` (or the project's equivalent) | The configuration for ephemeral development and test environments, selected by the pipeline                                                  |
+| The package manifest                                        | Package metadata                                                                                                                             |
+| The data folder                                             | Configuration Migration datasets, split into core and seed data                                                                              |
 
 ## Rules
 

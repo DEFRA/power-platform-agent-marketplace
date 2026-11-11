@@ -13,11 +13,11 @@ Commits drive versioning. GitVersion versions the package, and [PowerVersion](ht
 
 Use [Conventional Commits](https://www.conventionalcommits.org/): `type(scope): summary`. The title sets the increment:
 
-| Title | Increment | Why |
-| --- | --- | --- |
-| `feat!: remove the status column` | Major | An exclamation mark follows the type |
-| `feat: add inspection outcome` | Minor | The type is `feat` and there is no exclamation mark |
-| `fix: correct the due date` | Patch | Any other type |
+| Title                             | Increment | Why                                                 |
+| --------------------------------- | --------- | --------------------------------------------------- |
+| `feat!: remove the status column` | Major     | An exclamation mark follows the type                |
+| `feat: add inspection outcome`    | Minor     | The type is `feat` and there is no exclamation mark |
+| `fix: correct the due date`       | Patch     | Any other type                                      |
 
 Use `fix`, `refactor`, `test`, `docs` and `chore` for what they say. Never use `feat` for a change that adds nothing a user could see, and never leave the `!` off a breaking change. Keep the summary short, in the imperative and in British English.
 
@@ -25,7 +25,7 @@ Never commit, push or stage unless the user asks. When asked, follow the rules b
 
 ## Changes outside the solution folder
 
-A solution is versioned when a commit changes files in its own folder, and the title sets the increment. A commit that changes only *mapped* files, such as plug-in assemblies or web resource scripts that are built into the solution, has no change in the solution's folder. PowerVersion can't see it, so the commit body must say which solution to increment:
+A solution is versioned when a commit changes files in its own folder, and the title sets the increment. A commit that changes only _mapped_ files, such as plug-in assemblies or web resource scripts that are built into the solution, has no change in the solution's folder. PowerVersion can't see it, so the commit body must say which solution to increment:
 
 ```text
 feat: add the inspection reminder activity

@@ -16,10 +16,10 @@ The decision, stated plainly in the active voice: "We will…". If it will be de
 
 ## Alternatives considered
 
-| Option | Description | Why it wasn't chosen |
-| --- | --- | --- |
-| `<lower-code or configuration-driven option>` | | |
-| `<other option>` | | |
+| Option                                        | Description | Why it wasn't chosen |
+| --------------------------------------------- | ----------- | -------------------- |
+| `<lower-code or configuration-driven option>` |             |                      |
+| `<other option>`                              |             |                      |
 
 Include at least one lower-code or configuration-driven option. Include an AI-based option only where it's genuinely relevant.
 

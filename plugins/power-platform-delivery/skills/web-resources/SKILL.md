@@ -7,22 +7,22 @@ description: Designs, writes and reviews the TypeScript web resource scripts for
 
 Intended for `developer` (and `developer-worker` on an approved brief), but usable by anyone. Load `power-platform-standards` first. This skill is the procedure. Rules and code live in `references/`, loaded when a step needs them.
 
-| Reference | Load it when |
-| --- | --- |
-| [standards.md](references/standards.md) | Writing or reviewing a script or its tests |
-| [example.md](references/example.md) | You want a worked, tested handler to adapt |
+| Reference                               | Load it when                                                       |
+| --------------------------------------- | ------------------------------------------------------------------ |
+| [standards.md](references/standards.md) | Writing or reviewing a script or its tests                         |
+| [example.md](references/example.md)     | You want a worked, tested handler to adapt                         |
 | [toolchain.md](references/toolchain.md) | Setting up the toolchain, adding a script, or building and testing |
 
 ## Layout
 
 Discover the web resource root (the folder with `package.json` and `rollup.config.mjs`) and confirm it, as in [project-facts.md](../power-platform-standards/references/project-facts.md). Don't assume a path. If the project has no toolchain, propose copying the files in [assets/](assets/), for the human to approve.
 
-| Path | Purpose |
-| --- | --- |
+| Path                                           | Purpose                                                                                      |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | `src/<name>.<form\|ribbon\|subgrid.ribbon>.ts` | One script per web resource. Exported functions are the handlers that forms and ribbons call |
-| `tests/<name>.test.ts` | Jest tests for that script |
-| `tests/bundle.contract.test.ts` | Checks that every script is built and exposes its namespace |
-| `out/`, `dist/`, `coverage/`, `test-results/` | Build and test output. Never edit or commit |
+| `tests/<name>.test.ts`                         | Jest tests for that script                                                                   |
+| `tests/bundle.contract.test.ts`                | Checks that every script is built and exposes its namespace                                  |
+| `out/`, `dist/`, `coverage/`, `test-results/`  | Build and test output. Never edit or commit                                                  |
 
 The file name sets the namespace. `contact.ribbon.ts` is bundled as `dist/contact.ribbon.js` and exposes `Contact.Ribbon`, so the solution calls a handler as `Contact.Ribbon.<function>`. A project that already has another namespace scheme keeps it.
 

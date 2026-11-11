@@ -7,17 +7,17 @@ description: Designs, writes and reviews Dataverse plug-ins and custom workflow 
 
 Intended for `developer` (and `developer-worker` on an approved brief), but usable by anyone. Load `power-platform-standards` first. This skill is the procedure. The rules and code live in `references/`, loaded when a step needs them.
 
-| Reference | Load it when |
-| --- | --- |
-| [standards.md](references/standards.md) | Designing or reviewing any plug-in or custom workflow activity (CWA) |
-| [infrastructure.md](references/infrastructure.md) | Writing or reviewing an entry point, handler or composition root, or setting up the scaffold |
-| [data-access.md](references/data-access.md) | Reading or writing Dataverse data: contexts, query classes and LINQ |
-| [project-structure.md](references/project-structure.md) | Adding files or projects, setting up a new project, or building and testing (shared projects and the `UnitTest` configuration) |
-| [plugin-contract.md](references/plugin-contract.md) | Defining a plug-in step, writing its registration hand-off, or checking pitfalls |
-| [workflow-activity-contract.md](references/workflow-activity-contract.md) | Defining a CWA's inputs and outputs, writing its hand-off, or checking pitfalls |
-| [unit-testing.md](references/unit-testing.md) | Writing or reviewing the tests |
-| [plugin-example.md](references/plugin-example.md) | You want a worked, tested plug-in to adapt |
-| [workflow-activity-example.md](references/workflow-activity-example.md) | You want a worked, tested CWA to adapt |
+| Reference                                                                 | Load it when                                                                                                                   |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [standards.md](references/standards.md)                                   | Designing or reviewing any plug-in or custom workflow activity (CWA)                                                           |
+| [infrastructure.md](references/infrastructure.md)                         | Writing or reviewing an entry point, handler or composition root, or setting up the scaffold                                   |
+| [data-access.md](references/data-access.md)                               | Reading or writing Dataverse data: contexts, query classes and LINQ                                                            |
+| [project-structure.md](references/project-structure.md)                   | Adding files or projects, setting up a new project, or building and testing (shared projects and the `UnitTest` configuration) |
+| [plugin-contract.md](references/plugin-contract.md)                       | Defining a plug-in step, writing its registration hand-off, or checking pitfalls                                               |
+| [workflow-activity-contract.md](references/workflow-activity-contract.md) | Defining a CWA's inputs and outputs, writing its hand-off, or checking pitfalls                                                |
+| [unit-testing.md](references/unit-testing.md)                             | Writing or reviewing the tests                                                                                                 |
+| [plugin-example.md](references/plugin-example.md)                         | You want a worked, tested plug-in to adapt                                                                                     |
+| [workflow-activity-example.md](references/workflow-activity-example.md)   | You want a worked, tested CWA to adapt                                                                                         |
 
 ## When code is justified
 

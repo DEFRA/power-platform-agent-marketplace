@@ -22,16 +22,16 @@ Pull request validation runs only the stages whose inputs changed: the solutions
 4. **Build the traceability chain** (below) and call out every broken or missing link. Don't omit one.
 5. **Report.**
 
-| What changed | Look for impact on |
-| --- | --- |
+| What changed                                                                  | Look for impact on                                                                                                                                                                                                       |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Solution metadata: tables, columns, forms, views, ribbon, site map, processes | Scenarios and step bindings that name the affected table, field, command, view or tab. Integration tests for changed processes. Fakers and events that set changed columns (look the columns up with `dataverse-schema`) |
-| The early-bound model, regenerated | Fakers and events that use renamed or retyped properties |
-| Assemblies: plug-ins, custom workflow activities | Integration tests across the boundary they change. Unit tests (`dataverse-plugins`). Scenarios that rely on the outcome |
-| Web resources | Scenarios on the forms and ribbons that load them. The scripts' own Jest tests (`web-resources`) |
-| Package: import configuration, seed data, environment variables | Tests that depend on reference data or environment-specific values. Deployment assumptions |
-| Security roles, teams or personas | Persona configuration and the scenarios and integration tests that exercise who can and can't act |
-| The shared test-data project (events, fakers, user pool) | Every test that uses a changed event or faker. Both test layers |
-| Feature files, step bindings, hooks | The scenarios they bind. Step reuse elsewhere (search the step index from `bdd-scenarios`) |
+| The early-bound model, regenerated                                            | Fakers and events that use renamed or retyped properties                                                                                                                                                                 |
+| Assemblies: plug-ins, custom workflow activities                              | Integration tests across the boundary they change. Unit tests (`dataverse-plugins`). Scenarios that rely on the outcome                                                                                                  |
+| Web resources                                                                 | Scenarios on the forms and ribbons that load them. The scripts' own Jest tests (`web-resources`)                                                                                                                         |
+| Package: import configuration, seed data, environment variables               | Tests that depend on reference data or environment-specific values. Deployment assumptions                                                                                                                               |
+| Security roles, teams or personas                                             | Persona configuration and the scenarios and integration tests that exercise who can and can't act                                                                                                                        |
+| The shared test-data project (events, fakers, user pool)                      | Every test that uses a changed event or faker. Both test layers                                                                                                                                                          |
+| Feature files, step bindings, hooks                                           | The scenarios they bind. Step reuse elsewhere (search the step index from `bdd-scenarios`)                                                                                                                               |
 
 ## Traceability chain
 

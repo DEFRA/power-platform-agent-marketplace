@@ -6,11 +6,11 @@ The parts of an acceptance test run that are specific to Reqnroll and Power Play
 
 Reqnroll builds its container from hooks, and `Order` values control what exists when. Follow the stages in `run-lifecycle.md`, with configuration and registration first (large negative values) and clean-up last (large positive values). Acceptance tests add these steps:
 
-| When | Acceptance-specific hooks |
-| --- | --- |
-| Before the run | Start Playwright, after the pool and base client exist |
-| Before each scenario | Create the Power Playwright instance, before the scenario builder factory, which is registered last |
-| After each scenario | Stop tracing, after the user is released. Dispose the browser before the clients and the client factory |
+| When                 | Acceptance-specific hooks                                                                               |
+| -------------------- | ------------------------------------------------------------------------------------------------------- |
+| Before the run       | Start Playwright, after the pool and base client exist                                                  |
+| Before each scenario | Create the Power Playwright instance, before the scenario builder factory, which is registered last     |
+| After each scenario  | Stop tracing, after the user is released. Dispose the browser before the clients and the client factory |
 
 Register run-level services on the test thread container. Register scenario-level ones on the scenario's container, so scenarios don't interfere.
 

@@ -6,18 +6,18 @@ Load this when defining a plug-in step. A worked example is in [plugin-example.m
 
 Agree each item with the user, and ask for any that are missing.
 
-| Item | Decide |
-| --- | --- |
-| Capability and name | The general capability, and the plug-in name that describes it |
-| Table | Logical name, and whether the early-bound model already has it |
-| Message | `Create`, `Update`, `Delete`, a custom action name and so on |
-| Stage and mode | Pre-validation, pre-operation or post-operation; synchronous or asynchronous |
-| Filtering attributes | The attributes that trigger an `Update` step. Don't leave them empty without a reason |
-| Images | Pre or post image, its name, and only the attributes the logic reads. The handler declares the name as a constant, such as `PostImageName` |
-| Configuration | What varies, its format (JSON for the `[DataContract]` class, read from `PluginStepConfiguration`), and how bad values fail |
-| Behaviour | Inputs, outputs, writes, and what must not happen |
-| Failure | Throw (rolls back the transaction) or log and continue, and the user-facing message |
-| Recursion | Whether the plug-in writes to its own table, and how it avoids a loop |
+| Item                 | Decide                                                                                                                                     |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Capability and name  | The general capability, and the plug-in name that describes it                                                                             |
+| Table                | Logical name, and whether the early-bound model already has it                                                                             |
+| Message              | `Create`, `Update`, `Delete`, a custom action name and so on                                                                               |
+| Stage and mode       | Pre-validation, pre-operation or post-operation; synchronous or asynchronous                                                               |
+| Filtering attributes | The attributes that trigger an `Update` step. Don't leave them empty without a reason                                                      |
+| Images               | Pre or post image, its name, and only the attributes the logic reads. The handler declares the name as a constant, such as `PostImageName` |
+| Configuration        | What varies, its format (JSON for the `[DataContract]` class, read from `PluginStepConfiguration`), and how bad values fail                |
+| Behaviour            | Inputs, outputs, writes, and what must not happen                                                                                          |
+| Failure              | Throw (rolls back the transaction) or log and continue, and the user-facing message                                                        |
+| Recursion            | Whether the plug-in writes to its own table, and how it avoids a loop                                                                      |
 
 Keep step scope narrow, and avoid organisation-wide steps on out-of-the-box messages and tables (see `power-platform-standards`).
 

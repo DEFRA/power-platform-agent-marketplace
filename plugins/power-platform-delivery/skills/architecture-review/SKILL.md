@@ -7,12 +7,12 @@ description: Assesses the architectural impact of a work item or an existing des
 
 Intended for `solution-architect`, but usable by anyone. Load `power-platform-standards` first. This skill drives the review. It uses `power-platform-design` for Power Platform placement and ALM fit, `adr` to record decisions and `azure-boards` to read and comment on work items.
 
-| Reference | Load it when |
-| --- | --- |
-| [classification.md](references/classification.md) | Deciding the pattern fit, review level, complexity and the artefacts the review needs |
-| [options.md](references/options.md) | Generating and comparing options, justifying reuse, or stating a recommendation and its confidence |
-| [risk-and-debt.md](references/risk-and-debt.md) | Assessing non-functional requirements, risks, technical debt and architecture debt |
-| [artefacts.md](references/artefacts.md) | Checking fitness and traceability before handover, or writing an artefact |
+| Reference                                         | Load it when                                                                                       |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| [classification.md](references/classification.md) | Deciding the pattern fit, review level, complexity and the artefacts the review needs              |
+| [options.md](references/options.md)               | Generating and comparing options, justifying reuse, or stating a recommendation and its confidence |
+| [risk-and-debt.md](references/risk-and-debt.md)   | Assessing non-functional requirements, risks, technical debt and architecture debt                 |
+| [artefacts.md](references/artefacts.md)           | Checking fitness and traceability before handover, or writing an artefact                          |
 
 ## Principles
 

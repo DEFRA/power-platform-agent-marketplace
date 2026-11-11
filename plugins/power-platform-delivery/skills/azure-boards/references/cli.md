@@ -4,11 +4,11 @@ Commands for the CLI route. `<org>` is the configured organisation URL and `<pro
 
 ## Read
 
-| Need | Command |
-| --- | --- |
-| One item, with its fields and links | `az boards work-item show --id <id> --org <org>` |
-| A search | `az boards query --wiql "<query>" --org <org> --project <project>` |
-| An item's comments | `az devops invoke --area wit --resource comments --route-parameters project=<project> workItemId=<id> --http-method GET --api-version 6.0-preview --org <org>` |
+| Need                                | Command                                                                                                                                                        |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| One item, with its fields and links | `az boards work-item show --id <id> --org <org>`                                                                                                               |
+| A search                            | `az boards query --wiql "<query>" --org <org> --project <project>`                                                                                             |
+| An item's comments                  | `az devops invoke --area wit --resource comments --route-parameters project=<project> workItemId=<id> --http-method GET --api-version 6.0-preview --org <org>` |
 
 - `work-item show` doesn't accept `--project`, but `query` does.
 - There's no `work-item list` command. Search with a WIQL query instead:
@@ -21,12 +21,12 @@ Commands for the CLI route. `<org>` is the configured organisation URL and `<pro
 
 ## Write
 
-| Change | Command |
-| --- | --- |
-| Create | `az boards work-item create --type "<type>" --title "<title>" --area "<area path>" --description "<html>" --fields "Microsoft.VSTS.Common.AcceptanceCriteria=<html>" --org <org> --project <project>` |
-| Update | `az boards work-item update --id <id> --fields "<field>=<value>" --org <org>` |
-| Link to a parent | `az boards work-item relation add --id <child id> --relation-type parent --target-id <parent id> --org <org>` |
-| Comment | `az devops invoke --area wit --resource comments --route-parameters project=<project> workItemId=<id> --http-method POST --in-file <file> --api-version 6.0-preview --org <org>`, where the file holds `{"text": "<html>"}` |
+| Change           | Command                                                                                                                                                                                                                     |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Create           | `az boards work-item create --type "<type>" --title "<title>" --area "<area path>" --description "<html>" --fields "Microsoft.VSTS.Common.AcceptanceCriteria=<html>" --org <org> --project <project>`                       |
+| Update           | `az boards work-item update --id <id> --fields "<field>=<value>" --org <org>`                                                                                                                                               |
+| Link to a parent | `az boards work-item relation add --id <child id> --relation-type parent --target-id <parent id> --org <org>`                                                                                                               |
+| Comment          | `az devops invoke --area wit --resource comments --route-parameters project=<project> workItemId=<id> --http-method POST --in-file <file> --api-version 6.0-preview --org <org>`, where the file holds `{"text": "<html>"}` |
 
 Common fields are `System.Title`, `System.Description`, `System.State`, `System.AreaPath`, `System.IterationPath` and `Microsoft.VSTS.Common.AcceptanceCriteria`. Some process templates use other names. If an update seems to be ignored, check the field names on the item.
 

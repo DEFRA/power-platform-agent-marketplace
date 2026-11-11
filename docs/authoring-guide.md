@@ -24,19 +24,19 @@ plugins/power-platform-delivery/
 
 ## Rules
 
-| Rule | Limit or convention |
-| --- | --- |
-| Agent file length | 100 lines of body at most |
-| `SKILL.md` length | 150 lines of body at most. Move detail to `references/*.md`, one level deep |
-| `description` (agents and skills) | Third person. Says what and when. 400 characters at most. No repo paths or project names. Quote it if it contains `: ` |
-| Skill `name` | kebab-case and the same as the folder name |
-| Agent frontmatter | `name` (the same as the file name), `description` and, only when restricting, `tools` using the portable aliases `read`, `edit`, `search`, `execute`, `web`, `agent` and `todo`. No `handoffs`. No `model`, except on `developer-worker` (D11) |
-| Handoffs | In prose, naming agents by id: "hand off to `solution-architect` when…" |
-| Ownership | Use soft "Intended for" wording. Never hard-gate a skill to one agent |
-| Links | Relative links inside the plugin only. Never link to a path in a consumer repo |
-| Scripts | PowerShell 7 that works on Windows and Linux. Every input is a parameter, with no project defaults. Each has `-?` help and Pester tests in `tests/` |
-| Examples | The neutral domain above |
-| Language | British English |
+| Rule                              | Limit or convention                                                                                                                                                                                                                            |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Agent file length                 | 100 lines of body at most                                                                                                                                                                                                                      |
+| `SKILL.md` length                 | 150 lines of body at most. Move detail to `references/*.md`, one level deep                                                                                                                                                                    |
+| `description` (agents and skills) | Third person. Says what and when. 400 characters at most. No repo paths or project names. Quote it if it contains `: `                                                                                                                         |
+| Skill `name`                      | kebab-case and the same as the folder name                                                                                                                                                                                                     |
+| Agent frontmatter                 | `name` (the same as the file name), `description` and, only when restricting, `tools` using the portable aliases `read`, `edit`, `search`, `execute`, `web`, `agent` and `todo`. No `handoffs`. No `model`, except on `developer-worker` (D11) |
+| Handoffs                          | In prose, naming agents by id: "hand off to `solution-architect` when…"                                                                                                                                                                        |
+| Ownership                         | Use soft "Intended for" wording. Never hard-gate a skill to one agent                                                                                                                                                                          |
+| Links                             | Relative links inside the plugin only. Never link to a path in a consumer repo                                                                                                                                                                 |
+| Scripts                           | PowerShell 7 that works on Windows and Linux. Every input is a parameter, with no project defaults. Each has `-?` help and Pester tests in `tests/`                                                                                            |
+| Examples                          | The neutral domain above                                                                                                                                                                                                                       |
+| Language                          | British English                                                                                                                                                                                                                                |
 
 The numbers and allowed values are in [lint.config.json](../plugins/power-platform-delivery/tests/lint.config.json), the single place CI reads them from.
 

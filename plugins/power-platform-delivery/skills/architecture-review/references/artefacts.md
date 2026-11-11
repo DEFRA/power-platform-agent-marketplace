@@ -8,17 +8,17 @@ The chain runs business objective → epic → feature → user story → accept
 
 ## Fitness checklist
 
-| Check | Owned by | Fails when |
-| --- | --- | --- |
-| Classification | [classification.md](classification.md) | No classification is stated, or the artefacts don't match it |
-| ADR alignment and reuse | `adr` and [options.md](options.md) | A conflicting ADR isn't surfaced, or reuse wasn't considered |
-| Options and confidence | [options.md](options.md) | A significant recommendation has no alternatives, rationale or confidence rating |
-| Non-functional requirements, risk and debt | [risk-and-debt.md](risk-and-debt.md) | A category is missing, or a risk or debt item is unclassified |
-| Configuration data | `power-platform-design` | New configuration or reference data has no deployment path, or a deployment step is manual |
-| Non-breaking change | `power-platform-design` | A retired component still has dependents, or the deprecation log wasn't updated |
-| Operations and security | [risk-and-debt.md](risk-and-debt.md) | Support or security isn't addressed for a material change |
-| Incremental delivery | The review | A change delivered in stages has no minimum viable increment |
-| Acceptance criteria | The review | An acceptance criterion isn't addressed anywhere |
+| Check                                      | Owned by                               | Fails when                                                                                 |
+| ------------------------------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Classification                             | [classification.md](classification.md) | No classification is stated, or the artefacts don't match it                               |
+| ADR alignment and reuse                    | `adr` and [options.md](options.md)     | A conflicting ADR isn't surfaced, or reuse wasn't considered                               |
+| Options and confidence                     | [options.md](options.md)               | A significant recommendation has no alternatives, rationale or confidence rating           |
+| Non-functional requirements, risk and debt | [risk-and-debt.md](risk-and-debt.md)   | A category is missing, or a risk or debt item is unclassified                              |
+| Configuration data                         | `power-platform-design`                | New configuration or reference data has no deployment path, or a deployment step is manual |
+| Non-breaking change                        | `power-platform-design`                | A retired component still has dependents, or the deprecation log wasn't updated            |
+| Operations and security                    | [risk-and-debt.md](risk-and-debt.md)   | Support or security isn't addressed for a material change                                  |
+| Incremental delivery                       | The review                             | A change delivered in stages has no minimum viable increment                               |
+| Acceptance criteria                        | The review                             | An acceptance criterion isn't addressed anywhere                                           |
 
 Don't hand over while any check fails. Record any material divergence between the implementation and the approved architecture, with its impact, its risk and a remediation path.
 

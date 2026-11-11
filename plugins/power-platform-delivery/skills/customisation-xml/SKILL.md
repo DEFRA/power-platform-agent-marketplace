@@ -11,15 +11,15 @@ Solution metadata is synchronised from the development environment, never hand-w
 
 ## What goes where
 
-| Change | Who and where |
-| --- | --- |
-| Ribbon (`RibbonDiffXml`) | Developer, in the file |
-| Site map | Developer, in the file |
-| Forms and dashboards (FormXml) | Developer, in the file |
-| Views (saved queries) | Developer, in the file |
-| Tables, columns, relationships, option sets | Human, in the environment |
-| Processes, flows, business rules | Human, in the environment |
-| Plug-in step and web resource registrations | Human, in the environment |
+| Change                                                                        | Who and where             |
+| ----------------------------------------------------------------------------- | ------------------------- |
+| Ribbon (`RibbonDiffXml`)                                                      | Developer, in the file    |
+| Site map                                                                      | Developer, in the file    |
+| Forms and dashboards (FormXml)                                                | Developer, in the file    |
+| Views (saved queries)                                                         | Developer, in the file    |
+| Tables, columns, relationships, option sets                                   | Human, in the environment |
+| Processes, flows, business rules                                              | Human, in the environment |
+| Plug-in step and web resource registrations                                   | Human, in the environment |
 | Security roles, environment variables, connection references, app definitions | Human, in the environment |
 
 When a request needs both, say which parts are the human's and in what order they come: tables, columns, processes, flows, business rules, registrations, and only then the file edits that rely on them (a form can't show a column that doesn't exist yet). Prefer to do the human's parts first, and wait for the synchronised result before editing.

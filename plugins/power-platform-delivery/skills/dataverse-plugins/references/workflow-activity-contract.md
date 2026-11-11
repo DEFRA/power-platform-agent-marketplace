@@ -11,15 +11,15 @@ Load this when defining a custom workflow activity (CWA). A worked example is in
 
 ## Contract
 
-| Item | Decide |
-| --- | --- |
-| Capability and name | The general capability and the activity name that describes it |
-| Inputs | Name, type, and whether required. For a lookup, its table; for a choice, its table and column. Everything that varies is an input |
-| Configuration beyond inputs | Anything not per process, where it lives, its format and how a bad value fails |
-| Outputs | Name and type, and what a workflow or action reads from them |
-| Effects | The record it acts on (the primary record or a lookup input), the records it reads and writes, and whether it writes at all |
-| Failure | Throw (fails the workflow and shows a message) or log and continue |
-| Display text | Name, friendly name, description and group, which makers see. Describe the capability, not the first use |
+| Item                        | Decide                                                                                                                            |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Capability and name         | The general capability and the activity name that describes it                                                                    |
+| Inputs                      | Name, type, and whether required. For a lookup, its table; for a choice, its table and column. Everything that varies is an input |
+| Configuration beyond inputs | Anything not per process, where it lives, its format and how a bad value fails                                                    |
+| Outputs                     | Name and type, and what a workflow or action reads from them                                                                      |
+| Effects                     | The record it acts on (the primary record or a lookup input), the records it reads and writes, and whether it writes at all       |
+| Failure                     | Throw (fails the workflow and shows a message) or log and continue                                                                |
+| Display text                | Name, friendly name, description and group, which makers see. Describe the capability, not the first use                          |
 
 ## Registration hand-off
 

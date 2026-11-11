@@ -7,10 +7,10 @@ description: Decides which acceptance criteria are worth automating as BDD scena
 
 Intended for `product-analyst` and `quality-engineer`, but usable by anyone. Load `power-platform-standards` first. This skill writes `.feature` files. Step definitions and test code are covered by `acceptance-testing`.
 
-| Reference | Load it when |
-| --- | --- |
-| [scenario-style.md](references/scenario-style.md) | Writing or reviewing scenarios: structure, names, tables, tags and an example |
-| [personas-and-layout.md](references/personas-and-layout.md) | Choosing the login step and persona, or deciding where a feature file goes |
+| Reference                                                   | Load it when                                                                  |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [scenario-style.md](references/scenario-style.md)           | Writing or reviewing scenarios: structure, names, tables, tags and an example |
+| [personas-and-layout.md](references/personas-and-layout.md) | Choosing the login step and persona, or deciding where a feature file goes    |
 
 ## Principles
 
@@ -23,12 +23,12 @@ Intended for `product-analyst` and `quality-engineer`, but usable by anyone. Loa
 
 Assess each acceptance criterion before writing any Gherkin:
 
-| Classification | Means | Usually |
-| --- | --- | --- |
-| Business rule | A rule, workflow, calculation, permission or integration behaviour | Scenario recommended |
-| Negative path | A failure that would cause material harm if it broke silently, such as data loss, a wrong approval, a security bypass or a financial impact | Scenario recommended |
-| Cosmetic | Layout, wording, styling or a minor change to the screen, with no business rule | Not recommended. Suggest a lighter check, such as a manual check or a unit test. |
-| Existing coverage | An existing scenario already covers it | Not recommended. Name the scenario. |
+| Classification    | Means                                                                                                                                       | Usually                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Business rule     | A rule, workflow, calculation, permission or integration behaviour                                                                          | Scenario recommended                                                             |
+| Negative path     | A failure that would cause material harm if it broke silently, such as data loss, a wrong approval, a security bypass or a financial impact | Scenario recommended                                                             |
+| Cosmetic          | Layout, wording, styling or a minor change to the screen, with no business rule                                                             | Not recommended. Suggest a lighter check, such as a manual check or a unit test. |
+| Existing coverage | An existing scenario already covers it                                                                                                      | Not recommended. Name the scenario.                                              |
 
 For a borderline case, ask: if this scenario failed intermittently, or the screen changed again, would blocking a release be proportionate to the risk? If not, recommend a lighter check. If the impact is unclear, mark the criterion **Needs clarification** and ask. Write scenarios only for criteria marked **Scenario recommended**.
 
@@ -41,6 +41,7 @@ For a borderline case, ask: if this scenario failed intermittently, or the scree
    - [Build-ScenarioIndex.ps1](scripts/Build-ScenarioIndex.ps1) `-FeaturesPath <features folder>` lists every scenario with its tags, file and line.
 
    Search the indexes rather than reading every file. Open a source file only when the index doesn't make a binding's behaviour clear. Run a script with `-?` for its parameters.
+
 4. **Write** the happy-path scenarios, then validation and error scenarios, then any edge cases that carry real business or data risk. Follow [scenario-style.md](references/scenario-style.md) and [personas-and-layout.md](references/personas-and-layout.md).
 5. **Check coverage.** Map every acceptance criterion to a scenario or to a decision not to automate it. Don't invent criteria.
 6. **Save and report.** Write the scenarios to the feature files on disk: the files are the deliverable. Update the work item only when the user confirms.

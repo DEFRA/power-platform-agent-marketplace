@@ -11,13 +11,13 @@ Never assume a production defect by default, and never rewrite a test, step bind
 
 ## Classification and routing
 
-| Category | Means | Route to |
-| --- | --- | --- |
-| Requirement defect | The requirement is wrong, ambiguous or incomplete | `product-analyst` |
-| Scenario defect | The scenario misstates a correct requirement | `product-analyst` |
-| Test implementation defect | The automation (step, fixture, event, integration test) doesn't implement a correct scenario | `quality-engineer`, using `acceptance-testing`, `integration-testing` or `scenario-builder` |
-| Production defect | The system doesn't behave as the correct requirement and scenario say | `developer` |
-| Environment issue | The cause is the environment, its configuration, users or data, not code | The human who owns the environments (they own the pipelines' environments). Agents don't fix these |
+| Category                   | Means                                                                                        | Route to                                                                                           |
+| -------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Requirement defect         | The requirement is wrong, ambiguous or incomplete                                            | `product-analyst`                                                                                  |
+| Scenario defect            | The scenario misstates a correct requirement                                                 | `product-analyst`                                                                                  |
+| Test implementation defect | The automation (step, fixture, event, integration test) doesn't implement a correct scenario | `quality-engineer`, using `acceptance-testing`, `integration-testing` or `scenario-builder`        |
+| Production defect          | The system doesn't behave as the correct requirement and scenario say                        | `developer`                                                                                        |
+| Environment issue          | The cause is the environment, its configuration, users or data, not code                     | The human who owns the environments (they own the pipelines' environments). Agents don't fix these |
 
 A failure from a contract disagreement, such as a test that fails because the implementation and an ADR differ, goes to `solution-architect` to decide which is right.
 
@@ -40,6 +40,6 @@ A failure from a contract disagreement, such as a test that fails because the im
 For each failing test, one row:
 
 | Test | Classification | Evidence | Owner | Confidence |
-| --- | --- | --- | --- | --- |
+| ---- | -------------- | -------- | ----- | ---------- |
 
 Confidence says how sure you are and what extra evidence would confirm or change the classification. When several tests fail from one cause, group them under it, and say so.

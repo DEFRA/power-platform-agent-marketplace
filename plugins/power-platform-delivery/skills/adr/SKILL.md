@@ -7,8 +7,8 @@ description: Writes and maintains Architecture Decision Records. Decides when a 
 
 Intended for `solution-architect`, but usable by anyone. Load `power-platform-standards` first. Approved ADRs rank second in its source-of-truth order, so they must stay accurate and consistent. The content of a decision comes from `architecture-review`. This skill records it.
 
-| Asset | Use it when |
-| --- | --- |
+| Asset                                     | Use it when       |
+| ----------------------------------------- | ----------------- |
 | [adr-template.md](assets/adr-template.md) | Writing a new ADR |
 
 ## When to write one
@@ -26,12 +26,12 @@ A change that conforms to an existing pattern (review level 1) references the AD
 
 ## Status
 
-| Status | Means |
-| --- | --- |
-| Proposed | Drafted and waiting for a decision. Not authoritative. |
-| Accepted | Approved, and authoritative |
-| Superseded | Replaced by a later ADR, which it links to |
-| Deprecated | No longer applies, and has no replacement |
+| Status     | Means                                                  |
+| ---------- | ------------------------------------------------------ |
+| Proposed   | Drafted and waiting for a decision. Not authoritative. |
+| Accepted   | Approved, and authoritative                            |
+| Superseded | Replaced by a later ADR, which it links to             |
+| Deprecated | No longer applies, and has no replacement              |
 
 Only Accepted ADRs are authoritative. A person accepts an ADR: never accept your own. Leave a decision with Medium or Low confidence as Proposed, and say what would raise the confidence.
 

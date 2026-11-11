@@ -2,14 +2,14 @@
 
 ## INVEST
 
-| Check | The story… | If it fails |
-| --- | --- | --- |
-| Independent | Can be built and released without waiting for another story | Reorder or merge the stories, or record the dependency |
-| Negotiable | States the need and leaves room for how to meet it | Move the design detail to a note |
-| Valuable | Delivers something a user or the organisation can see | Merge it with the story it enables, or rewrite it around the outcome |
-| Estimable | Is clear enough for the team to size | Answer the open questions, or plan a time-boxed spike |
-| Small | Fits in a sprint | Split it, as [backlog.md](backlog.md) describes |
-| Testable | Has acceptance criteria that pass or fail | Rewrite the criteria |
+| Check       | The story…                                                  | If it fails                                                          |
+| ----------- | ----------------------------------------------------------- | -------------------------------------------------------------------- |
+| Independent | Can be built and released without waiting for another story | Reorder or merge the stories, or record the dependency               |
+| Negotiable  | States the need and leaves room for how to meet it          | Move the design detail to a note                                     |
+| Valuable    | Delivers something a user or the organisation can see       | Merge it with the story it enables, or rewrite it around the outcome |
+| Estimable   | Is clear enough for the team to size                        | Answer the open questions, or plan a time-boxed spike                |
+| Small       | Fits in a sprint                                            | Split it, as [backlog.md](backlog.md) describes                      |
+| Testable    | Has acceptance criteria that pass or fail                   | Rewrite the criteria                                                 |
 
 ## Readiness checklist
 
@@ -28,14 +28,14 @@ A story is ready when:
 
 Suggest priorities and say why. The product owner decides. Weigh:
 
-| Factor | Ask |
-| --- | --- |
-| Value | How far does it move the business objective? |
-| Risk reduction | Does it test an uncertain assumption or a risky integration early? |
-| Dependencies | Is other work waiting for it? |
-| Time sensitivity | Is there a deadline, a legislation date or a seasonal peak? |
-| Cost of delay | What's lost for each week it waits? |
-| Effort | Is it a quick win, or large for the value it brings? |
+| Factor           | Ask                                                                |
+| ---------------- | ------------------------------------------------------------------ |
+| Value            | How far does it move the business objective?                       |
+| Risk reduction   | Does it test an uncertain assumption or a risky integration early? |
+| Dependencies     | Is other work waiting for it?                                      |
+| Time sensitivity | Is there a deadline, a legislation date or a seasonal peak?        |
+| Cost of delay    | What's lost for each week it waits?                                |
+| Effort           | Is it a quick win, or large for the value it brings?               |
 
 ## Sequencing
 

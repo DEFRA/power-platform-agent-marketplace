@@ -23,10 +23,10 @@ In the examples, `AbcContext`, `abc_Case` and `abc_Applicant` stand for generate
 
 ## Contexts and identity
 
-| Need | Take | Who disposes it |
-| --- | --- | --- |
-| Queries as the executing user (the default) | `AbcContext` | The scope. The container creates a context for each class that takes one |
-| Another identity, deliberately | `IAbcContextFactory` | The caller, with `using`, within the invocation |
+| Need                                        | Take                 | Who disposes it                                                          |
+| ------------------------------------------- | -------------------- | ------------------------------------------------------------------------ |
+| Queries as the executing user (the default) | `AbcContext`         | The scope. The container creates a context for each class that takes one |
+| Another identity, deliberately              | `IAbcContextFactory` | The caller, with `using`, within the invocation                          |
 
 Register both in each composition root whose handlers need them, as `root.Register<AbcContext>();` and `root.Register<IAbcContextFactory, AbcContextFactory>();`. The generated context takes `IOrganizationService`, which each scope supplies as the executing user. The factory takes `IExecutionServiceProvider`, so it can ask only for the identities the host supports (see [infrastructure.md](infrastructure.md#identity)).
 

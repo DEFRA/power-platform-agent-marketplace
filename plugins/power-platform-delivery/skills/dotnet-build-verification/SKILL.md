@@ -22,12 +22,12 @@ Existing projects can carry thousands of analyser warnings, so "no new warnings"
 
 Run them with PowerShell 7 from anywhere in the repository, for example `pwsh -NoProfile -File <this skill's folder>/scripts/Test-Change.ps1`. Each has `-?` help with every parameter.
 
-| Script | Purpose |
-| --- | --- |
-| [Find-VerificationProject.ps1](scripts/Find-VerificationProject.ps1) | Lists the candidate projects with a role, configuration and reason. Changes nothing |
-| [New-WarningBaseline.ps1](scripts/New-WarningBaseline.ps1) | Builds the given projects and saves the warning baseline and the project list. Saves nothing if a build fails |
-| [Test-Change.ps1](scripts/Test-Change.ps1) | Rebuilds the recorded projects, diffs the warnings, runs the unit tests and prints `RESULT PASS`, `FAIL` or `INCOMPLETE` |
-| [BuildVerification.psm1](scripts/BuildVerification.psm1) | Functions shared by the scripts. Don't call it directly |
+| Script                                                               | Purpose                                                                                                                  |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| [Find-VerificationProject.ps1](scripts/Find-VerificationProject.ps1) | Lists the candidate projects with a role, configuration and reason. Changes nothing                                      |
+| [New-WarningBaseline.ps1](scripts/New-WarningBaseline.ps1)           | Builds the given projects and saves the warning baseline and the project list. Saves nothing if a build fails            |
+| [Test-Change.ps1](scripts/Test-Change.ps1)                           | Rebuilds the recorded projects, diffs the warnings, runs the unit tests and prints `RESULT PASS`, `FAIL` or `INCOMPLETE` |
+| [BuildVerification.psm1](scripts/BuildVerification.psm1)             | Functions shared by the scripts. Don't call it directly                                                                  |
 
 Load [report.md](references/report.md) when you read a report, choose a `-PathFilter`, or need the exit codes.
 
@@ -38,6 +38,7 @@ Load [report.md](references/report.md) when you read a report, choose a `-PathFi
    - **UnitTests**: a test project, built in `UnitTest` if it declares it, otherwise Debug.
 
    It lists, without suggesting, **SharedCode** (a shared-code assembly with no Release configuration, which the test build compiles) and **OtherTests** (Reqnroll, SpecFlow or Playwright tests, which need an environment). Confirm the list with the user, as in [project-facts.md](../power-platform-standards/references/project-facts.md). Don't store it: the baseline records it.
+
 2. **Take a baseline before the first C# edit.**
 
    ```powershell
@@ -47,6 +48,7 @@ Load [report.md](references/report.md) when you read a report, choose a `-PathFi
    - Take a fresh baseline for every task. Never reuse one from an earlier task or session.
    - If it prints `RESULT FAIL`, stop and report the failed build before changing anything. Stale `.projitems` entries and compile errors in the tests are common causes.
    - If the task adds a head or a test project, create the project first with no code, check that it builds, then include it in the baseline.
+
 3. **Iterate with the cheapest run that answers the question.**
    - Build and warnings only: `Test-Change.ps1 -SkipTests -PathFilter '<files you changed>'`. Include test files.
    - The tests for one area, without a build: `Test-Change.ps1 -SkipBuild -TestFilter '<filter>'`. `dotnet test` compiles the test project itself, so its warnings aren't checked.

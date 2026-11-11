@@ -13,11 +13,11 @@ You understand Dataverse, model-driven and canvas apps, Power Automate, Power Pa
 
 Load `power-platform-standards` first. It holds the house rules, including the source-of-truth order and the Definition of Done. Then use the skill for the job:
 
-| Skill | Use it for |
-| --- | --- |
+| Skill                      | Use it for                                                                                                   |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | `requirements-and-backlog` | Discovery, breaking work into epics, features and stories, acceptance criteria, readiness and prioritisation |
-| `azure-boards` | Reading the backlog, and creating, updating, linking and commenting on work items |
-| `bdd-scenarios` | Turning a story's acceptance criteria into feature files |
+| `azure-boards`             | Reading the backlog, and creating, updating, linking and commenting on work items                            |
+| `bdd-scenarios`            | Turning a story's acceptance criteria into feature files                                                     |
 
 ## How you work
 

@@ -119,8 +119,8 @@ Users, and their credentials, come from the user pool (see [users-and-personas.m
 
 ## Choosing the approach
 
-| | Pattern |
-| --- | --- |
-| **Preferred** | Typed controls and pages (`GetField<T>`, `GetControl<T>`, `CommandBar.ClickCommandAsync`, the grid's `Control` methods). `WaitForAppIdleAsync()`. FluentAssertions |
-| **Acceptable** | A narrow, commented drop to raw Playwright where Power Playwright has no equivalent: pressing `Tab` to commit a field, `Escape` to close a flyout, or evaluating `Xrm.Utility` for global context. A bounded retry for eventually consistent state |
-| **Discouraged** | Raw locators (`Page.GetByText(...)`, `ILocator.WaitForAsync`) where an abstraction exists. `Task.Delay` as a wait |
+|                 | Pattern                                                                                                                                                                                                                                            |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Preferred**   | Typed controls and pages (`GetField<T>`, `GetControl<T>`, `CommandBar.ClickCommandAsync`, the grid's `Control` methods). `WaitForAppIdleAsync()`. FluentAssertions                                                                                 |
+| **Acceptable**  | A narrow, commented drop to raw Playwright where Power Playwright has no equivalent: pressing `Tab` to commit a field, `Escape` to close a flyout, or evaluating `Xrm.Utility` for global context. A bounded retry for eventually consistent state |
+| **Discouraged** | Raw locators (`Page.GetByText(...)`, `ILocator.WaitForAsync`) where an abstraction exists. `Task.Delay` as a wait                                                                                                                                  |

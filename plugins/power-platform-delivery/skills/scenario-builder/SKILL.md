@@ -15,11 +15,11 @@ Test data is created the way production data is created: through the same API ca
 
 This also makes tests run unattended against a freshly deployed environment (see [alm.md](../power-platform-design/references/alm.md)): every test builds its own data and relies on none that was left behind.
 
-| Reference | Load it when |
-| --- | --- |
-| [templates.md](references/templates.md) | Writing an event, composite event or scenario class |
-| [usage.md](references/usage.md) | Calling builders from a test: chains, drilling in, resuming, correlating, reading outputs |
-| [fakers.md](references/fakers.md) | Writing or changing a Bogus faker, and `assets/RecordFaker.cs` |
+| Reference                               | Load it when                                                                              |
+| --------------------------------------- | ----------------------------------------------------------------------------------------- |
+| [templates.md](references/templates.md) | Writing an event, composite event or scenario class                                       |
+| [usage.md](references/usage.md)         | Calling builders from a test: chains, drilling in, resuming, correlating, reading outputs |
+| [fakers.md](references/fakers.md)       | Writing or changing a Bogus faker, and `assets/RecordFaker.cs`                            |
 
 ## Acting as a persona
 
@@ -35,17 +35,17 @@ Match the ScenarioBuilder version the project references: its API changes betwee
 
 This table is the single statement of the structural rules. The procedure and checklist refer to it.
 
-| Concept | Rule |
-| --- | --- |
-| `Event` | One actor action against the API. Implements `ExecuteAsync(ScenarioContext)` |
-| `Event.Info` | Nested class declaring the event's outputs. `ExecuteAsync` sets one context value keyed by the **event's own class name**, `context.Set(nameof(ApplicantSubmitsCaseEvent), new Info { ... })`. Never a per-property key or a typed-out string |
-| `Event.Builder` | Nested `Builder<TEvent>` with `With*` overrides. Field names and types **must match the event's fields exactly**, because the base builder copies values across by name. Value-type fields are **nullable** (`bool?`, `Guid?`) on both, so "not configured" differs from the default. Every overridable field has a safe default |
-| `CompositeEvent` | A business process made of other events through `[ComposeUsing]`. Name it with a verb that suggests configurable steps ("Processes"), not a single step ("Completes") |
-| `CompositeEvent.Builder` | One `By*` method per child, each only calling `ConfigureEvent`. Only configured children run unless `.AndAllPreviousSteps()` or `.AndAllOtherSteps()` is used |
-| `Scenario` | The test-facing entry point, composed with `[ComposeUsing]`. For each event whose outputs a test may need, a property **named after the event class** and typed as its `Info`. It's filled from the context by matching names |
-| `Scenario.Builder` | One configurator method per top-level step, each only calling `ConfigureEvent`. Overrides `InitializeServices` to register what events need injected: the client factory and a logger provider |
-| `ScenarioContext` | The bag events pass values through. Earlier events `Set`, later events `Get` |
-| `BuildAsync` | Runs the configured steps, plus any unconfigured steps that precede them at scenario level. `BuildAsync(scenario)` resumes an existing scenario |
+| Concept                  | Rule                                                                                                                                                                                                                                                                                                                             |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Event`                  | One actor action against the API. Implements `ExecuteAsync(ScenarioContext)`                                                                                                                                                                                                                                                     |
+| `Event.Info`             | Nested class declaring the event's outputs. `ExecuteAsync` sets one context value keyed by the **event's own class name**, `context.Set(nameof(ApplicantSubmitsCaseEvent), new Info { ... })`. Never a per-property key or a typed-out string                                                                                    |
+| `Event.Builder`          | Nested `Builder<TEvent>` with `With*` overrides. Field names and types **must match the event's fields exactly**, because the base builder copies values across by name. Value-type fields are **nullable** (`bool?`, `Guid?`) on both, so "not configured" differs from the default. Every overridable field has a safe default |
+| `CompositeEvent`         | A business process made of other events through `[ComposeUsing]`. Name it with a verb that suggests configurable steps ("Processes"), not a single step ("Completes")                                                                                                                                                            |
+| `CompositeEvent.Builder` | One `By*` method per child, each only calling `ConfigureEvent`. Only configured children run unless `.AndAllPreviousSteps()` or `.AndAllOtherSteps()` is used                                                                                                                                                                    |
+| `Scenario`               | The test-facing entry point, composed with `[ComposeUsing]`. For each event whose outputs a test may need, a property **named after the event class** and typed as its `Info`. It's filled from the context by matching names                                                                                                    |
+| `Scenario.Builder`       | One configurator method per top-level step, each only calling `ConfigureEvent`. Overrides `InitializeServices` to register what events need injected: the client factory and a logger provider                                                                                                                                   |
+| `ScenarioContext`        | The bag events pass values through. Earlier events `Set`, later events `Get`                                                                                                                                                                                                                                                     |
+| `BuildAsync`             | Runs the configured steps, plus any unconfigured steps that precede them at scenario level. `BuildAsync(scenario)` resumes an existing scenario                                                                                                                                                                                  |
 
 ## Procedure
 

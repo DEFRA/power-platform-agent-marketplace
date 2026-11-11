@@ -6,9 +6,9 @@ The code is taken unchanged from the same solution as the [plug-in example](plug
 
 ## Order of work
 
-| Step | Layer | What it adds |
-| --- | --- | --- |
-| 1. Application service | Application | `TextFieldTrimmer` holds the rule, and knows nothing of workflows |
+| Step                                  | Layer         | What it adds                                                                       |
+| ------------------------------------- | ------------- | ---------------------------------------------------------------------------------- |
+| 1. Application service                | Application   | `TextFieldTrimmer` holds the rule, and knows nothing of workflows                  |
 | 2. Activity, handler and registration | Workflow head | `TrimTextFields`, `TrimTextFieldsHandler`, and the handler in the composition root |
 
 Run each test and confirm it fails for the right reason before writing its code.
@@ -574,13 +574,13 @@ namespace Abc.Workflows
 
 Update the plug-in assembly in the development environment. Makers then see this activity in the process designer:
 
-| Item | Value |
-| --- | --- |
-| Activity type | `Abc.Workflows.TextTrimming.TrimTextFields` |
-| Name and friendly name | `TrimTextFields`, "Trim text fields" |
-| Group | "Text utilities" |
-| Description | Removes leading and trailing white space from named text attributes of the process's primary record |
-| Input | "Attribute logical names (comma-separated)", required, for example `abc_name, abc_description` |
-| Output | "Attributes changed", the number of attributes updated |
+| Item                   | Value                                                                                               |
+| ---------------------- | --------------------------------------------------------------------------------------------------- |
+| Activity type          | `Abc.Workflows.TextTrimming.TrimTextFields`                                                         |
+| Name and friendly name | `TrimTextFields`, "Trim text fields"                                                                |
+| Group                  | "Text utilities"                                                                                    |
+| Description            | Removes leading and trailing white space from named text attributes of the process's primary record |
+| Input                  | "Attribute logical names (comma-separated)", required, for example `abc_name, abc_description`      |
+| Output                 | "Attributes changed", the number of attributes updated                                              |
 
 It acts on the record the process runs on, so it works in a process on any table.
