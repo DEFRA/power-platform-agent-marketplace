@@ -450,8 +450,8 @@ Estimates are rough and assume one person.
 
 ### Phase 0: move the existing tests (0.5 day)
 
-- [ ] **T0.1** Move `plugins/power-platform-delivery/tests` to `tests/pester` and fix the path calculations (§5.1, steps 1 to 4).
-- [ ] **T0.2** Update CI, `AGENTS.md`, the authoring guide, `README.md` and the changelog (§5.1, steps 5 and 6).
+- [x] **T0.1** Move `plugins/power-platform-delivery/tests` to `tests/pester` and fix the path calculations (§5.1, steps 1 to 4).
+- [x] **T0.2** Update CI, `AGENTS.md`, the authoring guide, `README.md` and the changelog (§5.1, steps 5 and 6).
 
 ### Phase 1: spike (1 day)
 

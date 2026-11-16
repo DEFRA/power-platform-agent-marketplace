@@ -2,15 +2,9 @@
 # It stands in for the dotnet CLI with a global function, which takes precedence over the real executable, and builds a
 # small git repository of project files in TestDrive.
 
-$pluginRoot = $PSScriptRoot
-while (-not (Test-Path -LiteralPath (Join-Path $pluginRoot 'plugin.json'))) {
-    $pluginRoot = Split-Path -Parent $pluginRoot
-    if (-not $pluginRoot) {
-        throw 'plugin.json not found above the tests folder.'
-    }
-}
+. (Join-Path $PSScriptRoot '../../TestPaths.ps1')
 
-$script:ScriptsFolder = Join-Path $pluginRoot 'skills/dotnet-build-verification/scripts'
+$script:ScriptsFolder = Join-Path $script:PluginRoot 'skills/dotnet-build-verification/scripts'
 
 function global:dotnet {
     # Builds write the fixture warnings and errors to the file loggers; tests write the fixture TRX file.

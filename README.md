@@ -64,7 +64,7 @@ Skills also ship parameterised PowerShell 7 scripts, each with `-?` help and Pes
 Read [AGENTS.md](AGENTS.md) and the [authoring guide](docs/authoring-guide.md) before changing an agent, skill or script. They set out the rules, the layout and how to run the checks. CI runs the authoring-rule lint and the Pester tests on Windows and Linux. To run them locally you need PowerShell 7 and Pester 5.5 or later:
 
 ```powershell
-Invoke-Pester -Path plugins/power-platform-delivery/tests -Output Detailed
+Invoke-Pester -Path tests/pester -Output Detailed
 ```
 
 ## Repository layout
@@ -79,7 +79,7 @@ plugins/<plugin>/plugin.json      Plugin manifest
 plugins/<plugin>/CHANGELOG.md     Plugin changes
 plugins/<plugin>/agents/*.agent.md
 plugins/<plugin>/skills/<skill>/  SKILL.md, references/, assets/, scripts/
-plugins/<plugin>/tests/           Lint, schemas and Pester tests
+tests/pester/                     Lint, schemas and Pester tests
 ```
 
 ## Licence

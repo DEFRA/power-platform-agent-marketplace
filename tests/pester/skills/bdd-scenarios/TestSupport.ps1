@@ -1,14 +1,8 @@
 # Shared set-up for the bdd-scenarios tests. Pester runs only *.Tests.ps1 files, so this file isn't a test.
 
-$pluginRoot = $PSScriptRoot
-while (-not (Test-Path -LiteralPath (Join-Path $pluginRoot 'plugin.json'))) {
-    $pluginRoot = Split-Path -Parent $pluginRoot
-    if (-not $pluginRoot) {
-        throw 'plugin.json not found above the tests folder.'
-    }
-}
+. (Join-Path $PSScriptRoot '../../TestPaths.ps1')
 
-$script:ScriptsFolder = Join-Path $pluginRoot 'skills/bdd-scenarios/scripts'
+$script:ScriptsFolder = Join-Path $script:PluginRoot 'skills/bdd-scenarios/scripts'
 
 function Write-TestFile {
     param([string]$Path, [string[]]$Lines)

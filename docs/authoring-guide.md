@@ -19,7 +19,12 @@ plugins/power-platform-delivery/
     references/*.md      loaded on demand, one level deep
     assets/*             templates copied into consumer repos
     scripts/*.ps1        parameterised and Pester-tested
-  tests/                 lint, schemas and Pester tests
+```
+
+Tests live outside the plugin, so they don't ship with an install:
+
+```text
+tests/pester/            lint, schemas and Pester tests, mirroring the skills' folders
 ```
 
 ## Rules
@@ -34,11 +39,11 @@ plugins/power-platform-delivery/
 | Handoffs                          | In prose, naming agents by id: "hand off to `solution-architect` when…"                                                                                                                                                                        |
 | Ownership                         | Use soft "Intended for" wording. Never hard-gate a skill to one agent                                                                                                                                                                          |
 | Links                             | Relative links inside the plugin only. Never link to a path in a consumer repo                                                                                                                                                                 |
-| Scripts                           | PowerShell 7 that works on Windows and Linux. Every input is a parameter, with no project defaults. Each has `-?` help and Pester tests in `tests/`                                                                                            |
+| Scripts                           | PowerShell 7 that works on Windows and Linux. Every input is a parameter, with no project defaults. Each has `-?` help and Pester tests in `tests/pester/`                                                                                            |
 | Examples                          | The neutral domain above                                                                                                                                                                                                                       |
 | Language                          | British English                                                                                                                                                                                                                                |
 
-The numbers and allowed values are in [lint.config.json](../plugins/power-platform-delivery/tests/lint.config.json), the single place CI reads them from.
+The numbers and allowed values are in [lint.config.json](../tests/pester/lint.config.json), the single place CI reads them from.
 
 ## Project facts
 
@@ -49,7 +54,7 @@ Agents and skills never hard-code solution names, prefixes, paths, project names
 CI runs on Windows and Linux. To run the same checks locally you need PowerShell 7 and Pester 5 (5.5 or later):
 
 ```powershell
-Invoke-Pester -Path plugins/power-platform-delivery/tests -Output Detailed
+Invoke-Pester -Path tests/pester -Output Detailed
 ```
 
 The checks cover frontmatter, line budgets, in-plugin links, the JSON schemas for the manifests and project config, the `model` allow-list, and the tests for every script.
