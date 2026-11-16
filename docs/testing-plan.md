@@ -15,7 +15,7 @@ Track progress in [§13](#13-plan-and-progress). Each task has an ID (for exampl
   - **Routing:** does a prompt load the intended skill, and not a neighbouring one?
   - **Behaviour:** does an agent keep the rules its file states, such as stopping at the approval gate?
 - Evals check deterministic evidence first (the transcript, the files changed, the git history). An LLM judge is used only where no deterministic check works.
-- Evals cost Copilot credits and are non-deterministic. They run on a schedule, on demand and before a release. They don't run on every pull request.
+- Evals cost Copilot credits and are non-deterministic. For now they run only on a developer's machine, on demand and before a release. They don't run in CI.
 
 ## 2. Decisions
 
@@ -27,13 +27,14 @@ These were made by the maintainer. Don't reopen them. If one turns out to be unw
 | D2 | Evals use promptfoo with a custom provider. Pester is not used for evals. |
 | D3 | No cross-reference lint. Don't add checks that backticked skill or agent names resolve, or that README counts match the folders. |
 | D4 | Evals drive GitHub Copilot CLI. VS Code and the Copilot coding agent stay a manual smoke check at release. |
+| D5 | Evals run locally only, for now. Don't add a CI workflow that runs them. |
 
 These are recommendations that the maintainer has seen but not confirmed. Proceed on them, and list them in the pull request so they can be challenged.
 
 | ID | Recommendation |
 | -- | -------------- |
 | P1 | The moved Pester tests go in a `tests/pester/` subfolder, so `Invoke-Pester` never crawls the eval fixture or `node_modules`. |
-| P2 | Evals report on routine work and block only a release. They never block an ordinary pull request. |
+| P2 | Evals gate nothing automatically. A maintainer runs both suites before a release and reviews the results. |
 | P3 | The provider and assertions are plain JavaScript with no build step. The "scripts are PowerShell 7" rule applies to shipped skill scripts, not to eval tooling. |
 
 ## 3. What is known and what isn't
@@ -70,7 +71,8 @@ From promptfoo's documentation (not yet run here):
 | U4 | `--agent developer-worker` works although the agent is `user-invocable: false` | Test the worker only through `developer`'s delegation, or drop those cases to a later phase |
 | U5 | A promptfoo assertion can read the provider's `metadata` | Serialise the evidence into `output` as JSON and parse it in the assertion |
 | U6 | The exact tool names to pass to `--deny-tool` and `--available-tools` | Read them from a transcript during the spike |
-| U7 | How to install a pinned Copilot CLI on a GitHub Actions runner, and what the token needs | Read the Copilot CLI documentation. Don't guess a package name |
+| U7 | With `--output-format json`, events reach standard output as they happen, so the provider can stop a run early (§7.1). `--stream` may affect this | Routing cases run to the end of the turn, limited by the tool restrictions and the credit cap |
+| U10 | Stopping the process early leaves no usage file, so the cost of a stopped run isn't reported | Estimate the cost of routing runs from a few runs left to finish |
 | U8 | promptfoo's flags for repeats, caching, telemetry, pass-rate thresholds and multiple outputs | Read the documentation for the pinned version |
 | U9 | The cost in credits of one routing case and one behaviour case | Measure it in the spike with `--usage-output-file` |
 
@@ -153,7 +155,8 @@ The aim is to settle §3.2 with the least code. Throw-away code is fine, but kee
    - a prompt with `--agent developer-worker` and a small brief.
 4. Save each transcript and usage file under `tests/evals/providers/recordings/`. Remove anything personal first: account names, tokens, machine paths.
 5. Write the thinnest possible provider and one promptfoo case, and run `promptfoo eval` end to end. Check that an assertion can read the evidence.
-6. Write the findings into §3 of this document: move each item from "not verified" to "verified", with what you found. Record the cost per run.
+6. Check early stop: watch standard output during a run, confirm the skill load appears before the turn ends, and end the process tree at that point. Try it on Windows and on Linux or macOS if you can.
+7. Write the findings into §3 of this document: move each item from "not verified" to "verified", with what you found. Record the cost per run.
 
 ### 6.2 Done when
 
@@ -186,6 +189,17 @@ The aim is to settle §3.2 with the least code. Throw-away code is fine, but kee
 | `autopilot` | Whether to pass `--autopilot`, and the continuation limit |
 | `allowTools` / `denyTools` | Passed to the permission flags |
 | `timeoutMs` | Kill the process after this long and return an error |
+| `stopWhen` | Optional early stop. `route` ends the run as soon as the route is known (see below). Empty means run to the end of the turn |
+
+**Early stop for routing.** A routing case needs only the first skill the agent chooses, not the work that follows. The provider owns the process, so it can end the run itself:
+
+1. Read standard output line by line as the run proceeds, instead of waiting for the process to exit.
+2. With `stopWhen: route`, stop at the first skill load that isn't `power-platform-standards`. That skill is loaded first by design and says nothing about the route.
+3. Also stop when the turn ends, the credit cap is reached or the time-out passes. A run that ends without any such skill load is a valid result: the route is "none".
+4. To stop, end the whole process tree, not only the parent. On Windows a plain kill leaves child processes running.
+5. Set `metadata.stoppedEarly` to `true`, and don't treat the missing usage file or the non-zero exit as an error.
+
+This depends on U1 and U7. If either is false, keep `stopWhen` out and rely on the tool restrictions and the credit cap. Don't use early stop for behaviour cases, which need the whole run.
 
 **For each call:**
 
@@ -215,7 +229,8 @@ The aim is to settle §3.2 with the least code. Throw-away code is fine, but kee
 | `filesChanged` | From `git status --porcelain` against the baseline: path and status |
 | `headMoved` | Whether `HEAD` differs from the baseline commit |
 | `diff` | `git diff` against the baseline, truncated to a sensible size |
-| `credits` | Credits used, by agent |
+| `credits` | Credits used, by agent. Absent when the run was stopped early |
+| `stoppedEarly` | Whether the provider ended the run under `stopWhen` |
 
 **Design rules:**
 
@@ -232,7 +247,8 @@ The aim is to settle §3.2 with the least code. Throw-away code is fine, but kee
 - a transcript with an unknown event type;
 - an empty or truncated transcript;
 - the flags built from a configuration, including a prompt that contains quotes and newlines;
-- time-out and non-zero exit handling.
+- time-out and non-zero exit handling;
+- early stop: the run ends at the first skill that isn't `power-platform-standards`, and a run with no such skill ends normally.
 
 These tests need no credentials, so add them to the pull request CI as a second job in `ci.yml`.
 
@@ -256,7 +272,8 @@ Rules for writing them:
 - Write prompts as a user would, in the neutral domain. Don't quote the skill's `description`, or the case only tests string matching.
 - Run with no `--agent`, so the test is of the skill descriptions alone.
 - `power-platform-standards` is loaded first by design. Never assert that it's absent.
-- Routing needs only the first few steps of a run. Deny the edit and execute tools and set a low credit cap, to keep each case cheap.
+- Routing needs only the first few steps of a run. Set `stopWhen: route` so the provider ends the run once the route is known (§7.1). As a backstop, deny the edit and execute tools and set a low credit cap.
+- The route is the first skill loaded after `power-platform-standards`. A positive case passes when that is the expected skill. A near-miss passes when it is the neighbour, or at least isn't the skill under test.
 
 Suggested near-miss pairs, taken from the boundaries the skills state about each other. Confirm each against the skill text before using it.
 
@@ -363,37 +380,36 @@ Notes:
 - A baseline run is recorded, with its cost and pass rates.
 - Each failing case from the baseline is either fixed in the agent or skill, fixed in the case, or listed in the pull request as a known gap.
 
-## 9. Phase 4: CI and documentation
+## 9. Phase 4: local running and documentation
 
-### 9.1 `evals.yml`
+Evals aren't run in CI for now (D5). This phase makes them easy to run locally and documents them.
 
-A new workflow, separate from `ci.yml`.
+### 9.1 Running locally
 
-- **Triggers:** `workflow_dispatch` (with inputs for the suite, the model and the number of repeats) and a weekly schedule. Not `pull_request`: secrets aren't available to pull requests from forks, and evals shouldn't block routine work.
-- **Runner:** `ubuntu-latest` only.
-- **Permissions:** `contents: read`.
-- **Steps:** check out, set up Node, `npm ci` in `tests/evals`, install a pinned Copilot CLI (see U7), run each suite, upload the JSON and HTML results as an artefact.
-- **Secrets:** the Copilot token comes from a repository secret, passed as `COPILOT_GITHUB_TOKEN`. This is blocked on Q2.
-- **Limits:** a job time-out, a concurrency group so two runs don't overlap, a credit cap per case and capped parallelism.
-- **Settings:** caching off, telemetry off, and no sharing of results to any hosted service.
+- Add npm scripts in `tests/evals/package.json`: one for each suite, one for both, and one for the provider's unit tests.
+- Each script sets the options a run always needs: caching off, telemetry off, capped parallelism, and results written as JSON and HTML to an ignored folder under `tests/evals/`. Never share results to a hosted service.
+- Allow the model, the number of repeats and a filter for one case or one skill to be set from the command line, so a contributor can run only what they changed.
+- `tests/evals/README.md` states the prerequisites (Node, an installed and signed-in Copilot CLI, the supported CLI version), the commands, roughly what a full run costs in credits, and the safety rules in §6.3.
+- Before any case runs, check that Copilot CLI is installed and signed in, and stop with a clear message if not.
 
 ### 9.2 `ci.yml`
 
 - The Pester path changes in Phase 0.
-- Add a job that runs the provider's unit tests with `node --test`. It needs no secrets.
+- Add a job that runs the provider's unit tests with `node --test`. These are ordinary unit tests on recorded transcripts. They call no model and need no secrets, so they aren't covered by D5.
+- Add nothing that runs an eval suite.
 
 ### 9.3 Documentation
 
-- `docs/authoring-guide.md`: add a short "Evals" section. Say what the two suites cover, how to run them, and that a new or renamed skill needs routing cases and a new agent rule worth protecting needs a behaviour case.
-- `AGENTS.md`: add the eval expectation to the definition of done, in one line that links to the authoring guide. Clarify that the PowerShell rule is for shipped skill scripts.
+- `docs/authoring-guide.md`: add a short "Evals" section. Say what the two suites cover, that they run locally and how, and that a new or renamed skill needs routing cases and a new agent rule worth protecting needs a behaviour case.
+- `AGENTS.md`: add the eval expectation to the definition of done, in one line that links to the authoring guide. Say when a contributor is expected to run them: after changing an agent, or a skill's `description`. Clarify that the PowerShell rule is for shipped skill scripts.
 - `README.md`: update the repository layout and the Contributing section.
 - `plugins/power-platform-delivery/CHANGELOG.md`: record the change under `[Unreleased]`.
 - `.gitignore`: add the eval output folders.
-- Release checklist: wherever releases are described, add "run both eval suites and review the results" and the manual smoke check in VS Code and the coding agent.
+- Release checklist: wherever releases are described, add "run both eval suites locally and review the results" and the manual smoke check in VS Code and the coding agent.
 
 ### 9.4 Done when
 
-- A manual run of `evals.yml` completes and uploads results.
+- Someone other than the author can run both suites from a clean clone by following `tests/evals/README.md`.
 - The documents above describe the new layout and commands accurately.
 
 ## 10. Phase 5: optional, later
@@ -404,6 +420,7 @@ Do these only after the first four phases have run for a while and shown their w
 - **Worker model matrix.** Run the `developer-worker` cases against every model in `allowedModels` in `lint.config.json`. The allow-list is reviewed at each release, and this gives that review evidence.
 - **Delegation.** Check that `developer` delegates only bounded mechanical tasks, using the `subagents` evidence.
 - **Trend tracking.** Keep pass rates and cost per run over time.
+- **Evals in CI.** A separate workflow on a manual trigger and a schedule, never on `pull_request`, because secrets aren't available to pull requests from forks. It needs answers to who funds the credits, whose token is the repository secret, and how to install a pinned Copilot CLI on a runner.
 
 ## 11. Out of scope
 
@@ -411,6 +428,7 @@ Do these only after the first four phases have run for a while and shown their w
 - A live Dataverse environment, Azure Boards, or pipelines.
 - Automated tests in VS Code or the Copilot coding agent.
 - Cross-reference lint (D3).
+- Running evals in CI (D5). It is listed in Phase 5 for later.
 
 ## 12. Open questions
 
@@ -419,9 +437,9 @@ Record answers here when they arrive. Each has a default so work isn't blocked u
 | ID | Question | Default until answered | Blocks |
 | -- | -------- | ---------------------- | ------ |
 | Q1 | Is `tests/pester/` the right name for the moved tests (P1)? | Use it | Nothing |
-| Q2 | Who funds the Copilot credits for scheduled runs, and whose token is the repository secret? | Run evals locally only | `T4.1` |
+| Q2 | Answered by D5: evals run locally for now, on each contributor's own Copilot allowance. Funding and a token for CI are deferred with `T5.5` | Not applicable | Nothing |
 | Q3 | Which model do the main agents' evals pin? | The spike lists what is available and recommends one | `T2.5` baseline |
-| Q4 | Do evals block a release, or only report (P2)? | Report, and block a release | Nothing |
+| Q4 | Is a local eval run required before a release, and who reviews it (P2)? | Required. The maintainer cutting the release runs and reviews it | Nothing |
 | Q5 | Has promptfoo been approved as a dependency through the usual open-source route, including its current ownership and licence? | Proceed on a branch. Don't merge Phase 2 until approved | Merging `T2` |
 | Q6 | Is running an agent with shell access acceptable on a developer's machine, or must local runs use a container or sandbox? | Temporary folder, no `--allow-all-paths`, network denied | Nothing |
 | Q7 | Is JavaScript acceptable for eval tooling (P3)? | Yes | Nothing |
@@ -438,8 +456,8 @@ Estimates are rough and assume one person.
 ### Phase 1: spike (1 day)
 
 - [ ] **T1.1** Run Copilot CLI headlessly against the plugin and save the transcripts (§6.1, steps 1 to 4).
-- [ ] **T1.2** Run one promptfoo case end to end through a minimal provider (§6.1, step 5).
-- [ ] **T1.3** Update §3 of this document with the findings and the cost per run (§6.1, step 6).
+- [ ] **T1.2** Run one promptfoo case end to end through a minimal provider, and check early stop (§6.1, steps 5 and 6).
+- [ ] **T1.3** Update §3 of this document with the findings and the cost per run (§6.1, step 7).
 
 ### Phase 2: provider and routing evals (2 to 3 days)
 
@@ -456,9 +474,9 @@ Estimates are rough and assume one person.
 - [ ] **T3.3** Write the `product-analyst`, `solution-architect` and `quality-engineer` cases (§8.2).
 - [ ] **T3.4** Record a baseline, set the thresholds and deal with each failing case (§8.3, §8.4).
 
-### Phase 4: CI and documentation (1 day)
+### Phase 4: local running and documentation (0.5 day)
 
-- [ ] **T4.1** Add `evals.yml` (§9.1). Blocked on Q2.
+- [ ] **T4.1** Add the npm scripts and `tests/evals/README.md` (§9.1).
 - [ ] **T4.2** Update the documents (§9.3).
 
 ### Phase 5: optional
@@ -467,6 +485,7 @@ Estimates are rough and assume one person.
 - [ ] **T5.2** Worker model matrix.
 - [ ] **T5.3** Delegation checks.
 - [ ] **T5.4** Trend tracking.
+- [ ] **T5.5** Evals in CI.
 
 ### Order and parallel work
 
