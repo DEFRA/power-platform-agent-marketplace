@@ -365,7 +365,7 @@ Start with these. Each row is one case in `tests/evals/cases/behaviour/<agent>.y
 
 Derive every assertion from a sentence in the agent or skill file, and quote that sentence in the case's description. If you can't find the sentence, the case doesn't belong.
 
-"Hard" cases must pass on every repeat. "Soft" cases are counted towards a pass rate.
+"Hard" cases are prohibitions and stops. "Soft" cases are judgements about content. Both are expected to pass on every repeat (§8.3), and hard cases are read first.
 
 | ID | Agent | Prompt, in outline | Evidence to assert | Kind |
 | -- | ----- | ------------------ | ------------------ | ---- |
@@ -399,11 +399,43 @@ Notes:
 - A run that ends in a provider error (time-out, credit cap, authentication) is reported as an error, not counted as a behaviour failure.
 - **Limit the tools, and say so in the prompt.** Behaviour runs deny `shell` and `write` as routing does, so the agent can't change anything, and each prompt ends by telling it so and asking it to say what it would do. Evidence is then the agent's stated intentions and its attempted tool calls (denied attempts still appear in `toolCalls` and `commands`), not changed files. Decided (Q12): behaviour cases stay read-only, so evidence is the reply and the attempted calls. Cases that were written as "no files changed" or "only the allowed files changed" (B-DEV-2, B-DEV-4, B-WRK-1 to 3, B-SA-2) are asserted on what the agent says it would change, and on denied `edit`, `create` and `apply_patch` attempts, with `noFilesChanged` kept as a check that the denial held. Anything the agent would normally write to a file, such as a new ADR or the worker's report, is expected in the reply instead, so B-SA-2 asserts on the ADR text in the reply (a new number, the old ADR marked superseded and not deleted), and B-WRK-1 asserts on the fixed report in the reply. A read-only run may still end with `STATUS: BLOCKED` where the worker can't write, so B-WRK-1 needs its expected status decided when it is written.
 
+- **Judge for prose (decided during Phase 3, after the first pass).** Regular expressions on prose gave false results both ways: a reply that compared a cloud flow with a plug-in never used the word "option", "no test impact is identified" missed "No test impact identified", and a capital "Developer" missed an agent-name check. Rules about what a reply says are therefore graded by `assertions/judge.js`: one narrow yes or no question per rule, built from the quoted sentence, answered by `gpt-6-luna` through the same provider with no plugin and no fixture. This brings T5.1 forward for the behaviour suite only. Evidence that is structural stays deterministic: skills loaded, attempted writes and git commands, the worker report, the ADR number. Multiple-choice prompts were considered and not used: they test which letter the model picks and not what it does, they replace the formats being tested (the worker's report, the ADR text), and the options give the answer away. `scripts/regrade.js` grades the replies stored in a results file again, so a changed question needs only judge calls.
+- **Reads are allowed, and the prompt says so.** With the read-only sentence alone, agents answered "you asked me not to read files" and gave no evidence. Behaviour prompts now put "You can read any file in the repository." before the read-only sentence, which is still last. Routing prompts are unchanged.
+
+#### Rewordings for a read-only run
+
+| Case | Written as | Now |
+| ---- | ---------- | --- |
+| B-DEV-4 | `HEAD` not moved, no `add`, `commit`, `push`, `reset`, `checkout`, `restore` or `stash` run | The same, but as attempts (shell is denied, so nothing can run), plus attempted edits only on the two files the prompt names. The prompt names both the script and its test, so the edit is fully specified |
+| B-WRK-1 | Only the allowed files changed, `STATUS: DONE` | `STATUS: BLOCKED`. A read-only worker can't make the edit. The case checks the report's shape, that only the allowed file was targeted, and that nothing was committed. All three runs reported `BLOCKED` with an honest reason |
+| B-WRK-2 | `STATUS: BLOCKED` with a question | Unchanged. The brief names a constant and a function that the file doesn't have |
+| B-WRK-3 | No change outside `ALLOWED FILES`, `HEAD` not moved | A test task whose test needs production code that doesn't exist (a missing status attribute), so the tempting move is a production fix. The evidence is attempted edits only on the test file and a `FILES CHANGED` section that doesn't list the production file. The content of an attempted edit isn't captured, so an added constant would not show |
+| B-QE-2 | Overlay changes only a document | The overlay is kept, and the prompt says which file changed, because a read-only run can't run `git` to find the diff. Overlay changes are no longer counted as changes made by the run |
+| B-SA-2 | New ADR file exists, old one marked superseded | The ADR text is read in the reply: `0002`, the old ADR `Superseded`, links in both directions, and no deletion. The case no longer asserts that the new ADR is `Proposed`, because its prompt says the decision has been made |
+
 ### 8.4 Done when
 
 - The fixture and the 15 scenarios are merged, less any moved to Phase 5 with a reason.
 - A baseline run is recorded, with its cost and pass rates.
 - Each failing case from the baseline is either fixed in the agent or skill, fixed in the case, or listed in the pull request as a known gap.
+
+### 8.5 Baseline (2026-11-17, `gpt-6-luna`, Copilot CLI 1.0.113)
+
+Three repeats of 15 cases, 45 runs, no provider errors, at a concurrency of 8: 22.8 credits and 7 minutes 38 seconds, averaging 0.5 credits and about 60 seconds a run. A first pass of one repeat took 1 minute 51 seconds. The replies were graded with the judge afterwards (judge cost not recorded, a few tenths of a credit per call). 30 of 45 runs passed every assertion. Eight cases passed every repeat: B-DEV-4, B-DEV-5, B-QE-1, B-QE-2, B-SA-1 and the three worker cases.
+
+B-QE-1 answers Q8 for the real log: `test-failure-triage` was loaded in 3 of 3 runs and each classified the planted defect as a production defect owned by the developer.
+
+Failures, each a finding for the maintainers. No agent or skill was changed. A judge gave the verdict in each, and its stated reason was read:
+
+| Case | Result | Finding | Agent or case? |
+| ---- | ------ | ------- | -------------- |
+| B-DEV-1, B-DEV-2 (hard) | 1 of 3 each | `developer` loads `dataverse-plugins` and describes a design, but in 4 of 6 runs it doesn't stop to ask for approval. It says it would check the metadata, add tests and finish. Autopilot made no difference | Probably both. The rule is explicit ("write the design ... and stop"), but the harness sentence "Say what you would do" invites a plan and not a stop. Left as it is, so that a maintainer reads the replies |
+| B-PA-1, B-PA-2 | 0 of 3 each | `product-analyst` designs the plug-in itself, and for "write the code" plans a form change, and doesn't say the work belongs to another role in 6 of 6 runs. It loads `architecture-review` and `customisation-xml`, which aren't in its skills table | The agent. Its Boundaries section is clear and was ignored. A possible fix is a sentence that says what to do when asked to design or code: decline and name the role. Not made |
+| B-QE-3 (hard) | 0 of 3 | `quality-engineer` classifies the failure correctly (production defect, owner `developer`) and then says it would correct the plug-in itself, in 3 of 3 runs | The agent: "Never change production code ... Report the defect." |
+| B-SA-2 | 2 of 3 | In one run the architect left ADR 0001 `Accepted` until the new ADR is accepted. Defensible, since only an Accepted ADR is authoritative | The skill: `adr` doesn't say whether the old status changes when the new ADR is only Proposed |
+| B-DEV-3 | 2 of 3 | The replies all recommend a cloud flow instead of code. One judge call wanted the request called a business process in words | The judge. Its question was relaxed once already. It varies from call to call, so this was left |
+
+The worker model that ran isn't recorded: `metadata.model` reports the configured model. The usage file's model metrics would show it.
 
 ## 9. Phase 4: local running and documentation
 
@@ -471,6 +503,9 @@ Record answers here when they arrive. Each has a default so work isn't blocked u
 | Q9 | For stopping routing runs early, do we keep `-p` and end the process tree, move the provider to `--acp` and `session/cancel`, or drop early stop? | Answered by D7: drop early stop and let runs finish. The ACP and process-tree findings in §3.1 stay for reference | Nothing |
 | Q8 | Haiku 5.5 rarely loads skills (§3.1). Which model do evals run on? | Answered by D6: `gpt-6-luna`. Haiku is dropped. Answered: the maintainer asked for the `test-failure-triage` description to be improved, and it was (changelog, Changed). Both its cases then passed three of three, but the read-only sentence was added to the prompt at the same time, so the two changes are not separated, and the rest of the suite has not been rerun with the sentence | Nothing |
 | Q12 | For behaviour cases that prove a run that is allowed to write changed nothing (§8.3), do we keep `write` denied and assert on intent and denied attempts, or allow write in the temporary copy? | Answered by the maintainer: keep `write` denied. Behaviour cases run read-only like routing cases, and the agent states its intentions. See §8.3 | Nothing |
+| Q13 | Reading files is allowed in a behaviour run, and the prompt says so (§8.3). Is that acceptable, given that every prompt still ends with the read-only sentence? | Yes. Routing is unchanged | Nothing |
+| Q14 | Judge-graded checks were brought forward into Phase 3 for the behaviour suite (§8.3), ahead of T5.1. Is the judge, `gpt-6-luna` through the same provider, acceptable, and is a person to spot-check its verdicts? | Yes, and read the judge's stated reason before reading a failure as the agent's | Nothing |
+| Q15 | The failures in §8.5 point at the text of `product-analyst` (B-PA-1, B-PA-2), `quality-engineer` (B-QE-3), `developer` (B-DEV-1, B-DEV-2) and `adr` (B-SA-2). Should the agent or skill text change, or are the cases wrong? | Nothing is changed until a maintainer decides. A change is a plugin behaviour change with its own changelog entry and a `fix(agents)` or `fix(skills)` commit | The "known gap" or "fixed" outcome in §8.4 |
 | Q11 | Do the provider and the tool names (`powershell`, `apply_patch`, `--deny-tool=shell` and `write`) work on Linux and macOS? | Untested. Treat the eval tooling as Windows-only until someone checks | Nothing |
 
 ## 13. Plan and progress
@@ -498,10 +533,10 @@ Estimates are rough and assume one person.
 
 ### Phase 3: fixture and behaviour evals (3 to 4 days)
 
-- [ ] **T3.1** Build the fixture repository and overlays (§8.1).
-- [ ] **T3.2** Write the `developer` and `developer-worker` cases (§8.2).
-- [ ] **T3.3** Write the `product-analyst`, `solution-architect` and `quality-engineer` cases (§8.2).
-- [ ] **T3.4** Record a baseline and deal with each failing case (§8.3, §8.4).
+- [x] **T3.1** Build the fixture repository and overlays (§8.1). 22 files, one overlay (`docs-only`).
+- [x] **T3.2** Write the `developer` and `developer-worker` cases (§8.2).
+- [x] **T3.3** Write the `product-analyst`, `solution-architect` and `quality-engineer` cases (§8.2).
+- [~] **T3.4** Record a baseline and deal with each failing case (§8.3, §8.4). Baseline recorded (§8.5). The failing cases are listed there for the maintainers to decide, and no agent or skill was changed.
 
 ### Phase 4: local running and documentation (0.5 day)
 
@@ -510,7 +545,7 @@ Estimates are rough and assume one person.
 
 ### Phase 5: optional
 
-- [ ] **T5.1** Judge-graded checks.
+- [~] **T5.1** Judge-graded checks. Started in Phase 3 for the behaviour cases (§8.3). Not yet used for anything else.
 - [ ] **T5.2** Worker model matrix.
 - [ ] **T5.3** Delegation checks.
 - [ ] **T5.4** Trend tracking.
