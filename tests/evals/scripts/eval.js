@@ -2,7 +2,9 @@
 'use strict';
 // Runs one eval suite locally with the options a run always needs.
 //
-//   node scripts/eval.js routing [promptfoo options, for example --filter-pattern "adr" or --repeat 3]
+//   node scripts/eval.js routing|behaviour [promptfoo options, for example --filter-pattern "adr" or --repeat 3]
+//
+// Behaviour cases run three times unless --repeat says otherwise, because one run of a non-deterministic agent proves little.
 //
 // Caching, telemetry and update checks are off, parallelism is capped, nothing is shared to a hosted service, and
 // results go to results/ (git-ignored) as JSON and HTML.
@@ -15,12 +17,13 @@ const { spawnSync } = require('node:child_process');
 
 // Runs wait on the network, so they parallelise well. Each one starts a Copilot CLI process, so keep it modest.
 const DEFAULT_CONCURRENCY = 8;
+const DEFAULT_REPEATS = { behaviour: 3 };
 const root = path.join(__dirname, '..');
 const suite = process.argv[2];
 const extra = process.argv.slice(3);
 
 if (!suite || !fs.existsSync(path.join(root, `promptfooconfig.${suite}.yaml`))) {
-  console.error('Usage: node scripts/eval.js <suite> [promptfoo options]. Suites with a config: routing.');
+  console.error('Usage: node scripts/eval.js <suite> [promptfoo options]. Suites with a config: routing, behaviour.');
   process.exit(2);
 }
 
@@ -38,6 +41,7 @@ fs.mkdirSync(results, { recursive: true });
 const json = path.join(results, `${suite}.json`);
 const args = [
   entry, 'eval', '-c', `promptfooconfig.${suite}.yaml`, '--no-cache', '--no-write', '--no-share', ...(extra.some((a) => a === '--max-concurrency' || a === '-j') ? [] : ['--max-concurrency', String(DEFAULT_CONCURRENCY)]),
+  ...(DEFAULT_REPEATS[suite] && !extra.some((a) => a === '--repeat' || a.startsWith('--repeat=')) ? ['--repeat', String(DEFAULT_REPEATS[suite])] : []),
   '-o', json, '-o', path.join(results, `${suite}.html`), ...extra,
 ];
 const env = { ...process.env, PROMPTFOO_DISABLE_TELEMETRY: '1', PROMPTFOO_DISABLE_UPDATE: '1', PROMPTFOO_DISABLE_SHARING: '1' };

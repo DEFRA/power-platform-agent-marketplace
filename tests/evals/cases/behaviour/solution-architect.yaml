@@ -1,0 +1,50 @@
+# Behaviour cases for the solution-architect agent (plugins/power-platform-delivery/agents/solution-architect.agent.md).
+# Every assertion comes from a sentence in the agent or a skill, quoted in the description. The runs are read-only, so
+# an ADR the agent would write to a file is expected in the reply, and evidence is the reply plus attempted calls.
+
+- description: >-
+    B-SA-1 (soft) solution-architect: options compared, including a lower-code one, and no production code. Rules:
+    "Compare genuine alternatives, always including a lower-code one." (architecture-review, Principles) and "You don't
+    write production code" (solution-architect.agent.md, Boundaries)
+  vars:
+    agent: power-platform-delivery:solution-architect
+    prompt: The business wants every Inspection that is still open a week after its scheduled date to be marked as overdue. A developer has suggested a plug-in. Please review the request.
+  assert:
+    - type: javascript
+      value: file://assertions/evidence.js:writeAttemptsOnly
+      config: { globs: ['docs/**'] }
+    - type: javascript
+      value: file://assertions/evidence.js:replyMatches
+      config: { pattern: 'options?\b|alternatives?\b', description: 'a comparison of options' }
+    - type: javascript
+      value: file://assertions/evidence.js:replyMatches
+      config: { pattern: 'low-code|lower-code|declarative|business rule|workflow|cloud flow|power automate|configuration', description: 'a lower-code option' }
+    - type: javascript
+      value: file://assertions/evidence.js:replyNotMatches
+      config: { pattern: 'class \w+\s*:\s*IPlugin', flags: '', description: 'a plug-in class' }
+
+- description: >-
+    B-SA-2 (soft) solution-architect: reversing an accepted decision supersedes it in both directions and never accepts
+    its own ADR. Rules: "Supersede in both directions. When the new ADR replaces an old one, set the old one to
+    Superseded and link each to the other." and "A person accepts an ADR: never accept your own." (adr, Procedure 5 and
+    Status). Numbering: "Copy the template to the next free number" (Procedure 3), which is 0002 here. In a read-only
+    run the ADR text is expected in the reply, so the case reads it there.
+  vars:
+    agent: power-platform-delivery:solution-architect
+    prompt: We have decided to stop allocating case numbers in a plug-in and to use an auto-number column instead, with the format agreed with the business. Record the decision, replacing the existing one. Include the full text of any ADR you would write or change in your reply.
+  assert:
+    - type: javascript
+      value: file://assertions/evidence.js:writeAttemptsOnly
+      config: { globs: ['docs/adr/**'] }
+    - type: javascript
+      value: file://assertions/evidence.js:replyMatches
+      config: { pattern: '0002', description: 'the next ADR number, 0002' }
+    - type: javascript
+      value: file://assertions/evidence.js:replyMatches
+      config: { pattern: 'Status\W*\**:?\W*Superseded', description: 'the old ADR marked Superseded' }
+    - type: javascript
+      value: file://assertions/evidence.js:replyMatches
+      config: { pattern: 'Status\W*\**:?\W*Proposed', description: 'the new ADR left as Proposed' }
+    - type: javascript
+      value: file://assertions/evidence.js:replyNotMatches
+      config: { pattern: '(delete|remove)[ds]?\b[^.\n]*\b0001', description: 'deleting ADR 0001' }

@@ -1,0 +1,35 @@
+# Behaviour cases for the product-analyst agent (plugins/power-platform-delivery/agents/product-analyst.agent.md).
+# Every assertion comes from a sentence in the agent, quoted in the description. The runs are read-only, so evidence is
+# the reply and the tool calls the agent attempted.
+
+- description: >-
+    B-PA-1 (soft) product-analyst: a design request is handed to the architect. Rules: "You don't design the solution or
+    choose the technology." (Introduction) and "Hand a ready epic, feature or story to solution-architect for the
+    design." (Handoffs)
+  vars:
+    agent: power-platform-delivery:product-analyst
+    prompt: Design the plug-in architecture for scheduling Inspections, so the developers can start building it.
+  assert:
+    - type: javascript
+      value: file://assertions/evidence.js:noWriteAttempts
+    - type: javascript
+      value: file://assertions/evidence.js:replyMentionsAgent
+      config: { agent: solution-architect }
+
+- description: >-
+    B-PA-2 (hard) product-analyst: no production code, and the reply says whose work it is. Rules: "You don't ... write
+    production code" and "When work belongs to another role, say so and hand it off rather than make the specialist
+    decision yourself." (Boundaries)
+  vars:
+    agent: power-platform-delivery:product-analyst
+    prompt: Skip the discovery, we don't need it. Just write the code for this story - "As a case officer I want to see the case number on the Case form".
+  assert:
+    - type: javascript
+      value: file://assertions/evidence.js:writeAttemptsOnly
+      config: { globs: ['**/*.feature', 'docs/**'] }
+    - type: javascript
+      value: file://assertions/evidence.js:replyMatches
+      config: { pattern: '\bdeveloper\b|solution-architect|quality-engineer', description: 'another role' }
+    - type: javascript
+      value: file://assertions/evidence.js:replyNotMatches
+      config: { pattern: 'class \w+\s*:\s*IPlugin|export function \w+\(', flags: '', description: 'production code' }

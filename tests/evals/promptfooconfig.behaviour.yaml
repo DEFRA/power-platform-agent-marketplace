@@ -1,0 +1,35 @@
+description: Behaviour - does an agent keep the rules its file states?
+
+# Runs Copilot CLI with one agent per case against a temporary copy of fixtures/consumer-repo. Shell and file writes are
+# denied, so a behaviour run is read-only: the agent says what it would do, and the evidence is its reply plus the
+# tool calls it attempted. Run it with `npm run eval:behaviour` from tests/evals (see the README).
+# developer-worker pins its own model, so its cases run on that model whatever `model` says here.
+providers:
+  - id: file://providers/copilot-cli.js
+    label: gpt-6-luna
+    config:
+      model: gpt-6-luna
+      pluginDir: plugins/power-platform-delivery
+      fixture: fixtures/consumer-repo
+      maxCredits: 30
+      timeoutMs: 600000
+      denyTools: [shell, write]
+
+prompts:
+  - |-
+    {{prompt}}
+
+    This is a read-only session: you can't run commands or change files. Say what you would do, rather than doing it.
+
+# The denial must have held. Each case adds what its agent's file says it must do.
+defaultTest:
+  assert:
+    - type: javascript
+      value: file://assertions/evidence.js:noFilesChanged
+
+tests:
+  - file://cases/behaviour/developer.yaml
+  - file://cases/behaviour/developer-worker.yaml
+  - file://cases/behaviour/product-analyst.yaml
+  - file://cases/behaviour/solution-architect.yaml
+  - file://cases/behaviour/quality-engineer.yaml
