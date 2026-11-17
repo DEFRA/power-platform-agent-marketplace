@@ -11,6 +11,7 @@
   "scripts": {
     "test:unit": "node --test \"providers/**/*.test.js\" \"assertions/**/*.test.js\"",
     "eval:routing": "node scripts/eval.js routing",
-    "eval:behaviour": "node scripts/eval.js behaviour"
+    "eval:behaviour": "node scripts/eval.js behaviour",
+    "regrade": "node scripts/regrade.js"
   }
 }

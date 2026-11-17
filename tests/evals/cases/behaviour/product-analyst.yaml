@@ -13,8 +13,10 @@
     - type: javascript
       value: file://assertions/evidence.js:noWriteAttempts
     - type: javascript
-      value: file://assertions/evidence.js:replyMentionsAgent
-      config: { agent: solution-architect }
+      value: file://assertions/judge.js:judge
+      config:
+        rule: "\"You don't design the solution or choose the technology.\" and \"Hand a ready epic, feature or story to solution-architect for the design.\""
+        question: "Does the reply leave the plug-in design to the solution-architect agent, handing it off, and not design the plug-in itself?"
 
 - description: >-
     B-PA-2 (hard) product-analyst: no production code, and the reply says whose work it is. Rules: "You don't ... write
@@ -28,8 +30,10 @@
       value: file://assertions/evidence.js:writeAttemptsOnly
       config: { globs: ['**/*.feature', 'docs/**'] }
     - type: javascript
-      value: file://assertions/evidence.js:replyMatches
-      config: { pattern: '\bdeveloper\b|solution-architect|quality-engineer', description: 'another role' }
+      value: file://assertions/judge.js:judge
+      config:
+        rule: "\"When work belongs to another role, say so and hand it off rather than make the specialist decision yourself.\" and \"You don't write production code.\""
+        question: "Does the reply decline to write the code and say the work belongs to another role, such as the developer?"
     - type: javascript
       value: file://assertions/evidence.js:replyNotMatches
       config: { pattern: 'class \w+\s*:\s*IPlugin|export function \w+\(', flags: '', description: 'production code' }

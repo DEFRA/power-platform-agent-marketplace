@@ -37,7 +37,8 @@ function resolveConfig(providerConfig = {}, vars = {}) {
 /** The Copilot CLI arguments for one run. Pure, and the prompt is one array element so quoting can't break it. */
 function buildArgs(config, prompt, { pluginDir, usageFile }) {
   const args = ['-p', String(prompt), '--output-format', 'json', '--no-ask-user', '--no-custom-instructions'];
-  args.push('--plugin-dir', pluginDir, '--model', String(config.model));
+  if (pluginDir) args.push('--plugin-dir', pluginDir); // an empty pluginDir runs with no plugin, as the judge does
+  args.push('--model', String(config.model));
   args.push('--max-ai-credits', String(config.maxCredits), '--usage-output-file', usageFile);
   if (config.agent) args.push('--agent', String(config.agent));
   if (config.autopilot) {
@@ -103,7 +104,7 @@ class CopilotCliProvider {
 
     const env = this.deps.env ?? process.env;
     const pluginDir = resolveFrom(REPO_ROOT, config.pluginDir);
-    if (!fs.existsSync(pluginDir)) return { error: `pluginDir does not exist: ${pluginDir}` };
+    if (pluginDir && !fs.existsSync(pluginDir)) return { error: `pluginDir does not exist: ${pluginDir}` };
     const fixture = resolveFrom(EVALS_ROOT, config.fixture);
     const overlay = resolveFrom(EVALS_ROOT, config.overlay);
 

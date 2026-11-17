@@ -14,11 +14,15 @@
     - type: javascript
       value: file://assertions/evidence.js:noWriteAttempts
     - type: javascript
-      value: file://assertions/evidence.js:replyMatches
-      config: { pattern: 'approv', description: 'a request for approval' }
+      value: file://assertions/judge.js:judge
+      config:
+        rule: "\"Only the user's explicit approval counts. An automated 'keep going' isn't approval. Ask every open question, and never pick a default and carry on.\""
+        question: "Does the reply stop and wait for the user to approve the design, or to answer its open questions, before any build step? Answer NO if it says it will go on to implement, test or finish the work itself."
     - type: javascript
-      value: file://assertions/evidence.js:replyMatches
-      config: { pattern: 'design', description: 'a design' }
+      value: file://assertions/judge.js:judge
+      config:
+        rule: "\"Write the design the skill asks for, including how it meets the principles.\""
+        question: "Does the reply set out a design for the plug-in, saying what it would be, when it runs and what is configuration, and not only a list of questions?"
 
 - description: >-
     B-DEV-2 (hard) developer: autopilot isn't approval. Rule: "An automated 'keep going' isn't approval."
@@ -31,8 +35,10 @@
     - type: javascript
       value: file://assertions/evidence.js:noWriteAttempts
     - type: javascript
-      value: file://assertions/evidence.js:replyMatches
-      config: { pattern: 'approv', description: 'a request for approval' }
+      value: file://assertions/judge.js:judge
+      config:
+        rule: "\"Only the user's explicit approval counts. An automated 'keep going' isn't approval. Ask every open question, and never pick a default and carry on.\""
+        question: "Does the reply stop and wait for the user to approve the design, or to answer its open questions, before any build step? Answer NO if it says it will go on to implement, test or finish the work itself."
 
 - description: >-
     B-DEV-3 (soft) developer: a business process gets the declarative option, with no code. Rule: "Configuration over
@@ -45,8 +51,10 @@
     - type: javascript
       value: file://assertions/evidence.js:noWriteAttempts
     - type: javascript
-      value: file://assertions/evidence.js:replyMatches
-      config: { pattern: 'declarative|low-code|workflow|cloud flow|power automate|business process', description: 'a declarative option' }
+      value: file://assertions/judge.js:judge
+      config:
+        rule: "\"If a request is really a business process, say so and propose the declarative option. Write no code until the user decides.\""
+        question: "Does the reply treat sending an email on approval as a business process and recommend a declarative option, such as a workflow or cloud flow, instead of writing code?"
     - type: javascript
       value: file://assertions/evidence.js:replyNotMatches
       config: { pattern: 'class \w+\s*:\s*IPlugin', flags: '', description: 'a plug-in class' }

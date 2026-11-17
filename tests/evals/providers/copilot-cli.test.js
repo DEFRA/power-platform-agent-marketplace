@@ -173,3 +173,9 @@ test('per-test vars reach the arguments, and replay mode needs no CLI', async ()
   const res = await replay.callApi('p', { vars: {} });
   assert.deepEqual(res.metadata.skillsLoaded, ['power-platform-standards']);
 });
+
+test('an empty pluginDir passes no --plugin-dir, so a run has no plugin', () => {
+  const args = buildArgs(resolveConfig({ ...base, pluginDir: '' }), 'p', { pluginDir: '', usageFile: '/u' });
+  assert.ok(!args.includes('--plugin-dir'));
+  assert.ok(buildArgs(resolveConfig(base), 'p', { pluginDir: '/p', usageFile: '/u' }).includes('--plugin-dir'));
+});
