@@ -94,3 +94,10 @@ test('promptfoo wrappers read metadata and config from the context, and fail cle
   assert.equal(evidence.skillLoaded('', { providerResponse: {}, config: { skill: 'adr' } }).reason, 'No metadata on the provider response');
   assert.equal(evidence.replyMatchesWorkerReport(report('STATUS: DONE'), { config: {} }).pass, true);
 });
+
+test('skillLoadedFromVars reads the expected skill from the case vars', () => {
+  const providerResponse = { metadata: meta({ skillsLoaded: ['power-platform-standards', 'adr'] }) };
+  assert.equal(evidence.skillLoadedFromVars('', { providerResponse, vars: { skill: 'adr' } }).pass, true);
+  assert.equal(evidence.skillLoadedFromVars('', { providerResponse, vars: { skill: 'web-resources' } }).pass, false);
+  assert.match(evidence.skillLoadedFromVars('', { providerResponse, vars: {} }).reason, /no vars.skill/i);
+});

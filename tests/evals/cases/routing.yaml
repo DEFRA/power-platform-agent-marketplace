@@ -1,0 +1,185 @@
+# Routing cases (docs/testing-plan.md section 7.4): two natural prompts per skill, except power-platform-standards,
+# which is loaded first by design. Positive cases only (D8). A case passes when `skill` is loaded anywhere in the run.
+# Prompts are written as a user would write them, in the neutral domain (Case, Applicant, Inspection, prefix abc_).
+# Don't reword a prompt to make it pass: a failure means the skill's description or the case is wrong, and a
+# maintainer decides which.
+
+- description: 'routing: acceptance-testing (1)'
+  vars:
+    skill: acceptance-testing
+    prompt: The Gherkin scenarios for submitting a Case are agreed but there's no automation yet. Can you write the step definitions so they run against the model-driven app?
+- description: 'routing: acceptance-testing (2)'
+  vars:
+    skill: acceptance-testing
+    prompt: Our Reqnroll tests for the Inspection form have fallen behind now the Outcome field behaves differently. Update the bindings to match.
+
+- description: 'routing: adr (1)'
+  vars:
+    skill: adr
+    prompt: We decided to store Applicant documents in SharePoint rather than Dataverse file columns. Record that decision for the team.
+- description: 'routing: adr (2)'
+  vars:
+    skill: adr
+    prompt: The old decision to use a plug-in for Case numbering no longer holds. Write the new decision and mark the old one as replaced.
+
+- description: 'routing: architecture-review (1)'
+  vars:
+    skill: architecture-review
+    prompt: The business wants Inspections to be re-assigned automatically when an inspector goes on leave. What approach would you recommend, and what are the trade-offs?
+- description: 'routing: architecture-review (2)'
+  vars:
+    skill: architecture-review
+    prompt: Please review this design before we build it - a nightly job that copies every Case into a reporting database and flags any that are overdue.
+
+- description: 'routing: azure-boards (1)'
+  vars:
+    skill: azure-boards
+    prompt: What's the state of work item 4521, and who is it assigned to?
+- description: 'routing: azure-boards (2)'
+  vars:
+    skill: azure-boards
+    prompt: Create a user story for letting an Applicant withdraw a Case, link it to the parent feature, and add a comment that refinement is booked for Thursday.
+
+- description: 'routing: bdd-scenarios (1)'
+  vars:
+    skill: bdd-scenarios
+    prompt: Here are the acceptance criteria for Inspection scheduling. Turn the ones worth automating into feature files.
+- description: 'routing: bdd-scenarios (2)'
+  vars:
+    skill: bdd-scenarios
+    prompt: Can you check the feature files for Case approval for gaps, duplicated steps and anything ambiguous?
+
+- description: 'routing: commit-and-pull-request (1)'
+  vars:
+    skill: commit-and-pull-request
+    prompt: I've finished the change to the Case status choices. Write the commit message for it.
+- description: 'routing: commit-and-pull-request (2)'
+  vars:
+    skill: commit-and-pull-request
+    prompt: I'm about to open a pull request for the Applicant form changes. Draft the title and description, and tell me whether it will bump the solution version.
+
+- description: 'routing: customisation-xml (1)'
+  vars:
+    skill: customisation-xml
+    prompt: Add a new view to the Inspection table that shows only overdue inspections, sorted by due date.
+- description: 'routing: customisation-xml (2)'
+  vars:
+    skill: customisation-xml
+    prompt: I need a ribbon button on the Case form that opens the Applicant record. Can that be done by editing the solution files?
+
+- description: 'routing: dataverse-plugins (1)'
+  vars:
+    skill: dataverse-plugins
+    prompt: Write a plug-in that stops an Inspection being marked as completed if it has no outcome.
+- description: 'routing: dataverse-plugins (2)'
+  vars:
+    skill: dataverse-plugins
+    prompt: We need a custom workflow activity that calculates the due date for a Case from its priority. Can you build it?
+
+- description: 'routing: dataverse-schema (1)'
+  vars:
+    skill: dataverse-schema
+    prompt: What type is the abc_outcome column on Inspection, and what are its allowed values?
+- description: 'routing: dataverse-schema (2)'
+  vars:
+    skill: dataverse-schema
+    prompt: The early-bound classes don't have the new Applicant table. Can you regenerate them?
+
+- description: 'routing: dotnet-build-verification (1)'
+  vars:
+    skill: dotnet-build-verification
+    prompt: Before I start changing the Inspection plug-in, can you build the solution and note how many warnings there are now?
+- description: 'routing: dotnet-build-verification (2)'
+  vars:
+    skill: dotnet-build-verification
+    prompt: I've finished the C# changes. Check that nothing new has broken - warnings, build and unit tests - and tell me whether it's good to hand over.
+
+- description: 'routing: integration-testing (1)'
+  vars:
+    skill: integration-testing
+    prompt: Write tests that call Dataverse directly to prove an Inspection can't be completed by someone outside the inspectors team.
+- description: 'routing: integration-testing (2)'
+  vars:
+    skill: integration-testing
+    prompt: The plug-in that copies Applicant details onto a Case needs coverage below the UI. What tests should it have, and can you write them?
+
+- description: 'routing: package-deployer (1)'
+  vars:
+    skill: package-deployer
+    prompt: We've added a second solution for Inspection reporting. How do I get it into the deployment package so it imports after the core one?
+- description: 'routing: package-deployer (2)'
+  vars:
+    skill: package-deployer
+    prompt: I need some reference data for Case categories to be present in every environment after deployment. Where does that go in the package?
+
+- description: 'routing: power-platform-design (1)'
+  vars:
+    skill: power-platform-design
+    prompt: Where should the logic for escalating overdue Cases live - a flow, a plug-in, a business rule or somewhere else?
+- description: 'routing: power-platform-design (2)'
+  vars:
+    skill: power-platform-design
+    prompt: We want to retire the Inspection Notes table and move its data into Case. How do we do that without breaking anything that depends on it?
+
+- description: 'routing: requirements-and-backlog (1)'
+  vars:
+    skill: requirements-and-backlog
+    prompt: The business has asked for a way for Applicants to track their Cases online. Help me work out what we actually need to build and break it into stories.
+- description: 'routing: requirements-and-backlog (2)'
+  vars:
+    skill: requirements-and-backlog
+    prompt: This user story about Inspection reports is too big for one sprint. How should I split it, and are the acceptance criteria good enough?
+
+- description: 'routing: scenario-builder (1)'
+  vars:
+    skill: scenario-builder
+    prompt: My test needs a Case with three Inspections already completed, and nothing in our test data setup creates that. Can you add it?
+- description: 'routing: scenario-builder (2)'
+  vars:
+    skill: scenario-builder
+    prompt: Add a faker for the Applicant table so tests get realistic names and addresses.
+
+- description: 'routing: test-failure-triage (1)'
+  vars:
+    skill: test-failure-triage
+    prompt: Two of our Case approval tests started failing this morning - expected 3 but found 2. Why is this failing?
+- description: 'routing: test-failure-triage (2)'
+  vars:
+    skill: test-failure-triage
+    prompt: One of the Inspection scenarios passes locally but fails in the pull request run about one time in five. Who should look at it, and what is the likely cause?
+
+- description: 'routing: test-foundations (1)'
+  vars:
+    skill: test-foundations
+    prompt: Our acceptance tests need to sign in as an inspector, a manager and an Applicant, and they run in parallel. How should the test users and configuration be set up?
+- description: 'routing: test-foundations (2)'
+  vars:
+    skill: test-foundations
+    prompt: I want integration tests that call the Dataverse API as different personas. How do we create the clients and share the users without them colliding?
+
+- description: 'routing: test-impact-analysis (1)'
+  vars:
+    skill: test-impact-analysis
+    prompt: Looking at my branch against main, which tests could be affected by my change to the Case form?
+- description: 'routing: test-impact-analysis (2)'
+  vars:
+    skill: test-impact-analysis
+    prompt: Write a short summary of the testing impact of this change for the pull request.
+
+- description: 'routing: test-quality-review (1)'
+  vars:
+    skill: test-quality-review
+    prompt: Our acceptance test suite is slow and keeps flaking. Can you review the test code and tell me what to fix first?
+- description: 'routing: test-quality-review (2)'
+  vars:
+    skill: test-quality-review
+    prompt: I've just written the step bindings for Inspection scheduling. Before I merge, can you look them over for duplication and shared state?
+
+- description: 'routing: web-resources (1)'
+  vars:
+    skill: web-resources
+    prompt: When the Case status changes to Approved, the form should lock the Applicant section. Write the script for that.
+- description: 'routing: web-resources (2)'
+  vars:
+    skill: web-resources
+    prompt: Add a handler for the Inspection subgrid so that selecting a row shows its outcome in a header field.

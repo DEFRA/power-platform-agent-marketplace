@@ -134,6 +134,13 @@ module.exports = {
   // promptfoo assertions
   skillLoaded: wrap(skillLoaded, 'metadata'),
   skillNotLoaded: wrap(skillNotLoaded, 'metadata'),
+  // For a case file whose tests name the expected skill in `vars.skill`, so one defaultTest assertion serves every case.
+  skillLoadedFromVars: (output, context) => {
+    const metadata = context?.providerResponse?.metadata;
+    if (!metadata) return fail('No metadata on the provider response');
+    if (!context?.vars?.skill) return fail('The case has no vars.skill');
+    return skillLoaded(metadata, { skill: context.vars.skill });
+  },
   noFilesChanged: wrap(noFilesChanged, 'metadata'),
   onlyFilesChanged: wrap(onlyFilesChanged, 'metadata'),
   noFilesChangedUnder: wrap(noFilesChangedUnder, 'metadata'),
