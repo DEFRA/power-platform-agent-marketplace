@@ -5,6 +5,7 @@
 
 const SHELL_TOOLS = new Set(['powershell', 'bash', 'shell', 'sh', 'pwsh', 'cmd', 'run_in_terminal']);
 const NANO_PER_CREDIT = 1e9;
+const MAX_ARGUMENT = 4000;
 
 function parseLines(text) {
   const events = [];
@@ -22,8 +23,10 @@ function parseLines(text) {
 
 function mainArgument(args) {
   if (!args || typeof args !== 'object') return '';
-  const value = args.command ?? args.path ?? args.pattern ?? args.skill ?? args.paths ?? args.query ?? args.filePath ?? '';
-  return typeof value === 'string' ? value : JSON.stringify(value);
+  // `input` and `patch` are the text of an apply_patch call, which names its files inside the patch.
+  const value = args.command ?? args.path ?? args.pattern ?? args.skill ?? args.paths ?? args.query ?? args.filePath ?? args.input ?? args.patch ?? '';
+  const text = typeof value === 'string' ? value : JSON.stringify(value);
+  return text.length > MAX_ARGUMENT ? text.slice(0, MAX_ARGUMENT) : text;
 }
 
 function toolCallFrom(event) {

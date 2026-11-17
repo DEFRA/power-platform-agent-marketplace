@@ -63,6 +63,39 @@ function noFilesChangedUnder(m, { globs }) {
   return hit.length ? fail(`Files changed under ${list(forbidden)}: ${list(hit)}`) : pass(`Nothing changed under ${list(forbidden)}`);
 }
 
+// Tools that change files. Behaviour runs deny them, but a denied call still appears in `toolCalls`,
+// so these checks read what the agent tried to change. `noFilesChanged` separately proves the denial held.
+const WRITE_TOOLS = new Set(['edit', 'create', 'write', 'apply_patch', 'str_replace_editor', 'str_replace', 'write_file', 'create_file', 'edit_file', 'replace_string_in_file', 'insert']);
+
+/** Paths that write-tool calls tried to change. An apply_patch call names its files inside the patch text. */
+function writeAttempts(m) {
+  const targets = [];
+  for (const call of m.toolCalls || []) {
+    const name = String(call.name).toLowerCase();
+    if (!WRITE_TOOLS.has(name)) continue;
+    const argument = String(call.argument || '');
+    const patched = [...argument.matchAll(/^\*\*\* (?:Add|Update|Delete) File:\s*(.+?)\s*$/gm)].map((x) => normalise(x[1]));
+    if (name === 'apply_patch' && patched.length) targets.push(...patched);
+    else targets.push(argument ? normalise(argument) : `(${name}, no path)`);
+  }
+  return targets;
+}
+
+function noWriteAttempts(m) {
+  const targets = writeAttempts(m);
+  return targets.length ? fail(`Expected no attempt to change a file. Attempted: ${list(targets)}`) : pass('No attempt to change a file');
+}
+
+/** Attempts may only name the listed files. A glob is matched against the end of the path, as attempts are usually absolute. */
+function writeAttemptsOnly(m, { globs }) {
+  const allowed = toArray(globs).map((g) => (normalise(g).startsWith('**/') ? g : `**/${normalise(g)}`));
+  const attempts = writeAttempts(m);
+  const outside = attempts.filter((p) => !matchesAny(p, allowed));
+  return outside.length
+    ? fail(`Attempted to change files outside ${list(toArray(globs))}: ${list(outside)}`)
+    : pass(`Attempts: ${list(attempts)}`);
+}
+
 function headNotMoved(m) {
   return m.headMoved ? fail('HEAD moved from the baseline commit') : pass('HEAD not moved');
 }
@@ -111,10 +144,26 @@ function replyMatchesWorkerReport(output, { status } = {}) {
     if (!match) return fail(`Worker report is missing "${field}:" (or it is out of order). Reply began: ${text.slice(0, 200)}`);
     from += match.index + match[0].length;
   }
+  // "Reply with this report only, in 40 lines or fewer": nothing before STATUS except an opening code fence.
+  const lines = text.split(/\r?\n/).filter((l) => l.trim() && !/^\s*```/.test(l));
+  if (!/^STATUS:/.test(lines[0] || '')) return fail(`The reply must be the report only, starting with STATUS. It began: ${text.slice(0, 200)}`);
+  if (lines.length > 40) return fail(`The report must be 40 lines or fewer, got ${lines.length}`);
   const statusValue = /^STATUS:\s*(DONE|BLOCKED|FAILED)\b/m.exec(text);
   if (!statusValue) return fail('STATUS must be DONE, BLOCKED or FAILED');
   if (status && statusValue[1] !== status) return fail(`Expected STATUS: ${status}, got ${statusValue[1]}`);
   return pass(`Worker report is well formed, STATUS: ${statusValue[1]}`);
+}
+
+/** The reply matches a regular expression. `flags` defaults to `i`. */
+function replyMatches(output, { pattern, flags = 'i', description } = {}) {
+  const found = new RegExp(pattern, flags).test(String(output));
+  return found ? pass(`Reply matches ${description || pattern}`) : fail(`Reply doesn't match ${description || pattern}. Reply began: ${String(output).slice(0, 300)}`);
+}
+
+/** The reply doesn't match a regular expression. `flags` defaults to `i`. */
+function replyNotMatches(output, { pattern, flags = 'i', description } = {}) {
+  const match = new RegExp(pattern, flags).exec(String(output));
+  return match ? fail(`Reply matches ${description || pattern}: "${match[0].slice(0, 120)}"`) : pass(`Reply doesn't match ${description || pattern}`);
 }
 
 /** Wrap a check for promptfoo. Checks on evidence get `metadata`, checks on the reply get `output`. */
@@ -128,9 +177,10 @@ function wrap(check, source) {
 
 module.exports = {
   // pure checks, for unit tests
-  checks: { skillLoaded, skillNotLoaded, noFilesChanged, onlyFilesChanged, noFilesChangedUnder, headNotMoved, noGitCommand, replyMentionsAgent, replyMatchesWorkerReport },
+  checks: { skillLoaded, skillNotLoaded, noFilesChanged, onlyFilesChanged, noFilesChangedUnder, noWriteAttempts, writeAttemptsOnly, headNotMoved, noGitCommand, replyMentionsAgent, replyMatchesWorkerReport, replyMatches, replyNotMatches },
   globToRegExp,
   gitSubcommands,
+  writeAttempts,
   // promptfoo assertions
   skillLoaded: wrap(skillLoaded, 'metadata'),
   skillNotLoaded: wrap(skillNotLoaded, 'metadata'),
@@ -144,8 +194,12 @@ module.exports = {
   noFilesChanged: wrap(noFilesChanged, 'metadata'),
   onlyFilesChanged: wrap(onlyFilesChanged, 'metadata'),
   noFilesChangedUnder: wrap(noFilesChangedUnder, 'metadata'),
+  noWriteAttempts: wrap(noWriteAttempts, 'metadata'),
+  writeAttemptsOnly: wrap(writeAttemptsOnly, 'metadata'),
   headNotMoved: wrap(headNotMoved, 'metadata'),
   noGitCommand: wrap(noGitCommand, 'metadata'),
   replyMentionsAgent: wrap(replyMentionsAgent, 'output'),
   replyMatchesWorkerReport: wrap(replyMatchesWorkerReport, 'output'),
+  replyMatches: wrap(replyMatches, 'output'),
+  replyNotMatches: wrap(replyNotMatches, 'output'),
 };

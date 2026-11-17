@@ -117,3 +117,9 @@ test('usage file: missing or corrupt input is undefined, and a zeroed file is ze
   assert.equal(parseUsage('null'), undefined);
   assert.equal(parseUsage('{}').credits, 0);
 });
+
+test('an apply_patch call keeps its patch text as the argument, truncated to a sensible size', () => {
+  const line = (input) => JSON.stringify({ type: 'tool.execution_start', data: { toolName: 'apply_patch', arguments: { input } } });
+  assert.equal(parseTranscript(line('*** Update File: src/a.cs')).toolCalls[0].argument, '*** Update File: src/a.cs');
+  assert.equal(parseTranscript(line('x'.repeat(10000))).toolCalls[0].argument.length, 4000);
+});

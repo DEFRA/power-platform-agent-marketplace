@@ -101,3 +101,51 @@ test('skillLoadedFromVars reads the expected skill from the case vars', () => {
   assert.equal(evidence.skillLoadedFromVars('', { providerResponse, vars: { skill: 'web-resources' } }).pass, false);
   assert.match(evidence.skillLoadedFromVars('', { providerResponse, vars: {} }).reason, /no vars.skill/i);
 });
+
+test('write attempts: edit and create name a path, apply_patch names its files inside the patch, reads are ignored', () => {
+  const m = meta({
+    toolCalls: [
+      { name: 'view', argument: 'src/a.cs' },
+      { name: 'edit', argument: String.raw`C:\tmp\w\src\a.cs` },
+      { name: 'create', argument: '/tmp/w/docs/adr/0002-x.md' },
+      { name: 'apply_patch', argument: '*** Begin Patch\n*** Update File: src/b.cs\n@@\n*** Add File: docs/c.md\n*** End Patch' },
+      { name: 'powershell', argument: 'git status' },
+    ],
+  });
+  assert.deepEqual(evidence.writeAttempts(m), ['C:/tmp/w/src/a.cs', '/tmp/w/docs/adr/0002-x.md', 'src/b.cs', 'docs/c.md']);
+  assert.deepEqual(evidence.writeAttempts(meta()), []);
+});
+
+test('noWriteAttempts fails with the attempted paths, and passes when the agent only read', () => {
+  assert.equal(checks.noWriteAttempts(meta({ toolCalls: [{ name: 'view', argument: 'a' }, { name: 'grep', argument: 'b' }] })).pass, true);
+  const r = checks.noWriteAttempts(meta({ toolCalls: [{ name: 'edit', argument: 'src/a.cs' }] }));
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /src\/a\.cs/);
+  assert.equal(checks.noWriteAttempts(meta({ toolCalls: [{ name: 'apply_patch', argument: '' }] })).pass, false);
+});
+
+test('writeAttemptsOnly matches globs at the end of absolute paths and names what falls outside', () => {
+  const m = meta({ toolCalls: [{ name: 'edit', argument: String.raw`C:\tmp\w\src\WebResources\src\abc_case.form.ts` }] });
+  assert.equal(checks.writeAttemptsOnly(m, { globs: ['src/WebResources/src/abc_case.form.ts'] }).pass, true);
+  assert.equal(checks.writeAttemptsOnly(m, { globs: ['src/WebResources/**'] }).pass, true);
+  const r = checks.writeAttemptsOnly(m, { globs: ['docs/**'] });
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /abc_case\.form\.ts/);
+  assert.equal(checks.writeAttemptsOnly(meta(), { globs: ['docs/**'] }).pass, true);
+});
+
+test('replyMatchesWorkerReport wants the report only, in 40 lines or fewer, and allows a code fence', () => {
+  const body = 'STATUS: DONE\nSUMMARY: x\nFILES CHANGED: none\nCHECKS: none\nDEVIATIONS: none\nQUESTIONS: none';
+  assert.equal(checks.replyMatchesWorkerReport('```text\n' + body + '\n```').pass, true);
+  assert.match(checks.replyMatchesWorkerReport('Here is my report.\n' + body).reason, /report only/);
+  assert.match(checks.replyMatchesWorkerReport(body + '\n' + 'more\n'.repeat(40)).reason, /40 lines or fewer/);
+});
+
+test('replyMatches and replyNotMatches are case-insensitive by default, take flags and say what they looked for', () => {
+  assert.equal(checks.replyMatches('We Will Ask for APPROVAL', { pattern: 'approval' }).pass, true);
+  assert.equal(checks.replyMatches('approval', { pattern: 'Approval', flags: '' }).pass, false);
+  assert.match(checks.replyMatches('nothing', { pattern: 'x', description: 'an approval request' }).reason, /an approval request/);
+  assert.equal(checks.replyNotMatches('all good', { pattern: 'class [A-Z] : IPlugin' }).pass, true);
+  assert.match(checks.replyNotMatches('public class A : IPlugin', { pattern: 'class [A-Z] : IPlugin' }).reason, /class A : IPlugin/);
+  assert.equal(evidence.replyMatches('abc', { config: { pattern: 'b' } }).pass, true);
+});

@@ -46,4 +46,4 @@ jobs:
 
       - name: Run provider unit tests
         working-directory: tests/evals
-        run: node --test
+        run: npm run test:unit

@@ -3,13 +3,13 @@
   "private": true,
   "description": "Evals for the power-platform-delivery plugin. Not shipped with the plugin.",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "devDependencies": {
     "promptfoo": "0.125.1"
   },
   "scripts": {
-    "test:unit": "node --test",
+    "test:unit": "node --test \"providers/**/*.test.js\" \"assertions/**/*.test.js\"",
     "eval:routing": "node scripts/eval.js routing"
   }
 }
