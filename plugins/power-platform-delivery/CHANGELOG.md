@@ -7,10 +7,11 @@ All notable changes to the `power-platform-delivery` plugin are recorded here. T
 ### Changed
 
 - The lint and Pester tests moved from the plugin's `tests` folder to `tests/pester` at the repository root. They no longer ship with the plugin.
+- `test-failure-triage`: the description now covers questions such as why a test is failing or why it expected 3 but found 2, and says to load the skill before investigating the failure yourself. In routing evals the model skipped the skill on a short "why is this failing" prompt.
 
 ### Added
 
-- Routing evals under `tests/evals` (not shipped with the plugin): a promptfoo provider for Copilot CLI, shared assertions and routing cases for the skills. They run locally only. No agent or skill changed.
+- Routing evals under `tests/evals` (not shipped with the plugin): a promptfoo provider for Copilot CLI, shared assertions and routing cases for the skills. They run locally only.
 
 ## [0.1.0] - 2026-11-11
 
