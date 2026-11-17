@@ -1,0 +1,17 @@
+<Entity>
+  <Name LocalizedName="Applicant" OriginalName="Applicant">abc_Applicant</Name>
+  <EntityInfo>
+    <entity Name="abc_applicant">
+      <attributes>
+        <attribute PhysicalName="abc_Name">
+          <Type>nvarchar</Type><Name>abc_name</Name><LogicalName>abc_name</LogicalName>
+          <RequiredLevel>required</RequiredLevel><MaxLength>100</MaxLength><Format>text</Format>
+        </attribute>
+        <attribute PhysicalName="abc_Email">
+          <Type>nvarchar</Type><Name>abc_email</Name><LogicalName>abc_email</LogicalName>
+          <RequiredLevel>none</RequiredLevel><MaxLength>200</MaxLength><Format>email</Format>
+        </attribute>
+      </attributes>
+    </entity>
+  </EntityInfo>
+</Entity>

@@ -1,0 +1,29 @@
+Reqnroll acceptance run. Environment: pull request validation (fresh environment).
+
+[09:41:07] Persona pool: CaseOfficer x2, Inspector x2. All users valid.
+
+Feature: Submit a case
+
+  Scenario: Submitting a draft case allocates a case number
+    [09:41:12] Given I am logged in to the 'Case Management' app as 'CaseOfficer' ... done (3.1s)
+    [09:41:15] ScenarioBuilder: POST abc_applicants -> 201
+    [09:41:15] ScenarioBuilder: POST abc_cases (abc_status=1) -> 201
+    [09:41:15] And a draft case exists for an applicant ... done (0.9s)
+    [09:41:19] When I submit the case ... done (3.6s)
+               The app showed the Case as Submitted.
+    [09:41:20] Then the case has a case number starting with 'CAS-' ... FAILED
+      Expected: string starting with "CAS-"
+      But was:  <null>
+      at Abc.Cases.Acceptance.Steps.CaseSteps.ThenTheCaseHasACaseNumberStartingWith(String prefix)
+
+  Scenario: A case without an applicant cannot be submitted
+    [09:41:31] Given I am logged in to the 'Case Management' app as 'CaseOfficer' ... done (2.8s)
+    [09:41:33] ScenarioBuilder: POST abc_cases (abc_status=1) -> 400 (abc_applicantid is required)
+    [09:41:34] Then I am told that an applicant is required ... done (0.4s)
+
+Plug-in trace log for abc_case 3f1c0d2e-7a41-4b0e-9d52-0c7e2f6a1b90 (Update, 09:41:19Z):
+  Abc.Cases.Plugins.CaseNumberPlugin: PreUpdate started, abc_status = 2
+  Abc.Cases.Plugins.CaseNumberPlugin: Completed, target unchanged
+  No exception was logged.
+
+Total: 2, Passed: 1, Failed: 1, Skipped: 0

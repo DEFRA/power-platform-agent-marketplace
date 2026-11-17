@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.PowerApps.MSBuild.Solution/1.0.0">
+  <PropertyGroup>
+    <SolutionPackageType>Both</SolutionPackageType>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,32 @@
+<Entity>
+  <Name LocalizedName="Case" OriginalName="Case">abc_Case</Name>
+  <EntityInfo>
+    <entity Name="abc_case">
+      <attributes>
+        <attribute PhysicalName="abc_Name">
+          <Type>nvarchar</Type><Name>abc_name</Name><LogicalName>abc_name</LogicalName>
+          <RequiredLevel>required</RequiredLevel><MaxLength>100</MaxLength><Format>text</Format>
+        </attribute>
+        <attribute PhysicalName="abc_CaseNumber">
+          <Type>nvarchar</Type><Name>abc_casenumber</Name><LogicalName>abc_casenumber</LogicalName>
+          <RequiredLevel>none</RequiredLevel><MaxLength>20</MaxLength><Format>text</Format>
+        </attribute>
+        <attribute PhysicalName="abc_Status">
+          <Type>picklist</Type><Name>abc_status</Name><LogicalName>abc_status</LogicalName>
+          <RequiredLevel>none</RequiredLevel>
+          <optionset Name="abc_case_status">
+            <options>
+              <option value="1"><labels><label languagecode="1033" description="Draft" /></labels></option>
+              <option value="2"><labels><label languagecode="1033" description="Submitted" /></labels></option>
+              <option value="3"><labels><label languagecode="1033" description="Approved" /></labels></option>
+            </options>
+          </optionset>
+        </attribute>
+        <attribute PhysicalName="abc_ApplicantId">
+          <Type>lookup</Type><Name>abc_applicantid</Name><LogicalName>abc_applicantid</LogicalName>
+          <RequiredLevel>required</RequiredLevel>
+        </attribute>
+      </attributes>
+    </entity>
+  </EntityInfo>
+</Entity>
