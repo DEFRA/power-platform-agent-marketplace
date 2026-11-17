@@ -27,3 +27,23 @@ jobs:
           Install-Module Pester -MinimumVersion 5.5.0 -MaximumVersion 5.99.99 -Scope CurrentUser -Force -SkipPublisherCheck
           Import-Module Pester -MinimumVersion 5.5.0 -MaximumVersion 5.99.99
           Invoke-Pester -Path tests/pester -Output Detailed -CI
+
+  # Unit tests for the eval provider, on recorded transcripts. They call no model, need no secrets and install
+  # nothing, so they are not an eval run. See docs/testing-plan.md (D5, section 9.2).
+  eval-provider-tests:
+    name: Eval provider unit tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run provider unit tests
+        working-directory: tests/evals
+        run: node --test

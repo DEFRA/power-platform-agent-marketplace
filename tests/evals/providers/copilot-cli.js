@@ -42,7 +42,7 @@ function buildArgs(config, prompt, { pluginDir, usageFile }) {
   if (config.agent) args.push('--agent', String(config.agent));
   if (config.autopilot) {
     args.push('--autopilot');
-    if (Number.isFinite(Number(config.autopilot)) && Number(config.autopilot) > 0) {
+    if (typeof config.autopilot !== 'boolean' && Number.isFinite(Number(config.autopilot)) && Number(config.autopilot) > 0) {
       args.push('--max-autopilot-continues', String(Number(config.autopilot)));
     }
   }
