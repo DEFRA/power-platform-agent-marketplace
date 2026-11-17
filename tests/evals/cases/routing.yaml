@@ -1,5 +1,5 @@
-# Routing cases (docs/testing-plan.md section 7.4): two natural prompts per skill, except power-platform-standards,
-# which is loaded first by design. Positive cases only (D8). A case passes when `skill` is loaded anywhere in the run.
+# Routing cases: two natural prompts per skill, except power-platform-standards,
+# which is loaded first by design. Positive cases only. A case passes when `skill` is loaded anywhere in the run.
 # Prompts are written as a user would write them, in the neutral domain (Case, Applicant, Inspection, prefix abc_).
 # Don't reword a prompt to make it pass: a failure means the skill's description or the case is wrong, and a
 # maintainer decides which.

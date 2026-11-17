@@ -97,7 +97,7 @@ Found in the first spike runs (Copilot CLI 1.0.112, 2026-11-17):
 
 Found while building Phase 2 (Copilot CLI 1.0.112 and 1.0.113, 2026-11-17):
 
-- **Copilot CLI updates itself.** Midway through the first full routing run the CLI went from 1.0.112 to 1.0.113, and two runs failed with "no platform package found" (exit 1) while the package was being replaced. The provider reports that as a provider error, and the threshold script calls the run incomplete. Rerun after an update. The baseline records the CLI version.
+- **Copilot CLI updates itself.** Midway through the first full routing run the CLI went from 1.0.112 to 1.0.113, and two runs failed with "no platform package found" (exit 1) while the package was being replaced. The provider reports that as a provider error, and a run that ends this way is an error, not a failure. Rerun after an update.
 - **`gpt-6-luna` cost and speed.** A routing run uses about 0.5 credits (19.4 credits for 40 runs, summed from the usage files), and takes 80 to 100 seconds of wall time. Forty cases take 10 to 11 minutes at a concurrency of 4. The default is now 8, which hasn't been timed. This answers U9 for routing on luna. A behaviour case will cost more because it runs longer, and hasn't been measured.
 - **More tool names.** `gpt-6-luna` also uses `apply_patch` and `rg`. A denied call (`powershell` under `--deny-tool=shell`, `apply_patch` under `--deny-tool=write`) still appears as a `tool.execution_start` event, so `commands` and `toolCalls` list attempts, not successes. Evidence of what changed comes from git.
 - **Baseline routing result.** 39 of 40 cases passed on a clean full run. An earlier run, cut short by the CLI update, passed 37 of 38 completed cases. The one failure in the clean run was `test-failure-triage (1)`, "two tests started failing, expected 3 but found 2, why is this failing?", which loaded only `power-platform-standards`. That is the earlier probe's prompt shape (Q8). The flaky-test prompt (2) passed in both runs. In 3 runs the route differed from the expected skill, and they passed because the expected skill was loaded later. No case was reworded.
@@ -323,13 +323,11 @@ Rules for writing them:
 - Runs go to their natural end (D7). To keep them short and safe, deny the edit and execute tools and set a low credit cap. A routing run is read-only.
 - A case passes when the expected skill is loaded anywhere in the run. A run may reasonably load other skills first, for example `architecture-review` before `dataverse-plugins` (§3.1, decided by the maintainer). Report the route, the first skill loaded after `power-platform-standards`, as metadata, because it helps when reading results.
 
-### 7.5 Thresholds
+### 7.5 Baseline (no thresholds)
 
-As built: `scripts/thresholds.js <results.json>` reads promptfoo's JSON output and compares it with `baselines/routing.json`. A provider error isn't a failure: it makes the run incomplete (exit 2), and the pass rate counts only completed runs. `npm run eval:routing` runs the suite and then this check. The margin is a proposal (Q10).
+Decided after the first baseline: no thresholds and no failure margin, because nothing is gated on the evals yet. `scripts/thresholds.js` and the committed baseline were removed. The expectation is that every case passes. When a case fails, decide which is wrong: the skill's `description` or the case. Fix the description if a real user's prompt wouldn't find the skill. Don't reword a case until it passes. Revisit thresholds if the evals ever gate anything.
 
-- Run the suite once to set a baseline, and commit the baseline pass rate with the cases.
-- Then fail the run when the overall pass rate falls below the baseline by more than an agreed margin, or when both positive cases for any one skill fail.
-- When a case fails, decide which is wrong: the skill's `description` or the case. Fix the description if a real user's prompt wouldn't find the skill. Don't reword a case until it passes.
+First baseline (2026-11-17, `gpt-6-luna`, Copilot CLI 1.0.113): 39 of 40, 19.4 credits. The one failure was `test-failure-triage (1)`.
 
 ### 7.6 Done when
 
@@ -392,12 +390,12 @@ Notes:
 - For B-DEV-5, read the project-facts reference for what is discovered and what is stored.
 - Where a "Soft" case can only be checked by reading prose, prefer a narrow text or pattern check. Use an LLM judge only in Phase 5.
 
-### 8.3 Repeats and thresholds
+### 8.3 Repeats and results
 
 - Run each behaviour case three times.
-- A hard case fails the run if any repeat fails.
-- Soft cases are gated on a pass rate, set from a baseline run as in §7.5.
+- No thresholds for now (§7.5). Every repeat of every case is expected to pass, and a failure is read as a finding. Hard and soft are still a useful way to order that reading.
 - A run that ends in a provider error (time-out, credit cap, authentication) is reported as an error, not counted as a behaviour failure.
+- **Limit the tools, and say so in the prompt.** Behaviour runs deny `shell` and `write` as routing does, so the agent can't change anything, and each prompt ends by telling it so and asking it to say what it would do. Evidence is then the agent's stated intentions and its attempted tool calls (denied attempts still appear in `toolCalls` and `commands`), not changed files. Cases that prove "no files changed" for a run that is allowed to write (B-DEV-2 with autopilot, B-DEV-4, B-WRK-1 to 3, B-SA-2) need a decision before they are written (Q12).
 
 ### 8.4 Done when
 
@@ -465,12 +463,12 @@ Record answers here when they arrive. Each has a default so work isn't blocked u
 | Q2 | Answered by D5: evals run locally for now, on each contributor's own Copilot allowance. Funding and a token for CI are deferred with `T5.5` | Not applicable | Nothing |
 | Q3 | Which model do the main agents' evals pin? | Answered by D6: `gpt-6-luna`. Extra runs on other models are optional (`T5.2`) | Nothing |
 | Q4 | Is a local eval run required before a release, and who reviews it (P2)? | Required. The maintainer cutting the release runs and reviews it | Nothing |
-| Q5 | Has promptfoo been approved as a dependency through the usual open-source route, including its current ownership and licence? | Proceed on a branch. Don't merge Phase 2 until approved | Merging `T2` |
+| Q5 | Has promptfoo been approved as a dependency through the usual open-source route, including its current ownership and licence? | Answered by the maintainer: promptfoo is fine to use | Nothing |
 | Q6 | Is running an agent with shell access acceptable on a developer's machine, or must local runs use a container or sandbox? | Temporary folder, no `--allow-all-paths`, network denied | Nothing |
 | Q7 | Is JavaScript acceptable for eval tooling (P3)? | Yes | Nothing |
 | Q9 | For stopping routing runs early, do we keep `-p` and end the process tree, move the provider to `--acp` and `session/cancel`, or drop early stop? | Answered by D7: drop early stop and let runs finish. The ACP and process-tree findings in §3.1 stay for reference | Nothing |
-| Q8 | Haiku 5.5 rarely loads skills (§3.1). Which model do evals run on? | Answered by D6: `gpt-6-luna`. Haiku is dropped. Remaining question: whether to improve the `test-failure-triage` description. The baseline run still skipped the skill on the short "why is this failing" prompt, and the case was not reworded. Maintainer to decide | Nothing now |
-| Q10 | What margin below the baseline pass rate fails a routing run (§7.5)? | 10 percentage points, which is 4 of 40 cases. That is wider than the run-to-run spread seen so far (13/16 to 24/24 across three luna runs of 8 prompts, and 37/38 against 39/40 here). A run also fails if every run for one skill fails | Nothing |
+| Q8 | Haiku 5.5 rarely loads skills (§3.1). Which model do evals run on? | Answered by D6: `gpt-6-luna`. Haiku is dropped. Answered: the maintainer asked for the `test-failure-triage` description to be improved, and it was (changelog, Changed). Both its cases then passed three of three, but the read-only sentence was added to the prompt at the same time, so the two changes are not separated, and the rest of the suite has not been rerun with the sentence | Nothing |
+| Q12 | For behaviour cases that prove a run that is allowed to write changed nothing (§8.3), do we keep `write` denied and assert on intent and denied attempts, or allow write in the temporary copy? | Keep write denied, and assert on the reply and on denied attempts. Needs a maintainer decision before T3.2 | `T3.2` |
 | Q11 | Do the provider and the tool names (`powershell`, `apply_patch`, `--deny-tool=shell` and `write`) work on Linux and macOS? | Untested. Treat the eval tooling as Windows-only until someone checks | Nothing |
 
 ## 13. Plan and progress
@@ -494,14 +492,14 @@ Estimates are rough and assume one person.
 - [x] **T2.2** Write the provider's unit tests and add them to `ci.yml` (§7.2, §9.2).
 - [x] **T2.3** Write the shared assertions (§7.3).
 - [x] **T2.4** Write the routing cases (§7.4).
-- [x] **T2.5** Record a baseline and set the thresholds (§7.5). Baseline 39 of 40, 19.4 credits. Phase 2 isn't merged until Q5 (promptfoo approval) is answered.
+- [x] **T2.5** Record a baseline (§7.5). First baseline 39 of 40, 19.4 credits. Thresholds were dropped (§7.5), and Q5 is answered, so Phase 2 can merge.
 
 ### Phase 3: fixture and behaviour evals (3 to 4 days)
 
 - [ ] **T3.1** Build the fixture repository and overlays (§8.1).
 - [ ] **T3.2** Write the `developer` and `developer-worker` cases (§8.2).
 - [ ] **T3.3** Write the `product-analyst`, `solution-architect` and `quality-engineer` cases (§8.2).
-- [ ] **T3.4** Record a baseline, set the thresholds and deal with each failing case (§8.3, §8.4).
+- [ ] **T3.4** Record a baseline and deal with each failing case (§8.3, §8.4).
 
 ### Phase 4: local running and documentation (0.5 day)
 

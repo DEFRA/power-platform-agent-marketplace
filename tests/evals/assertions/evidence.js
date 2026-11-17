@@ -1,5 +1,5 @@
 'use strict';
-// Shared assertions over the evidence the provider puts in `metadata` (docs/testing-plan.md section 7.3).
+// Shared assertions over the evidence the provider puts in `metadata`.
 // Each check is a pure function of (metadata, args) that returns { pass, reason }, so it can be unit tested.
 // The promptfoo wrappers at the bottom read `context.providerResponse.metadata` and the assertion's `config`.
 // In a case file:  - type: javascript

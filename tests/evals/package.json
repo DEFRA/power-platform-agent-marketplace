@@ -10,7 +10,6 @@
   },
   "scripts": {
     "test:unit": "node --test",
-    "eval:routing": "node scripts/eval.js routing",
-    "thresholds": "node scripts/thresholds.js"
+    "eval:routing": "node scripts/eval.js routing"
   }
 }

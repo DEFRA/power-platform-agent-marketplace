@@ -29,7 +29,7 @@ jobs:
           Invoke-Pester -Path tests/pester -Output Detailed -CI
 
   # Unit tests for the eval provider, on recorded transcripts. They call no model, need no secrets and install
-  # nothing, so they are not an eval run. See docs/testing-plan.md (D5, section 9.2).
+  # nothing, so they are not an eval run.
   eval-provider-tests:
     name: Eval provider unit tests (${{ matrix.os }})
     runs-on: ${{ matrix.os }}

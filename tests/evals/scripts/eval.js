@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 'use strict';
-// Runs one eval suite locally with the options a run always needs, then applies the thresholds.
+// Runs one eval suite locally with the options a run always needs.
 //
 //   node scripts/eval.js routing [promptfoo options, for example --filter-pattern "adr" or --repeat 3]
 //
 // Caching, telemetry and update checks are off, parallelism is capped, nothing is shared to a hosted service, and
-// results go to results/ (git-ignored) as JSON and HTML. Authentication comes from COPILOT_GITHUB_TOKEN, GH_TOKEN
+// results go to results/ (git-ignored) as JSON and HTML.
+// Authentication comes from COPILOT_GITHUB_TOKEN, GH_TOKEN
 // or GITHUB_TOKEN. This script never prints a token.
 
 const fs = require('node:fs');
@@ -41,9 +42,6 @@ const args = [
 ];
 const env = { ...process.env, PROMPTFOO_DISABLE_TELEMETRY: '1', PROMPTFOO_DISABLE_UPDATE: '1', PROMPTFOO_DISABLE_SHARING: '1' };
 
-// promptfoo exits 100 when some cases fail, which the thresholds decide on, so only a crash stops here.
+// Exit code: 0 when every case passed, 100 when some failed, anything else when the run itself broke.
 const run = spawnSync(process.execPath, args, { cwd: root, env, stdio: 'inherit' });
-if (run.error || (run.status !== 0 && run.status !== 100)) process.exit(run.status || 2);
-
-const check = spawnSync(process.execPath, [path.join(__dirname, 'thresholds.js'), json], { cwd: root, stdio: 'inherit' });
-process.exit(check.status ?? 2);
+process.exit(run.error ? 2 : run.status ?? 2);

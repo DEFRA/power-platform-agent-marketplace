@@ -1,4 +1,4 @@
-description: Routing - does a natural prompt load the intended skill? (docs/testing-plan.md section 7.4)
+description: Routing - does a natural prompt load the intended skill?
 
 # Runs Copilot CLI with no --agent, so the test is of the skill descriptions alone. Shell and file writes are denied,
 # so a routing run is read-only. Run it with `npm run eval:routing` from tests/evals (see the README).
@@ -13,7 +13,10 @@ providers:
       denyTools: [shell, write]
 
 prompts:
-  - '{{prompt}}'
+  - |-
+    {{prompt}}
+
+    This is a read-only session: you can't run commands or change files. Say what you would do, rather than doing it.
 
 defaultTest:
   assert:

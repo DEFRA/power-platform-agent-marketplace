@@ -1,6 +1,6 @@
 'use strict';
-// promptfoo provider that runs GitHub Copilot CLI headlessly against the plugin. See docs/testing-plan.md section 7.1.
-// Every run goes to its natural end (D7), so the usage file is always written. The provider reads standard output
+// promptfoo provider that runs GitHub Copilot CLI headlessly against the plugin.
+// Every run goes to its natural end, so the usage file is always written. The provider reads standard output
 // as it arrives only so that it can enforce timeoutMs.
 
 const fs = require('node:fs');
