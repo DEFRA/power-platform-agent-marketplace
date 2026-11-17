@@ -1,0 +1,17 @@
+{
+  "recordedAt": "2026-11-17",
+  "model": "gpt-6-luna",
+  "copilotVersion": "1.0.113",
+  "runs": 40,
+  "passed": 39,
+  "failed": 1,
+  "passRate": 0.975,
+  "credits": 19.39,
+  "skillsWithFailures": {
+    "test-failure-triage": {
+      "pass": 1,
+      "fail": 1,
+      "error": 0
+    }
+  }
+}

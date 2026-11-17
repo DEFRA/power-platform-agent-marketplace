@@ -8,6 +8,10 @@ All notable changes to the `power-platform-delivery` plugin are recorded here. T
 
 - The lint and Pester tests moved from the plugin's `tests` folder to `tests/pester` at the repository root. They no longer ship with the plugin.
 
+### Added
+
+- Routing evals under `tests/evals` (not shipped with the plugin): a promptfoo provider for Copilot CLI, shared assertions and routing cases for the skills. They run locally only. No agent or skill changed.
+
 ## [0.1.0] - 2026-11-11
 
 The first release: an agentic team that Defra teams install to deliver Power Platform projects. It works in VS Code, Copilot CLI and the Copilot coding agent.

@@ -95,6 +95,13 @@ Found in the first spike runs (Copilot CLI 1.0.112, 2026-11-17):
 - When the account's monthly quota is exhausted, the CLI exits 1 with a `session.error` of `errorType: quota` (HTTP 402). The usage file is still written, with zeros. The provider must report this as an error, not a failed assertion.
 - On Windows PowerShell 5 and 7, redirecting standard error with `2>` can produce UTF-16 text. Redirect standard output only, or set the encoding, when a script captures it.
 
+Found while building Phase 2 (Copilot CLI 1.0.112 and 1.0.113, 2026-11-17):
+
+- **Copilot CLI updates itself.** Midway through the first full routing run the CLI went from 1.0.112 to 1.0.113, and two runs failed with "no platform package found" (exit 1) while the package was being replaced. The provider reports that as a provider error, and the threshold script calls the run incomplete. Rerun after an update. The baseline records the CLI version.
+- **`gpt-6-luna` cost and speed.** A routing run uses about 0.5 credits (19.4 credits for 40 runs, summed from the usage files), and takes 80 to 100 seconds of wall time. Forty cases take 10 to 11 minutes at a concurrency of 4. The default is now 8, which hasn't been timed. This answers U9 for routing on luna. A behaviour case will cost more because it runs longer, and hasn't been measured.
+- **More tool names.** `gpt-6-luna` also uses `apply_patch` and `rg`. A denied call (`powershell` under `--deny-tool=shell`, `apply_patch` under `--deny-tool=write`) still appears as a `tool.execution_start` event, so `commands` and `toolCalls` list attempts, not successes. Evidence of what changed comes from git.
+- **Baseline routing result.** 39 of 40 cases passed on a clean full run. An earlier run, cut short by the CLI update, passed 37 of 38 completed cases. The one failure in the clean run was `test-failure-triage (1)`, "two tests started failing, expected 3 but found 2, why is this failing?", which loaded only `power-platform-standards`. That is the earlier probe's prompt shape (Q8). The flaky-test prompt (2) passed in both runs. In 3 runs the route differed from the expected skill, and they passed because the expected skill was loaded later. No case was reworded.
+
 From promptfoo's documentation (not yet run here):
 
 - A custom provider implements `id()` and `callApi()`. The response can carry `output`, `tokenUsage`, `cost`, `metadata` and `error`.
@@ -268,6 +275,16 @@ The aim is to settle §3.2 with the least code. Throw-away code is fine, but kee
 - Tolerate unknown event types in the transcript. The CLI's format will change between versions.
 - Record the Copilot CLI version in `metadata`, and fail fast with a clear message if the CLI isn't installed or isn't authenticated.
 
+**As built.** The provider is `providers/copilot-cli.js`, with `process.js` (finding the CLI, starting it without a shell, ending the process tree), `workspace.js` (the temporary repository and git evidence) and `transcript.js`. Differences from the text above:
+
+- `fixture` and `overlay` are resolved relative to `tests/evals/`, and `pluginDir` relative to the repository root. `pluginDir` defaults to the plugin, `maxCredits` to 30 and `timeoutMs` to 300000. `autopilot` is `true`, or a number for the continuation limit.
+- The response sets `tokenUsage` but not `cost`, because credits aren't a currency. Credits are in `metadata.credits` (`total`, `byAgent`, `premiumRequests`). `metadata` also has `route`, `exitCode`, `copilotVersion`, `model` and `agent`.
+- Preflight, once per provider: the CLI is found and runs, and one of the three token variables is set. A stored `copilot login` can't be used, because `COPILOT_HOME` is isolated. Otherwise the call returns an error before any process starts.
+- On Windows the loader is found from `COPILOT_CLI_LOADER`, the folder of `copilot.cmd` on `PATH`, `%APPDATA%\npm` or `npm_config_prefix`. Elsewhere it runs `copilot` directly. Only the Windows route was run for real. The Linux and macOS code is covered by unit tests with fakes, and the tool names there are unchecked (Q11).
+- `config.replay` (a recording path) makes the provider parse a recording instead of running the CLI, to try assertions without a model.
+- The child process gets the caller's whole environment plus `COPILOT_HOME`, so a shell tool would see the token. Routing denies shell. Phase 3 should decide whether to narrow this.
+- `COPILOT_EVAL_KEEP_TEMP=1` keeps the working folder.
+
 ### 7.2 Provider unit tests
 
 `node --test`, with no test framework added. Cover at least:
@@ -292,6 +309,8 @@ Under `tests/evals/assertions/`, one small function each, with a clear failure m
 - `replyMentionsAgent(id)`
 - `replyMatchesWorkerReport()` for the fixed report format in `developer-worker`
 
+As built, all in `assertions/evidence.js`, referenced from a case as `file://assertions/evidence.js:<name>`, with arguments in the assertion's `config` (`skill`, `globs`, `subcommands`, `agent`, `status`). Each check is also a pure function, tested in `evidence.test.js`. `skillLoadedFromVars` reads the skill from the case's `vars.skill`, so one `defaultTest` assertion serves the routing file.
+
 ### 7.4 Routing cases
 
 `tests/evals/cases/routing.yaml`. For each skill except `power-platform-standards`, write two prompts that should load it. That gives about 40 cases. There are no near-miss cases (D8).
@@ -305,6 +324,8 @@ Rules for writing them:
 - A case passes when the expected skill is loaded anywhere in the run. A run may reasonably load other skills first, for example `architecture-review` before `dataverse-plugins` (§3.1, decided by the maintainer). Report the route, the first skill loaded after `power-platform-standards`, as metadata, because it helps when reading results.
 
 ### 7.5 Thresholds
+
+As built: `scripts/thresholds.js <results.json>` reads promptfoo's JSON output and compares it with `baselines/routing.json`. A provider error isn't a failure: it makes the run incomplete (exit 2), and the pass rate counts only completed runs. `npm run eval:routing` runs the suite and then this check. The margin is a proposal (Q10).
 
 - Run the suite once to set a baseline, and commit the baseline pass rate with the cases.
 - Then fail the run when the overall pass rate falls below the baseline by more than an agreed margin, or when both positive cases for any one skill fail.
@@ -448,7 +469,9 @@ Record answers here when they arrive. Each has a default so work isn't blocked u
 | Q6 | Is running an agent with shell access acceptable on a developer's machine, or must local runs use a container or sandbox? | Temporary folder, no `--allow-all-paths`, network denied | Nothing |
 | Q7 | Is JavaScript acceptable for eval tooling (P3)? | Yes | Nothing |
 | Q9 | For stopping routing runs early, do we keep `-p` and end the process tree, move the provider to `--acp` and `session/cancel`, or drop early stop? | Answered by D7: drop early stop and let runs finish. The ACP and process-tree findings in §3.1 stay for reference | Nothing |
-| Q8 | Haiku 5.5 rarely loads skills (§3.1). Which model do evals run on? | Answered by D6: `gpt-6-luna`. Haiku is dropped. Remaining question: whether to improve the `test-failure-triage` description (§3.1) | `T2.4` |
+| Q8 | Haiku 5.5 rarely loads skills (§3.1). Which model do evals run on? | Answered by D6: `gpt-6-luna`. Haiku is dropped. Remaining question: whether to improve the `test-failure-triage` description. The baseline run still skipped the skill on the short "why is this failing" prompt, and the case was not reworded. Maintainer to decide | Nothing now |
+| Q10 | What margin below the baseline pass rate fails a routing run (§7.5)? | 10 percentage points, which is 4 of 40 cases. That is wider than the run-to-run spread seen so far (13/16 to 24/24 across three luna runs of 8 prompts, and 37/38 against 39/40 here). A run also fails if every run for one skill fails | Nothing |
+| Q11 | Do the provider and the tool names (`powershell`, `apply_patch`, `--deny-tool=shell` and `write`) work on Linux and macOS? | Untested. Treat the eval tooling as Windows-only until someone checks | Nothing |
 
 ## 13. Plan and progress
 
@@ -467,11 +490,11 @@ Estimates are rough and assume one person.
 
 ### Phase 2: provider and routing evals (2 to 3 days)
 
-- [ ] **T2.1** Write the provider to the specification (§7.1).
-- [ ] **T2.2** Write the provider's unit tests and add them to `ci.yml` (§7.2, §9.2).
-- [ ] **T2.3** Write the shared assertions (§7.3).
-- [ ] **T2.4** Write the routing cases (§7.4).
-- [ ] **T2.5** Record a baseline and set the thresholds (§7.5).
+- [x] **T2.1** Write the provider to the specification (§7.1).
+- [x] **T2.2** Write the provider's unit tests and add them to `ci.yml` (§7.2, §9.2).
+- [x] **T2.3** Write the shared assertions (§7.3).
+- [x] **T2.4** Write the routing cases (§7.4).
+- [x] **T2.5** Record a baseline and set the thresholds (§7.5). Baseline 39 of 40, 19.4 credits. Phase 2 isn't merged until Q5 (promptfoo approval) is answered.
 
 ### Phase 3: fixture and behaviour evals (3 to 4 days)
 
