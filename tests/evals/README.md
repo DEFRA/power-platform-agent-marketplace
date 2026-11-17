@@ -14,16 +14,16 @@ Only the routing suite exists so far: does a natural prompt load the intended sk
 ## Run
 
 ```powershell
-npm run eval:routing                                  # all 40 cases, 10 to 11 minutes at 4 parallel runs
+npm run eval:routing                                  # all 40 cases, about 4 minutes at 8 parallel runs
 npm run eval:routing -- --filter-pattern "adr"        # one skill
 npm run eval:routing -- --repeat 3                    # repeat each case
-npm run eval:routing -- --max-concurrency 4           # default is 8 parallel runs
+npm run eval:routing -- --max-concurrency 4           # the default is 8 parallel runs
 npm run test:unit                                     # provider and assertion unit tests, no credentials
 ```
 
 Results go to `results/` (git-ignored) as JSON and HTML. The exit code is 0 when every case passed, 100 when some failed, and 2 or another value when the run itself broke. A run that ends in a provider error (time-out, credit cap, quota, authentication, CLI update) is an error, not a failed assertion.
 
-Cost, measured on `gpt-6-luna`: about 0.5 credits per routing case, 19 credits for the 40 cases. Each run is capped at 30 credits, the lowest value `--max-ai-credits` accepts.
+Cost, measured on `gpt-6-luna`: about 0.25 credits per routing case, 9.5 credits for the 40 cases. Each run is capped at 30 credits, the lowest value `--max-ai-credits` accepts.
 
 ## How a run works
 
