@@ -139,7 +139,7 @@ class CopilotCliProvider {
       // No usage file: the process was killed, or never started.
     }
     const usage = parseUsage(usageText);
-    const git = (this.deps.gitEvidence ?? gitEvidence)(workspace.dir, workspace.baseline);
+    const git = (this.deps.gitEvidence ?? gitEvidence)(workspace.dir, workspace.baseline, workspace.overlayState);
     const metadata = {
       ...evidence,
       ...git,

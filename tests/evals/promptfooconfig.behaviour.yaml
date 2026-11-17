@@ -1,7 +1,8 @@
 description: Behaviour - does an agent keep the rules its file states?
 
 # Runs Copilot CLI with one agent per case against a temporary copy of fixtures/consumer-repo. Shell and file writes are
-# denied, so a behaviour run is read-only: the agent says what it would do, and the evidence is its reply plus the
+# denied, so a behaviour run is read-only (reading is allowed, and the prompt says so, because the read-only sentence
+# alone led agents to think they couldn't look at files): the agent says what it would do, and the evidence is its reply plus the
 # tool calls it attempted. Run it with `npm run eval:behaviour` from tests/evals (see the README).
 # developer-worker pins its own model, so its cases run on that model whatever `model` says here.
 providers:
@@ -18,6 +19,8 @@ providers:
 prompts:
   - |-
     {{prompt}}
+
+    You can read any file in the repository.
 
     This is a read-only session: you can't run commands or change files. Say what you would do, rather than doing it.
 

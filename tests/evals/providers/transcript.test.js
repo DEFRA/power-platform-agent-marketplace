@@ -123,3 +123,11 @@ test('an apply_patch call keeps its patch text as the argument, truncated to a s
   assert.equal(parseTranscript(line('*** Update File: src/a.cs')).toolCalls[0].argument, '*** Update File: src/a.cs');
   assert.equal(parseTranscript(line('x'.repeat(10000))).toolCalls[0].argument.length, 4000);
 });
+
+test('in autopilot the task_complete summary is the final reply, and a later message replaces it', () => {
+  const message = (content) => JSON.stringify({ type: 'assistant.message', data: { content, toolRequests: [] } });
+  const complete = (summary) => JSON.stringify({ type: 'session.task_complete', data: { summary, success: true } });
+  assert.equal(parseTranscript([message(''), complete('All done.')].join('\n')).output, 'All done.');
+  assert.equal(parseTranscript([message('Earlier reply'), complete('')].join('\n')).output, 'Earlier reply');
+  assert.equal(parseTranscript([complete('Summary'), message('Final words')].join('\n')).output, 'Final words');
+});

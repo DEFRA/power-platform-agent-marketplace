@@ -1,6 +1,8 @@
 # Behaviour cases for the solution-architect agent (plugins/power-platform-delivery/agents/solution-architect.agent.md).
 # Every assertion comes from a sentence in the agent or a skill, quoted in the description. The runs are read-only, so
 # an ADR the agent would write to a file is expected in the reply, and evidence is the reply plus attempted calls.
+# B-SA-2 doesn't assert that the new ADR is Proposed: its prompt says the decision has been made, so a person has
+# decided and Accepted is defensible.
 
 - description: >-
     B-SA-1 (soft) solution-architect: options compared, including a lower-code one, and no production code. Rules:
@@ -15,7 +17,7 @@
       config: { globs: ['docs/**'] }
     - type: javascript
       value: file://assertions/evidence.js:replyMatches
-      config: { pattern: 'options?\b|alternatives?\b', description: 'a comparison of options' }
+      config: { pattern: 'plug-in', description: 'the plug-in option' }
     - type: javascript
       value: file://assertions/evidence.js:replyMatches
       config: { pattern: 'low-code|lower-code|declarative|business rule|workflow|cloud flow|power automate|configuration', description: 'a lower-code option' }
@@ -44,7 +46,10 @@
       config: { pattern: 'Status\W*\**:?\W*Superseded', description: 'the old ADR marked Superseded' }
     - type: javascript
       value: file://assertions/evidence.js:replyMatches
-      config: { pattern: 'Status\W*\**:?\W*Proposed', description: 'the new ADR left as Proposed' }
+      config: { pattern: '0002[^\n]*superseded by|superseded by[^\n]*0002', description: 'the old ADR linked to the new one' }
+    - type: javascript
+      value: file://assertions/evidence.js:replyMatches
+      config: { pattern: '0001[^\n]*supersedes|supersedes[^\n]*0001', description: 'the new ADR linked to the old one' }
     - type: javascript
       value: file://assertions/evidence.js:replyNotMatches
       config: { pattern: '(delete|remove)[ds]?\b[^.\n]*\b0001', description: 'deleting ADR 0001' }

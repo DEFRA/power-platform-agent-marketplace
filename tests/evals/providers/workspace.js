@@ -37,7 +37,9 @@ function prepareWorkspace({ fixture, overlay, tmpRoot = os.tmpdir() }) {
     git(dir, ['commit', '--quiet', '--allow-empty', '-m', 'baseline']);
     const baseline = git(dir, ['rev-parse', 'HEAD']).trim();
     if (overlay) copyFolder(overlay, dir);
-    return { root, dir, copilotHome, baseline, usageFile: path.join(root, 'usage.json') };
+    // What the overlay changed, so that evidence can tell the agent's changes from the starting state.
+    const overlayState = overlay ? changeState(dir) : {};
+    return { root, dir, copilotHome, baseline, overlayState, usageFile: path.join(root, 'usage.json') };
   } catch (error) {
     removeFolder(root);
     throw error;
@@ -67,11 +69,24 @@ function parsePorcelain(text) {
   return changes;
 }
 
-/** What changed in the working folder since the baseline commit. */
-function gitEvidence(dir, baseline) {
+/** Each changed path with a hash of its current content (or `deleted`), so a later change to the same file shows. */
+function changeState(dir) {
+  const state = {};
+  for (const { path: file, status } of parsePorcelain(git(dir, ['status', '--porcelain=v1', '-z', '--untracked-files=all']))) {
+    state[file] = fs.existsSync(path.join(dir, file)) ? `${status}:${git(dir, ['hash-object', '--', file]).trim()}` : `${status}:deleted`;
+  }
+  return state;
+}
+
+/**
+ * What changed in the working folder since the baseline commit. `overlayState` (from prepareWorkspace) lists changes
+ * that were there before the agent started. A file in it counts as changed only if it differs from that state.
+ */
+function gitEvidence(dir, baseline, overlayState = {}) {
   const empty = { filesChanged: [], headMoved: false, diff: '' };
   try {
-    const filesChanged = parsePorcelain(git(dir, ['status', '--porcelain=v1', '-z', '--untracked-files=all']));
+    const now = changeState(dir);
+    const filesChanged = parsePorcelain(git(dir, ['status', '--porcelain=v1', '-z', '--untracked-files=all'])).filter((c) => overlayState[c.path] !== now[c.path]);
     const head = git(dir, ['rev-parse', 'HEAD']).trim();
     git(dir, ['add', '-A', '-N']); // so new files appear in the diff
     let diff = git(dir, ['diff', baseline, '--']);
@@ -82,4 +97,4 @@ function gitEvidence(dir, baseline) {
   }
 }
 
-module.exports = { prepareWorkspace, removeFolder, gitEvidence, parsePorcelain };
+module.exports = { changeState, prepareWorkspace, removeFolder, gitEvidence, parsePorcelain };

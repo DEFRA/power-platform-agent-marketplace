@@ -66,6 +66,10 @@ function parseTranscript(text) {
         // Messages that only carry tool requests have empty content, so keep the last non-empty reply.
         if (typeof data.content === 'string' && data.content.trim()) output = data.content;
         break;
+      case 'session.task_complete':
+        // In autopilot the agent ends with a task_complete call, and its summary is the final reply.
+        if (typeof data.summary === 'string' && data.summary.trim()) output = data.summary;
+        break;
       case 'subagent.started': {
         const id = data.agentName ?? data.agentId ?? data.name;
         if (id) subagents.push(String(id));

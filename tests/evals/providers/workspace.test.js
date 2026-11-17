@@ -101,3 +101,25 @@ test('git evidence from a folder that is not a repository reports the error inst
     removeFolder(dir);
   }
 });
+
+test('changes that came from the overlay are not reported as changes made by the run, but a further change to them is', () => {
+  const fixture = tempFolder({ 'a.txt': 'a', 'b.txt': 'b' });
+  const overlay = tempFolder({ 'a.txt': 'overlaid', 'new.md': 'new' });
+  const ws = prepareWorkspace({ fixture, overlay });
+  const plain = prepareWorkspace({});
+  try {
+    assert.deepEqual(Object.keys(ws.overlayState).sort(), ['a.txt', 'new.md']);
+    assert.deepEqual(gitEvidence(ws.dir, ws.baseline, ws.overlayState).filesChanged, [], 'the overlay alone is no change');
+    fs.writeFileSync(path.join(ws.dir, 'a.txt'), 'edited again');
+    fs.writeFileSync(path.join(ws.dir, 'b.txt'), 'edited');
+    fs.rmSync(path.join(ws.dir, 'new.md'));
+    const changed = gitEvidence(ws.dir, ws.baseline, ws.overlayState).filesChanged.map((c) => c.path).sort();
+    assert.deepEqual(changed, ['a.txt', 'b.txt', 'new.md'], 'a changed overlay file, a changed fixture file and a deleted overlay file');
+    assert.deepEqual(plain.overlayState, {}, 'no overlay, no state');
+  } finally {
+    removeFolder(ws.root);
+    removeFolder(plain.root);
+    removeFolder(fixture);
+    removeFolder(overlay);
+  }
+});
