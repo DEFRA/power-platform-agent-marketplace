@@ -1,0 +1,14 @@
+description: Spike - one case end to end through the provider, replaying a recorded transcript
+providers:
+  - id: file://providers/copilot-cli.js
+    config:
+      replay: recordings/routing-no-agent.jsonl
+prompts:
+  - '{{prompt}}'
+tests:
+  - description: standards skill is loaded first
+    vars:
+      prompt: I need to add a new choice column called Priority to the Inspection table. How should I go about it?
+    assert:
+      - type: javascript
+        value: file://assertions/spike.js

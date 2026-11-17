@@ -1,0 +1,9 @@
+{
+  "name": "power-platform-delivery-evals",
+  "private": true,
+  "description": "Evals for the power-platform-delivery plugin. Not shipped with the plugin.",
+  "engines": { "node": ">=20" },
+  "devDependencies": {
+    "promptfoo": "0.125.1"
+  }
+}
