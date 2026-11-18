@@ -41,7 +41,7 @@ Only Accepted ADRs are authoritative. A person accepts an ADR: never accept your
 2. **Search first.** Read the existing ADRs on the subject. Update a Proposed ADR, or supersede an Accepted one, rather than write a duplicate.
 3. **Number it.** Copy the template to the next free number, named `NNNN-kebab-case-title.md`, such as `0004-record-inspection-outcomes.md`. Follow the project's naming if it differs.
 4. **Fill every section** from the `architecture-review` output. Write "None identified" rather than leave a section empty.
-5. **Supersede in both directions.** When the new ADR replaces an old one, set the old one to Superseded and link each to the other.
+5. **Supersede in both directions.** When the new ADR replaces an old one, link each to the other: "Supersedes NNNN" on the new one, and "Superseded by NNNN once accepted" on the old one. Only Accepted ADRs are authoritative, so leave the old one Accepted while the new one is Proposed, and set it to Superseded when a person accepts the new one.
 6. **Keep the set consistent.** Check the decision against the other Accepted ADRs. Raise any conflict with the user for a decision. Never resolve it silently.
 7. **Update the index.** Add or update the ADR's row in the folder's index, such as a README table with Number, Title, Status and Date columns. Follow the existing index if there is one.
 
