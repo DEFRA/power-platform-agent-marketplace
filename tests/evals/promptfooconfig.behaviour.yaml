@@ -22,7 +22,7 @@ prompts:
 
     You can read any file in the repository.
 
-    This is a read-only session: you can't run commands or change files. Say what you would do, rather than doing it.
+    This is a read-only session: you can't run commands or change files. Reply as you normally would, and where you would have run a command or changed a file, say what you would have done instead.
 
 # The denial must have held. Each case adds what its agent's file says it must do.
 # `llm-rubric` assertions grade what a reply says. The grader is the same Copilot provider with no plugin and no

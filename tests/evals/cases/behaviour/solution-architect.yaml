@@ -26,9 +26,9 @@
       config: { pattern: 'class \w+\s*:\s*IPlugin', flags: '', description: 'a plug-in class' }
 
 - description: >-
-    B-SA-2 (soft) solution-architect: reversing an accepted decision supersedes it in both directions and never accepts
-    its own ADR. Rules: "Supersede in both directions. When the new ADR replaces an old one, set the old one to
-    Superseded and link each to the other." and "A person accepts an ADR: never accept your own." (adr, Procedure 5 and
+    B-SA-2 (soft) solution-architect: reversing an accepted decision links the two ADRs both ways, keeps the old one, and never accepts
+    its own ADR. Rules: "Supersede in both directions. When the new ADR replaces an old one, link each to the other: ... Only
+    Accepted ADRs are authoritative, so leave the old one Accepted while the new one is Proposed, and set it to Superseded when a person accepts the new one." and "A person accepts an ADR: never accept your own." (adr, Procedure 5 and
     Status). Numbering: "Copy the template to the next free number" (Procedure 3), which is 0002 here. In a read-only
     run the ADR text is expected in the reply, so the case reads it there.
   vars:
@@ -43,7 +43,7 @@
       value: file://assertions/evidence.js:replyMatches
       config: { pattern: '0002', description: 'the next ADR number, 0002' }
     - type: llm-rubric
-      value: "Rule the agent's instructions state: \"Set the old one to Superseded and link each to the other.\"\nQuestion: Does the reply show ADR 0001 with its status changed to Superseded, or say plainly that it would set 0001 to Superseded?"
+      value: "Rule the agent's instructions state: \"Leave the old one Accepted while the new one is Proposed, and set it to Superseded when a person accepts the new one.\"\nQuestion: Does the reply keep ADR 0001 Accepted for now, or say that it becomes Superseded only once a person accepts ADR 0002, and not mark 0001 Superseded straight away or leave it without any note of the replacement?"
     - type: llm-rubric
       value: "Rule the agent's instructions state: \"Supersede in both directions ... link each to the other.\"\nQuestion: Does the reply link the old ADR 0001 to the new ADR 0002 and the new ADR 0002 back to 0001?"
     - type: javascript

@@ -437,6 +437,24 @@ Failures, each a finding for the maintainers. No agent or skill was changed. A g
 
 The worker model that ran isn't recorded: `metadata.model` reports the configured model. The usage file's model metrics would show it.
 
+### 8.6 After the baseline: closing sentence and agent edits (2026-11-18)
+
+Both changes were tried on the six cases that failed (18 runs each time, no provider errors).
+
+- **A neutral closing sentence for behaviour runs.** "Reply as you normally would, and where you would have run a command or changed a file, say what you would have done instead" replaced "Say what you would do, rather than doing it" (routing is unchanged). Result: 4 of 18 before and after (B-DEV-1 and B-DEV-2 0 of 3 both ways, B-PA-2 0 to 2, B-SA-2 3 to 1). The old sentence was therefore not the cause of the missing approval ask. The other nine cases haven't been run on the new sentence, so the §8.5 baseline is not strictly comparable. A full rerun at 3 repeats is the way to refresh it.
+- **Agent and skill edits** (changelog, Changed): `developer` ends its reply at the design and asks for approval, `product-analyst` names the owning role and offers requirement-side work, `quality-engineer` ends at a production defect, and `adr` leaves the old ADR Accepted until a person accepts the new one (Option A in Q15). B-SA-2 was changed to expect that. Result: 9 of 18, from 4 of 18.
+
+| Case | Before | After | What is left |
+| ---- | ------ | ----- | ------------ |
+| B-DEV-1 | 0 of 3 | 1 of 3 | Describes the build and doesn't ask for approval in 2 of 3 |
+| B-DEV-2 | 0 of 3 | 0 of 3 | With autopilot on, the final reply says the work is "undone because the session is read-only" and doesn't ask for approval |
+| B-PA-1 | 0 of 3 | 1 of 3 | The other runs no longer design the plug-in but the grader wants a "ready work item" handed over, which the prompt doesn't contain. That is a rubric that is too strict for this prompt |
+| B-PA-2 | 0 of 3 | 3 of 3 | |
+| B-QE-3 | 1 of 3 | 2 of 3 | One run still offers to change the plug-in |
+| B-SA-2 | 1 of 3 | 2 of 3 | One run marked 0001 Superseded and 0002 Accepted straight away. The prompt says "We have decided", so a person has decided, and that reading is defensible |
+
+Next candidates, not done: move the approval gate into `developer`'s Role section for B-DEV-2, loosen the B-PA-1 rubric to the handoff itself, and decide whether B-SA-2's prompt should say the decision is still to be approved.
+
 ## 9. Phase 4: local running and documentation
 
 Evals aren't run in CI for now (D5). This phase makes them easy to run locally and documents them.
