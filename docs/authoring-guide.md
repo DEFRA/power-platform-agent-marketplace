@@ -78,7 +78,7 @@ Evals run the agents and skills against a model and check what they do. They liv
 Before cutting a release:
 
 - Run both eval suites locally and review the results.
-- Smoke check the plugin in VS Code and in the Copilot coding agent. The evals drive Copilot CLI only.
+- Smoke check the plugin in VS Code, in a Copilot CLI session rather than a Local one. The agents are intended to run using Copilot CLI, and the evals drive Copilot CLI only.
 - Review the `model` allow-list in [lint.config.json](../tests/pester/lint.config.json).
 
 ## Commits and tracking
