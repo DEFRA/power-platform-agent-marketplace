@@ -9,7 +9,7 @@ All notable changes to the `power-platform-delivery` plugin are recorded here. T
 - The lint and Pester tests moved from the plugin's `tests` folder to `tests/pester` at the repository root. They no longer ship with the plugin.
 - `developer`: the approval gate now says to end the reply with the design and the open questions, and to ask for approval, instead of describing the build as the next step, and the Role section states the same gate. Behaviour evals showed it describing the build and carrying on.
 - `product-analyst`: when asked to design or write code, it now names the owning role, says what it needs from them and offers requirement-side work, and it uses only the skills in its table. Behaviour evals showed it designing the solution itself.
-- `quality-engineer`: a production defect now ends its task. It reports the failing test, the evidence and the likely cause for `developer`, and doesn't offer the fix. Behaviour evals showed it offering to correct the plug-in.
+- `quality-engineer`: a production defect now ends its task (stated in the Role section). It reports the failing test, the evidence and the likely cause to `developer`, and doesn't say what it would change or offer the fix. Behaviour evals showed it offering to correct the plug-in.
 - `adr`: superseding now links both ways and leaves the old ADR Accepted until a person accepts the new one, which matches the skill's rule that only Accepted ADRs are authoritative.
 - `test-failure-triage`: the description now covers questions such as why a test is failing or why it expected 3 but found 2, and says to load the skill before investigating the failure yourself. In routing evals the model skipped the skill on a short "why is this failing" prompt.
 
