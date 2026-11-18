@@ -2,7 +2,7 @@
 
 A GitHub Copilot plugin marketplace for Defra teams building and operating services on the Power Platform.
 
-It currently offers one plugin, `power-platform-delivery`: an opinionated agentic delivery team that works the way Defra Power Platform projects do. It supports VS Code, Copilot CLI and the Copilot coding agent.
+It currently offers one plugin, `power-platform-delivery`: an opinionated agentic delivery team that works the way Defra Power Platform projects do. It supports VS Code, Copilot CLI and the Copilot coding agent. The agents are intended to run using Copilot CLI, so in VS Code run them in a Copilot CLI session rather than a Local one.
 
 ## Install
 
@@ -13,7 +13,7 @@ It currently offers one plugin, `power-platform-delivery`: an opinionated agenti
 
 ## power-platform-delivery
 
-The plugin ships four agents, a cheaper subagent and 21 skills. Agents describe a role and route to skills. Skills hold the procedures and can be used on their own as well as by an agent. The plugin's version is `0.1.0` and its changes are in the [changelog](plugins/power-platform-delivery/CHANGELOG.md).
+The plugin ships four agents, a cheaper subagent and 21 skills. Agents describe a role and route to skills. Skills hold the procedures and can be used on their own as well as by an agent. The plugin's version is `0.2.0` and its changes are in the [changelog](plugins/power-platform-delivery/CHANGELOG.md).
 
 ### Agents
 
@@ -64,14 +64,25 @@ Skills also ship parameterised PowerShell 7 scripts, each with `-?` help and Pes
 Read [AGENTS.md](AGENTS.md) and the [authoring guide](docs/authoring-guide.md) before changing an agent, skill or script. They set out the rules, the layout and how to run the checks. CI runs the authoring-rule lint and the Pester tests on Windows and Linux. To run them locally you need PowerShell 7 and Pester 5.5 or later:
 
 ```powershell
-Invoke-Pester -Path plugins/power-platform-delivery/tests -Output Detailed
+Invoke-Pester -Path tests/pester -Output Detailed
 ```
+
+CI also runs the unit tests for the eval tooling. The evals themselves run an agent against a model, so they run on your machine only, use your Copilot allowance and never run in CI. After changing an agent or a skill's `description`, run the ones you affect (they need Node 22 and Copilot CLI):
+
+```powershell
+cd tests/evals
+npm ci
+npm run eval:routing -- --filter-pattern "adr"   # does a prompt load the skill?
+npm run eval:behaviour -- --filter-pattern "B-QE" # does an agent keep its rules?
+```
+
+See [tests/evals/README.md](tests/evals/README.md) for the prerequisites, the cost and the safety rules, and the [authoring guide](docs/authoring-guide.md#evals) for when to run and add them.
 
 ## Repository layout
 
 ```text
 .github/plugin/marketplace.json   Marketplace catalogue
-.github/workflows/ci.yml          Lint and Pester tests
+.github/workflows/ci.yml          Lint, Pester tests and eval unit tests
 .github/CODEOWNERS                Code owners (no owning team yet)
 docs/authoring-guide.md           Rules for agents, skills and scripts
 AGENTS.md                         Guidance for agents working on this repository
@@ -79,7 +90,8 @@ plugins/<plugin>/plugin.json      Plugin manifest
 plugins/<plugin>/CHANGELOG.md     Plugin changes
 plugins/<plugin>/agents/*.agent.md
 plugins/<plugin>/skills/<skill>/  SKILL.md, references/, assets/, scripts/
-plugins/<plugin>/tests/           Lint, schemas and Pester tests
+tests/pester/                     Lint, schemas and Pester tests
+tests/evals/                      Routing and behaviour evals, run locally (see its README)
 ```
 
 ## Licence

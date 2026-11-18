@@ -1,6 +1,6 @@
 ---
 name: test-failure-triage
-description: Diagnoses a failing or flaky automated test, classifies the root cause as a requirement defect, scenario defect, test implementation defect, production defect or environment issue, and names the right owner to route it to. Use whenever a test fails, in a pull request run or locally, and the cause isn't yet known.
+description: Diagnoses why an automated test is failing or flaky, in a pull request run or locally, including questions such as why a test is failing or why it expected 3 but found 2. Classifies the root cause as a requirement, scenario, test implementation or production defect, or an environment issue, and names the owner. Use first, before investigating the failure yourself.
 ---
 
 # Test failure triage

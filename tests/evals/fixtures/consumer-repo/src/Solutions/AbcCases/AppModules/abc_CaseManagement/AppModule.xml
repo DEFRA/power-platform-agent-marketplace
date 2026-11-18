@@ -1,0 +1,9 @@
+<AppModule>
+  <UniqueName>abc_CaseManagement</UniqueName>
+  <LocalizedNames><LocalizedName description="Case Management" languagecode="1033" /></LocalizedNames>
+  <AppModuleComponents>
+    <AppModuleComponent type="1" schemaName="abc_case" />
+    <AppModuleComponent type="1" schemaName="abc_applicant" />
+    <AppModuleComponent type="1" schemaName="abc_inspection" />
+  </AppModuleComponents>
+</AppModule>

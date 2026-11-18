@@ -1,4 +1,5 @@
-$script:ScriptsFolder = Join-Path (Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $PSScriptRoot))) 'skills/dataverse-schema/scripts'
+. (Join-Path $PSScriptRoot '../../TestPaths.ps1')
+$script:ScriptsFolder = Join-Path $script:PluginRoot 'skills/dataverse-schema/scripts'
 
 function New-SolutionFixture {
     param([string]$Root)

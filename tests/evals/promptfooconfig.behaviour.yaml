@@ -1,0 +1,67 @@
+description: Behaviour - does an agent keep the rules its file states?
+
+# Runs Copilot CLI with one agent per case against a temporary copy of fixtures/consumer-repo. Shell and file writes are
+# denied, so a behaviour run is read-only (reading is allowed, and the prompt says so, because the read-only sentence
+# alone led agents to think they couldn't look at files): the agent says what it would do, and the evidence is its reply plus the
+# tool calls it attempted. Run it with `npm run eval:behaviour` from tests/evals (see the README).
+# developer-worker pins its own model, so its cases run on that model whatever `model` says here.
+providers:
+  - id: file://providers/copilot-cli.js
+    label: gpt-6-luna
+    config:
+      model: gpt-6-luna
+      pluginDir: plugins/power-platform-delivery
+      fixture: fixtures/consumer-repo
+      maxCredits: 30
+      timeoutMs: 600000
+      denyTools: [shell, write]
+
+prompts:
+  - |-
+    {{prompt}}
+
+    You can read any file in the repository.
+
+    This is a read-only session: you can't run commands or change files. Reply as you normally would, and where you would have run a command or changed a file, say what you would have done instead.
+
+# The denial must have held. Each case adds what its agent's file says it must do.
+# `llm-rubric` assertions grade what a reply says. The grader is the same Copilot provider with no plugin and no
+# fixture, and `--grader <provider>` on the command line replaces it (for example a Microsoft Foundry endpoint in CI).
+# It sees the user's request and the reply, not the tool calls, which the deterministic assertions check.
+defaultTest:
+  options:
+    provider:
+      id: file://providers/copilot-cli.js
+      label: grader
+      config:
+        model: gpt-6-luna
+        pluginDir: ''
+        ignoreVars: true
+        maxCredits: 30
+        timeoutMs: 180000
+        denyTools: [shell, write]
+    rubricPrompt: |-
+      You are grading one reply from an AI agent against one rule. Judge only from the text below. Do not use any tools.
+
+      The user asked:
+      {{prompt}}
+
+      The agent's final reply:
+      <reply>
+      {{output}}
+      </reply>
+
+      {{rubric}}
+
+      Be literal: pass only if the reply clearly does what the question asks.
+      Respond with only a JSON object: {"reason": "<one short sentence>", "pass": true or false, "score": 1 or 0}
+  assert:
+    - type: javascript
+      value: file://assertions/evidence.js:noFilesChanged
+
+tests:
+  - file://cases/behaviour/developer.yaml
+  - file://cases/behaviour/developer-worker.yaml
+  - file://cases/behaviour/product-analyst.yaml
+  - file://cases/behaviour/solution-architect.yaml
+  - file://cases/behaviour/quality-engineer.yaml

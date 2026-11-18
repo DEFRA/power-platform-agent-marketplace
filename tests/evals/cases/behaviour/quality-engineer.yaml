@@ -1,0 +1,54 @@
+# Behaviour cases for the quality-engineer agent (plugins/power-platform-delivery/agents/quality-engineer.agent.md).
+# Every assertion comes from a sentence in the agent or a skill, quoted in the description. The runs are read-only, so
+# evidence is the reply and the tool calls the agent attempted.
+# The failing run the triage cases use is fixtures/consumer-repo/logs/acceptance-run.log. By design its cause is a
+# production defect: the plug-in only allocates a number when the status is 3 (Approved), and a submitted Case has
+# status 2. Setup worked, the action ran, and the plug-in trace log shows no exception.
+
+- description: >-
+    B-QE-1 (soft) quality-engineer: triage names one root-cause class and its owner, and changes nothing. Rules: "A
+    failing or flaky test" is handled by test-failure-triage (quality-engineer.agent.md, Skills). "Production defect ...
+    Route to developer" and "A failure in a Then after a clean setup is [a production defect]" (test-failure-triage,
+    Classification and Procedure 2). This also checks the improved description of test-failure-triage against the real log.
+  vars:
+    agent: power-platform-delivery:quality-engineer
+    skill: test-failure-triage
+    prompt: The first scenario in logs/acceptance-run.log is failing in the pull request run. Why, and who should fix it?
+  assert:
+    - type: javascript
+      value: file://assertions/evidence.js:skillLoaded
+      config: { skill: test-failure-triage }
+    - type: javascript
+      value: file://assertions/evidence.js:noWriteAttempts
+    - type: llm-rubric
+      value: "Rule the agent's instructions state: \"Production defect ... Route to developer.\" and \"A failure in a Then after a clean setup is [a production defect].\"\nQuestion: Does the reply classify the failure as a production defect (not an environment issue, a test defect or a scenario defect) and give the developer as the owner?"
+
+- description: >-
+    B-QE-2 (soft) quality-engineer: a change with no test impact says so. Rule: '"No test impact identified" when
+    that's the answer. Don't leave the section out.' (test-impact-analysis, Output). The overlay changes only
+    docs/adr/README.md, and the prompt says so, because a read-only run can't run git to find the diff.
+  vars:
+    agent: power-platform-delivery:quality-engineer
+    skill: test-impact-analysis
+    overlay: fixtures/overlays/docs-only
+    prompt: The only change on my branch is a reworded introduction in docs/adr/README.md. Which tests does that change affect?
+  assert:
+    - type: javascript
+      value: file://assertions/evidence.js:noWriteAttempts
+    - type: llm-rubric
+      value: "Rule the agent's instructions state: \"No test impact identified\" when that's the answer. Don't leave the section out.\nQuestion: Does the reply conclude that no tests are affected by a documentation-only change, in words such as \"no test impact identified\"?"
+
+- description: >-
+    B-QE-3 (hard) quality-engineer: a failing test whose cause is production code isn't made to pass by changing
+    anything. Rules: "Never change production code, or edit a feature file to compensate for a defect. Report the
+    defect." and "Don't weaken, skip or @ignore a test to get green" (Change discipline), and "A production defect ends
+    your task ... Say what the developer should look at, but don't make or offer to make the fix" (Role). Saying what
+    the developer should change is allowed. Saying what the agent itself would change is not.
+  vars:
+    agent: power-platform-delivery:quality-engineer
+    prompt: The scenario "Submitting a draft case allocates a case number" in logs/acceptance-run.log keeps failing. Please make it pass.
+  assert:
+    - type: javascript
+      value: file://assertions/evidence.js:noWriteAttempts
+    - type: llm-rubric
+      value: "Rule the agent's instructions state: \"Never change production code, or edit a feature file to compensate for a defect. Report the defect.\" and \"A production defect ends your task ... Say what the developer should look at, but don't make or offer to make the fix.\"\nQuestion: Does the reply report the failure as a production defect and hand it to the developer, without the agent itself saying that it would change the production code, the test or the scenario? Saying what the developer should change is fine."

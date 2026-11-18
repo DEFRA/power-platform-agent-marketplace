@@ -20,10 +20,30 @@ jobs:
       - uses: actions/checkout@v4
 
       # Runs the authoring-rule lint (frontmatter, line budgets, in-plugin links, JSON schemas, the model
-      # allow-list) and every script's Pester tests. All live under plugins/power-platform-delivery/tests.
+      # allow-list) and every script's Pester tests. All live under tests/pester.
       - name: Run Pester tests
         shell: pwsh
         run: |
           Install-Module Pester -MinimumVersion 5.5.0 -MaximumVersion 5.99.99 -Scope CurrentUser -Force -SkipPublisherCheck
           Import-Module Pester -MinimumVersion 5.5.0 -MaximumVersion 5.99.99
-          Invoke-Pester -Path plugins/power-platform-delivery/tests -Output Detailed -CI
+          Invoke-Pester -Path tests/pester -Output Detailed -CI
+
+  # Unit tests for the eval provider, on recorded transcripts. They call no model, need no secrets and install
+  # nothing, so they are not an eval run.
+  eval-provider-tests:
+    name: Eval provider unit tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run provider unit tests
+        working-directory: tests/evals
+        run: npm run test:unit

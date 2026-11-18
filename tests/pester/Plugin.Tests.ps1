@@ -1,8 +1,7 @@
 BeforeAll {
     . (Join-Path $PSScriptRoot 'PluginLint.ps1')
 
-    $script:PluginRoot = Split-Path -Parent $PSScriptRoot
-    $script:RepoRoot = Split-Path -Parent (Split-Path -Parent $script:PluginRoot)
+    . (Join-Path $PSScriptRoot 'TestPaths.ps1')
     $script:Config = Get-LintConfig
     $script:Schemas = Join-Path $PSScriptRoot 'schemas'
 }
@@ -66,7 +65,8 @@ Describe 'Plugin links' {
 
 Describe 'Skill scripts' {
     BeforeDiscovery {
-        $scriptFiles = @(Get-ChildItem (Join-Path (Split-Path -Parent $PSScriptRoot) 'skills/*/scripts/*') -File -ErrorAction SilentlyContinue |
+        . (Join-Path $PSScriptRoot 'TestPaths.ps1')
+        $scriptFiles = @(Get-ChildItem (Join-Path $script:PluginRoot 'skills/*/scripts/*') -File -ErrorAction SilentlyContinue |
                 Where-Object Extension -In '.ps1', '.psm1' |
                 ForEach-Object { @{ Skill = $_.Directory.Parent.Name; Name = $_.Name; Path = $_.FullName } })
         $commandScripts = @($scriptFiles | Where-Object { $_.Name -like '*.ps1' })
@@ -90,7 +90,7 @@ Describe 'Skill scripts' {
 
     It '<Skill>/<Name> has Pester tests' -ForEach $scriptFiles {
         $testFile = Join-Path $PSScriptRoot "skills/$Skill/$([IO.Path]::GetFileNameWithoutExtension($Name)).Tests.ps1"
-        $testFile | Should -Exist -Because 'each script has a Pester test file at tests/skills/<skill>/<script>.Tests.ps1'
+        $testFile | Should -Exist -Because 'each script has a Pester test file at tests/pester/skills/<skill>/<script>.Tests.ps1'
     }
 }
 

@@ -1,0 +1,26 @@
+description: Routing - does a natural prompt load the intended skill?
+
+# Runs Copilot CLI with no --agent, so the test is of the skill descriptions alone. Shell and file writes are denied,
+# so a routing run is read-only. Run it with `npm run eval:routing` from tests/evals (see the README).
+providers:
+  - id: file://providers/copilot-cli.js
+    label: gpt-6-luna
+    config:
+      model: gpt-6-luna
+      pluginDir: plugins/power-platform-delivery
+      maxCredits: 30
+      timeoutMs: 300000
+      denyTools: [shell, write]
+
+prompts:
+  - |-
+    {{prompt}}
+
+    This is a read-only session: you can't run commands or change files. Say what you would do, rather than doing it.
+
+defaultTest:
+  assert:
+    - type: javascript
+      value: file://assertions/evidence.js:skillLoadedFromVars
+
+tests: file://cases/routing.yaml

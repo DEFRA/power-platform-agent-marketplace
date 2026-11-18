@@ -1,7 +1,7 @@
 {
   "name": "power-platform-delivery",
   "description": "An agentic Power Platform delivery team for Defra: Product Analyst, Solution Architect, Developer and Quality Engineer, with the skills they share.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "Defra",
     "url": "https://github.com/DEFRA/power-platform-agent-marketplace"
