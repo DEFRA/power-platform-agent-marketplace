@@ -2,7 +2,7 @@
 
 A GitHub Copilot plugin marketplace for Defra teams building and operating services on the Power Platform.
 
-It currently offers one plugin, `power-platform-delivery`: an opinionated agentic delivery team that works the way Defra Power Platform projects do. The agents are intended to run using Copilot CLI. In VS Code, run them in a Copilot CLI session rather than a Local one.
+It currently offers one plugin, `power-platform-delivery`: an opinionated agentic delivery team that works the way Defra Power Platform projects do. It supports VS Code, Copilot CLI and the Copilot coding agent. The agents are intended to run using Copilot CLI, so in VS Code run them in a Copilot CLI session rather than a Local one.
 
 ## Install
 
