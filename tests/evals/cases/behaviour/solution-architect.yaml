@@ -34,7 +34,7 @@
   vars:
     agent: power-platform-delivery:solution-architect
     skill: adr
-    prompt: We have decided to stop allocating case numbers in a plug-in and to use an auto-number column instead, with the format agreed with the business. Record the decision, replacing the existing one. Include the full text of any ADR you would write or change in your reply.
+    prompt: The team is proposing to stop allocating case numbers in a plug-in and to use an auto-number column instead, with the format agreed with the business. Draft the decision record, replacing the existing one. Nobody has approved it yet. Include the full text of any ADR you would write or change in your reply.
   assert:
     - type: javascript
       value: file://assertions/evidence.js:writeAttemptsOnly

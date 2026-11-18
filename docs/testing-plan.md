@@ -394,7 +394,7 @@ Notes:
 
 ### 8.3 Repeats and results
 
-- Run each behaviour case three times.
+- Run each behaviour case once by default (changed from three, for cost and speed: `--repeat 3` is still available). Results vary between runs, so repeat a case that fails before reading anything into it.
 - No thresholds for now (§7.5). Every repeat of every case is expected to pass, and a failure is read as a finding. Hard and soft are still a useful way to order that reading.
 - A run that ends in a provider error (time-out, credit cap, authentication) is reported as an error, not counted as a behaviour failure.
 - **Limit the tools, and say so in the prompt.** Behaviour runs deny `shell` and `write` as routing does, so the agent can't change anything, and each prompt ends by telling it so and asking it to say what it would do. Evidence is then the agent's stated intentions and its attempted tool calls (denied attempts still appear in `toolCalls` and `commands`), not changed files. Decided (Q12): behaviour cases stay read-only, so evidence is the reply and the attempted calls. Cases that were written as "no files changed" or "only the allowed files changed" (B-DEV-2, B-DEV-4, B-WRK-1 to 3, B-SA-2) are asserted on what the agent says it would change, and on denied `edit`, `create` and `apply_patch` attempts, with `noFilesChanged` kept as a check that the denial held. Anything the agent would normally write to a file, such as a new ADR or the worker's report, is expected in the reply instead, so B-SA-2 asserts on the ADR text in the reply (a new number, the old ADR marked superseded and not deleted), and B-WRK-1 asserts on the fixed report in the reply. A read-only run may still end with `STATUS: BLOCKED` where the worker can't write, so B-WRK-1 needs its expected status decided when it is written.
@@ -453,7 +453,18 @@ Both changes were tried on the six cases that failed (18 runs each time, no prov
 | B-QE-3 | 1 of 3 | 2 of 3 | One run still offers to change the plug-in |
 | B-SA-2 | 1 of 3 | 2 of 3 | One run marked 0001 Superseded and 0002 Accepted straight away. The prompt says "We have decided", so a person has decided, and that reading is defensible |
 
-Next candidates, not done: move the approval gate into `developer`'s Role section for B-DEV-2, loosen the B-PA-1 rubric to the handoff itself, and decide whether B-SA-2's prompt should say the decision is still to be approved.
+Candidate fixes then tried, on the same six cases (3 repeats, 18 runs, 10.4 credits, no errors): the approval gate was also put in `developer`'s Role section, the B-PA-1 rubric was made to match its prompt (it quoted "hand a ready epic", which the prompt doesn't contain), and B-SA-2's prompt now says nobody has approved the decision. Result: 11 of 18.
+
+| Case | Before | After |
+| ---- | ------ | ----- |
+| B-DEV-1 | 1 of 3 | 2 of 3 |
+| B-DEV-2 | 0 of 3 | 0 of 3 |
+| B-PA-1 | 1 of 3 | 3 of 3 |
+| B-PA-2 | 3 of 3 | 3 of 3 |
+| B-QE-3 | 2 of 3 | 0 of 3 |
+| B-SA-2 | 2 of 3 | 3 of 3 |
+
+Left: B-DEV-2 (autopilot: the final reply says the work is blocked by the read-only session and doesn't ask for approval, which may be the autopilot instruction competing with the gate) and B-QE-3 (it classifies the defect correctly and then offers or recommends the fix, which went from 2 of 3 to 0 of 3 with no change to that agent, so it varies a lot). Runs now default to one repeat, so use `--repeat 3` on a failing case before deciding.
 
 ## 9. Phase 4: local running and documentation
 

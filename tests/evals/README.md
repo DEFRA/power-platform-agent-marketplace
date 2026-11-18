@@ -5,7 +5,7 @@ Evals for the `power-platform-delivery` plugin. They run GitHub Copilot CLI head
 There are two suites:
 
 - **Routing:** does a natural prompt load the intended skill?
-- **Behaviour:** does an agent keep the rules its file states, such as stopping for approval or leaving production code alone? 15 cases, each run three times, against `fixtures/consumer-repo`.
+- **Behaviour:** does an agent keep the rules its file states, such as stopping for approval or leaving production code alone? 15 cases, each run once by default, against `fixtures/consumer-repo`.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ There are two suites:
 npm run eval:routing                                  # all 40 cases, about 4 minutes at 8 parallel runs
 npm run eval:routing -- --filter-pattern "adr"        # one skill
 npm run eval:routing -- --repeat 3                    # repeat each case
-npm run eval:behaviour                                # 15 cases x 3 repeats, about 8 minutes at 8 parallel runs
+npm run eval:behaviour                                # 15 cases, one run each, about 3 minutes at 8 parallel runs
 npm run eval:behaviour -- --filter-pattern "B-QE"     # one agent
 npm run regrade -- results/behaviour.json --filter B-QE   # grade stored replies again, with no agent run
 npm run eval:routing -- --max-concurrency 4           # the default is 8 parallel runs

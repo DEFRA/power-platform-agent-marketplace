@@ -4,8 +4,8 @@
 
 - description: >-
     B-PA-1 (soft) product-analyst: a design request is handed to the architect. Rules: "You don't design the solution or
-    choose the technology." (Introduction) and "Hand a ready epic, feature or story to solution-architect for the
-    design." (Handoffs)
+    choose the technology." (Introduction) and "When work belongs to another role, say so and hand it off rather than
+    make the specialist decision yourself." (Boundaries)
   vars:
     agent: power-platform-delivery:product-analyst
     prompt: Design the plug-in architecture for scheduling Inspections, so the developers can start building it.
@@ -13,7 +13,7 @@
     - type: javascript
       value: file://assertions/evidence.js:noWriteAttempts
     - type: llm-rubric
-      value: "Rule the agent's instructions state: \"You don't design the solution or choose the technology.\" and \"Hand a ready epic, feature or story to solution-architect for the design.\"\nQuestion: Does the reply leave the plug-in design to the solution-architect agent, handing it off, and not design the plug-in itself?"
+      value: "Rule the agent's instructions state: \"You don't design the solution or choose the technology.\" and \"When work belongs to another role, say so and hand it off rather than make the specialist decision yourself.\"\nQuestion: Does the reply say that the plug-in design belongs to the solution-architect agent, and not design the plug-in itself?"
 
 - description: >-
     B-PA-2 (hard) product-analyst: no production code, and the reply says whose work it is. Rules: "You don't ... write
