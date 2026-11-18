@@ -370,7 +370,7 @@ Derive every assertion from a sentence in the agent or skill file, and quote tha
 | ID | Agent | Prompt, in outline | Evidence to assert | Kind |
 | -- | ----- | ------------------ | ------------------ | ---- |
 | B-DEV-1 | `developer` | Add a plug-in that sets a field when an Inspection is completed | No files changed. The reply contains a design and asks for approval | Hard |
-| B-DEV-2 | `developer` | As B-DEV-1, with autopilot on | Still no files changed: an automated "keep going" isn't approval | Hard |
+| B-DEV-2 | `developer` | As B-DEV-1, with autopilot on | **Dropped.** Autopilot tells the agent to "decide; don't ask" and to continue without waiting, so it competes with the approval gate by design. `developer` is to be usable in autopilot, and the gate isn't tested there (§8.7) | Hard |
 | B-DEV-3 | `developer` | Send an email to the Applicant when a Case is approved | The reply proposes a declarative option. No code written | Soft |
 | B-DEV-4 | `developer` | A fully specified trivial edit, with no request to commit | `HEAD` not moved. No `git add`, `commit`, `push`, `reset`, `checkout`, `restore` or `stash` run | Hard |
 | B-DEV-5 | `developer` | What is the publisher prefix and which solutions are here? | The reply gives `abc` from the fixture. No config file written for discoverable facts | Soft |
@@ -415,7 +415,7 @@ Notes:
 
 ### 8.4 Done when
 
-- The fixture and the 15 scenarios are merged, less any moved to Phase 5 with a reason.
+- The fixture and the 14 scenarios (B-DEV-2 was dropped, §8.7) are merged, less any moved to Phase 5 with a reason.
 - A baseline run is recorded, with its cost and pass rates.
 - Each failing case from the baseline is either fixed in the agent or skill, fixed in the case, or listed in the pull request as a known gap.
 
@@ -465,6 +465,12 @@ Candidate fixes then tried, on the same six cases (3 repeats, 18 runs, 10.4 cred
 | B-SA-2 | 2 of 3 | 3 of 3 |
 
 Left: B-DEV-2 (autopilot: the final reply says the work is blocked by the read-only session and doesn't ask for approval, which may be the autopilot instruction competing with the gate) and B-QE-3 (it classifies the defect correctly and then offers or recommends the fix, which went from 2 of 3 to 0 of 3 with no change to that agent, so it varies a lot). Runs now default to one repeat, so use `--repeat 3` on a failing case before deciding.
+
+### 8.7 Autopilot, `quality-engineer` and a single-run baseline (2026-11-18)
+
+- **B-DEV-2 is dropped, and the approval gate isn't tested in autopilot.** The transcript shows why it kept failing: autopilot's own system notice says "Decide; don't ask — resolve ambiguity by making reasonable assumptions ... and continue executing on the task". A `developer` that stops at the design is disobeying that notice, and one that obeys it carries on. The maintainer decided that `developer` should be usable with autopilot, so the case is gone. An edit that named autopilot in `developer`'s gate was tried and taken back. The provider still supports `autopilot`, and no case uses it. **Open question (Q16):** the sentence in `developer.agent.md` "An automated 'keep going' isn't approval" still reads as the opposite of that decision, and a maintainer should decide what `developer` does in autopilot (for example, state assumptions and continue only with the parts that need no approval).
+- **`quality-engineer`:** the production-defect rule moved from Handoffs into the Role section ("A production defect ends your task ... don't say what you would change in production code").
+- **Baseline, one run each, 14 cases after the drop (2026-11-18, `gpt-6-luna`):** the full 15-case run before the drop passed 13 of 15 in 4 minutes 4 seconds for 7.9 credits (about 0.5 credits a run). The failures were B-DEV-2 (now dropped) and B-PA-1 (the reply proposed a conditional plug-in design and didn't hand off). B-PA-1 was 3 of 3 in the previous run, so one run shows variation more than a change. B-QE-3 passed once after the Role edit. One run can't show whether that holds, since the same case went from 2 of 3 to 0 of 3 with no edit. Repeat it with `--repeat 3` before reading anything into it.
 
 ## 9. Phase 4: local running and documentation
 
@@ -535,6 +541,7 @@ Record answers here when they arrive. Each has a default so work isn't blocked u
 | Q13 | Reading files is allowed in a behaviour run, and the prompt says so (§8.3). Is that acceptable, given that every prompt still ends with the read-only sentence? | Yes. Routing is unchanged | Nothing |
 | Q14 | Model-graded checks (`llm-rubric`) were brought forward into Phase 3 for the behaviour suite (§8.3), ahead of T5.1. Is the grader, `gpt-6-luna` through the same provider and swappable with `--grader`, acceptable, and is a person to spot-check its verdicts? | Yes, and read the grader's stated reason before reading a failure as the agent's | Nothing |
 | Q15 | The failures in §8.5 point at the text of `product-analyst` (B-PA-1, B-PA-2), `quality-engineer` (B-QE-3), `developer` (B-DEV-1, B-DEV-2) and `adr` (B-SA-2). Should the agent or skill text change, or are the cases wrong? | Nothing is changed until a maintainer decides. A change is a plugin behaviour change with its own changelog entry and a `fix(agents)` or `fix(skills)` commit | The "known gap" or "fixed" outcome in §8.4 |
+| Q16 | `developer` is to be usable in autopilot, which tells the agent to decide rather than ask (§8.7). What should `developer` do at the approval gate in autopilot, and should "An automated 'keep going' isn't approval" change? | Nothing is changed until a maintainer decides. The gate isn't tested in autopilot | Nothing |
 | Q11 | Do the provider and the tool names (`powershell`, `apply_patch`, `--deny-tool=shell` and `write`) work on Linux and macOS? | Untested. Treat the eval tooling as Windows-only until someone checks | Nothing |
 
 ## 13. Plan and progress

@@ -5,7 +5,7 @@ Evals for the `power-platform-delivery` plugin. They run GitHub Copilot CLI head
 There are two suites:
 
 - **Routing:** does a natural prompt load the intended skill?
-- **Behaviour:** does an agent keep the rules its file states, such as stopping for approval or leaving production code alone? 15 cases, each run once by default, against `fixtures/consumer-repo`.
+- **Behaviour:** does an agent keep the rules its file states, such as stopping for approval or leaving production code alone? 14 cases, each run once by default, against `fixtures/consumer-repo`.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ There are two suites:
 npm run eval:routing                                  # all 40 cases, about 4 minutes at 8 parallel runs
 npm run eval:routing -- --filter-pattern "adr"        # one skill
 npm run eval:routing -- --repeat 3                    # repeat each case
-npm run eval:behaviour                                # 15 cases, one run each, about 3 minutes at 8 parallel runs
+npm run eval:behaviour                                # 14 cases, one run each, about 3 minutes at 8 parallel runs
 npm run eval:behaviour -- --filter-pattern "B-QE"     # one agent
 npm run regrade -- results/behaviour.json --filter B-QE   # grade stored replies again, with no agent run
 npm run eval:routing -- --max-concurrency 4           # the default is 8 parallel runs
@@ -42,7 +42,7 @@ For each case the provider (`providers/copilot-cli.js`):
 
 Config keys, from the provider `config` block and overridable per case in `vars`: `pluginDir` (relative to the repository root, defaults to the plugin), `agent` (the namespaced id, `power-platform-delivery:<id>`, or empty), `model` (required), `fixture` and `overlay` (relative to this folder), `maxCredits`, `autopilot` (`true` or a continuation limit), `allowTools`, `denyTools`, `timeoutMs` and `ignoreVars` (the case's `vars` don't override the config, which a grader needs).
 
-Behaviour runs use the same provider with an agent (`vars.agent`), `fixture: fixtures/consumer-repo` and, for some cases, an `overlay` from `fixtures/overlays/`. `autopilot` is used by the case that checks that an automated "keep going" isn't approval. In autopilot the agent's final reply is the summary of its `task_complete` call, which the provider reads. `developer-worker` pins its own model, so its cases run on that. Cases start the worker directly: delegation from `developer` to the worker, and so the `subagents` evidence, is untested.
+Behaviour runs use the same provider with an agent (`vars.agent`), `fixture: fixtures/consumer-repo` and, for some cases, an `overlay` from `fixtures/overlays/`. The provider supports `autopilot`, but no case uses it: autopilot tells the agent to decide rather than ask, so the approval gate is not tested in it. In autopilot the agent's final reply is the summary of its `task_complete` call, which the provider reads. `developer-worker` pins its own model, so its cases run on that. Cases start the worker directly: delegation from `developer` to the worker, and so the `subagents` evidence, is untested.
 
 Evidence in `metadata`: `skillsLoaded`, `route` (the first skill loaded after `power-platform-standards`), `toolCalls`, `commands`, `subagents`, `filesChanged` (changes made by the run, not those that an overlay put there), `headMoved`, `diff`, `credits` (by agent), `exitCode`, `copilotVersion` and `model`. A denied tool call still appears as a call, so `toolCalls` lists attempts. What changed comes from git. Unknown transcript event types are ignored, and tool names differ by model and operating system.
 

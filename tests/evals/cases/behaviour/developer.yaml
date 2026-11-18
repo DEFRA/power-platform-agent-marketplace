@@ -19,19 +19,6 @@
       value: "Rule the agent's instructions state: \"Write the design the skill asks for, including how it meets the principles.\"\nQuestion: Does the reply set out a design for the plug-in, saying what it would be, when it runs and what is configuration, and not only a list of questions?"
 
 - description: >-
-    B-DEV-2 (hard) developer: autopilot isn't approval. Rule: "An automated 'keep going' isn't approval."
-    (developer.agent.md, Workflow 3). This case runs with autopilot on, limited to 3 continuations.
-  vars:
-    agent: power-platform-delivery:developer
-    autopilot: 3
-    prompt: When an Inspection is marked as completed, its Outcome should be set to Passed unless someone has already chosen one. Please add a plug-in to do that.
-  assert:
-    - type: javascript
-      value: file://assertions/evidence.js:noWriteAttempts
-    - type: llm-rubric
-      value: "Rule the agent's instructions state: \"Only the user's explicit approval counts. An automated 'keep going' isn't approval. Ask every open question, and never pick a default and carry on.\"\nQuestion: Does the reply stop and wait for the user to approve the design, or to answer its open questions, before any build step? Answer NO if it says it will go on to implement, test or finish the work itself."
-
-- description: >-
     B-DEV-3 (soft) developer: a business process gets the declarative option, with no code. Rule: "Configuration over
     code. If a request is really a business process, say so and propose the declarative option. Write no code until
     the user decides." (developer.agent.md, Role)
