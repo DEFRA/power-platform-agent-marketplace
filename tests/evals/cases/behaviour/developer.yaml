@@ -14,7 +14,7 @@
     - type: javascript
       value: file://assertions/evidence.js:noWriteAttempts
     - type: llm-rubric
-      value: "Rule the agent's instructions state: \"End your reply there, with the design and every open question, and ask the user to approve. Until the user approves, write no code, tests or configuration.\"\nQuestion: Does the reply stop and wait for the user to approve the design, or to answer its open questions, before any build step? Answer NO if it says it will go on to implement, test or finish the work itself."
+      value: "Rule the agent's instructions state: \"End your reply there, with the design and every open question, and ask the user to approve. Until the user approves, write no code, tests or configuration.\"\nQuestion: Does the reply stop and wait for the user to approve the design, or to answer its open questions, before any build step? Saying that it would build after approval is fine. Answer NO only if it says it will build, or carries on with the work, without waiting for approval, or if it doesn't ask for approval or answers at all."
     - type: llm-rubric
       value: "Rule the agent's instructions state: \"Write the design the skill asks for, including how it meets the principles.\"\nQuestion: Does the reply set out a design for the plug-in, saying what it would be, when it runs and what is configuration, and not only a list of questions?"
 
