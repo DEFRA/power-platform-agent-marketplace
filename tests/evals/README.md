@@ -23,6 +23,7 @@ npm run eval:routing -- --repeat 3                    # repeat each case
 npm run eval:behaviour                                # 14 cases, one run each, about 3 minutes at 8 parallel runs
 npm run eval:behaviour -- --filter-pattern "B-QE"     # one agent
 npm run regrade -- results/behaviour.json --filter B-QE   # grade stored replies again, with no agent run
+npm run eval:routing -- --var model=gpt-5.6-luna      # try another model (the report's label still shows the default, the model column the one used)
 npm run eval:routing -- --max-concurrency 4           # the default is 8 parallel runs
 npm run test:unit                                     # provider and assertion unit tests, no credentials
 ```
@@ -79,6 +80,30 @@ Evals pin `gpt-6-luna`: cheap, and it loads skills reliably. Haiku 5.5 and sever
 - Results are never shared to a hosted service. Telemetry and update checks are off.
 - Scrub recordings before committing them: tool results can carry machine paths and the account's remaining budget. Recordings in `providers/recordings/` have been scrubbed, and their `assistant.tool_call_delta` lines removed.
 - On Windows PowerShell, redirecting standard error with `2>` can produce UTF-16. Redirect standard output only when capturing a transcript.
+
+## Things worth knowing
+
+Found while building the evals, for whoever changes them next:
+
+- **Before any case runs**, the provider checks that Copilot CLI runs and a token is set, and returns a plain error if not. A quota that is used up (exit 1 with a `session.error` of type `quota`) is reported as an error, not a failed case.
+- **`--max-ai-credits` has a minimum of 30**, so every run is capped at 30 credits at least.
+- **Plugin agents are namespaced** (`power-platform-delivery:<id>`). `developer-worker` runs when started directly although it isn't user-invocable, and runs on the model it pins. `metadata.model` shows the configured model, not necessarily the one the worker used. The usage file's model metrics do.
+- **Tool names** seen on Windows: `powershell`, `edit`, `create`, `apply_patch`, `view`, `glob`, `grep`, `rg`, `skill`, `task_complete`. They differ by model and operating system, and `--deny-tool=write` denies `edit`, `create` and `apply_patch` together.
+- **Autopilot** ends with a `task_complete` call, whose summary is the reply (the provider reads it). Its system notice tells the agent to "decide; don't ask", so an approval gate can't be tested under it, and no case uses it.
+- **The same case can pass and fail with no change in between.** Repeat a failing case before acting, and use `npm run regrade` to check a changed assertion or rubric against stored replies, which also shows whether a change just made it looser.
+- **Prose is graded by a model, and a grader can be stricter or looser from one call to the next.** Read the grader's reason before reading a failure as the agent's. Two rubric faults found so far were a rubric that wanted a literal phrase, and one that couldn't tell building before approval from building after it.
+- **Behaviour failures that led to text changes:** `developer` described the build and carried on instead of ending at the design; `product-analyst` designed the solution itself; `quality-engineer` offered to fix production code; `adr` didn't say when the old ADR becomes Superseded. These are in the plugin changelog. Rules stated in several places didn't hold better than one clear statement, so prefer one clear statement in the Role section.
+- **Models.** Haiku models and several others rarely call the `skill` tool unprompted, so evals pin `gpt-6-luna`. Higher reasoning effort didn't fix that.
+- **Stopping a run early** was tried and dropped: runs go to their natural end, so the usage file is always written. On Windows a plain kill leaves child processes behind, so the provider ends the whole process tree on a time-out.
+
+## Not done yet
+
+- **Delegation.** Whether `developer` delegates only bounded mechanical work to `developer-worker`, and the `subagents` evidence, are untested. Cases start the worker directly.
+- **Linux and macOS.** Only Windows has been run. The provider's Linux and macOS code is covered by unit tests with fakes, and the tool names there are unchecked.
+- **A worker model matrix.** Run the `developer-worker` cases against every model in the allow-list in `lint.config.json` at each release review.
+- **Trend tracking** of pass rates and cost over time.
+- **Writing cases.** Behaviour cases that say "never change X" (B-QE-3, B-PA-2) are read-only, so they grade what the agent says it would change. If one keeps flipping, let it write to the temporary copy and assert on the files.
+- **Evals in CI.** Use a separate workflow on a manual trigger and a schedule, never on `pull_request`, because secrets aren't available to pull requests from forks. It needs answers to who funds the credits, whose token is the repository secret, and how to install a pinned Copilot CLI on a runner. The rubric grader can already be replaced with `--grader <provider>`, for example a Microsoft Foundry endpoint. The agents themselves still run on Copilot CLI.
 
 ## Layout
 

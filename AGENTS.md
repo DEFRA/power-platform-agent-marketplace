@@ -26,7 +26,7 @@ This repository is a GitHub Copilot plugin marketplace. It contains one plugin, 
   - Write British English.
 - **Never hard-code project facts.** Discover paths, prefixes, solution names, project names and app names from the repository, confirm them with the user, and store in `.agent-config/power-platform.json` only what can't be discovered. If you add a fact, add it to the project-facts reference, not to a skill.
 - **Examples use the neutral domain:** Case, Applicant and Inspection, with the publisher prefix `abc_`.
-- **Scripts are PowerShell 7 and cross-platform.**
+- **Scripts are PowerShell 7 and cross-platform.** This is for the scripts that skills ship. The eval tooling under `tests/evals` is plain JavaScript with no build step.
   - Every input is a parameter, with no project defaults.
   - Each script has `-?` help and Pester tests under `tests/pester/`, mirroring the skill's folder.
 - **Shipped code is minimal.** The plugin ships only the plug-in and workflow scaffold (`dataverse-plugins`), the TypeScript toolchain (`web-resources`) and `RecordFaker` (`scenario-builder`), as code `assets/` for reference. CI doesn't build or test them, and they are expected to move to NuGet and npm packages with their own lifecycle. Don't add more shared code. Describe what a project's own implementation must do instead.
@@ -42,6 +42,7 @@ This repository is a GitHub Copilot plugin marketplace. It contains one plugin, 
   Invoke-Pester -Path tests/pester -Output Detailed
   ```
 
+- After changing an agent, or a skill's `description`, you ran the evals for it, and you can explain any failure. See [Evals](docs/authoring-guide.md#evals). They cost Copilot credits, so run only the cases you affect, and never in this repository: they use a temporary copy of a fixture.
 - [plugins/power-platform-delivery/CHANGELOG.md](plugins/power-platform-delivery/CHANGELOG.md) records the change under `[Unreleased]`.
 - [README.md](README.md) still describes the agents and skills accurately if you added, renamed or removed one.
 - If you hit a question that the existing docs don't answer, don't guess. Record the question with your recommendation (in the pull request description, or where the maintainers asked for questions to be recorded), and stop or skip the affected part.

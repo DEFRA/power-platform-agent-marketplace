@@ -25,6 +25,7 @@ Tests live outside the plugin, so they don't ship with an install:
 
 ```text
 tests/pester/            lint, schemas and Pester tests, mirroring the skills' folders
+tests/evals/             evals that run the agents against a model, and their unit tests
 ```
 
 ## Rules
@@ -58,6 +59,27 @@ Invoke-Pester -Path tests/pester -Output Detailed
 ```
 
 The checks cover frontmatter, line budgets, in-plugin links, the JSON schemas for the manifests and project config, the `model` allow-list, and the tests for every script.
+
+## Evals
+
+Evals run the agents and skills against a model and check what they do. They live in [tests/evals](../tests/evals/README.md), which also covers running them, what they cost and the safety rules. They run on your machine, on your Copilot allowance. Results vary between runs, so they never run in CI and never gate a pull request.
+
+- **Routing:** does a natural prompt load the intended skill? Every skill except `power-platform-standards` has two cases in `cases/routing.yaml`.
+- **Behaviour:** does an agent keep a rule its file states? Each agent has cases in `cases/behaviour/<agent>.yaml`, run read-only against a small fixture repository.
+
+**When to run them.** After changing an agent, or a skill's `description`. From `tests/evals`, run `npm run eval:routing` or `npm run eval:behaviour`, filtered to what you changed (`-- --filter-pattern "adr"`).
+
+**When to add a case.** A new or renamed skill needs two routing cases. A new agent rule worth protecting needs a behaviour case, and the case's description quotes the sentence the rule comes from. If you can't find the sentence, the case doesn't belong.
+
+**Reading a failure.** Every case is expected to pass, and a failure is a finding, not a number to tune. Repeat a failing case (`-- --repeat 3`) before concluding anything, because the same case can pass and fail with no change in between. Then decide whether the agent or skill text, or the case, is wrong, and say which in the pull request. Don't change an agent or skill just to make an eval pass without saying so. A change to an agent's or skill's behaviour needs its own changelog entry.
+
+## Releasing
+
+Before cutting a release:
+
+- Run both eval suites locally and review the results.
+- Smoke check the plugin in VS Code and in the Copilot coding agent. The evals drive Copilot CLI only.
+- Review the `model` allow-list in [lint.config.json](../tests/pester/lint.config.json).
 
 ## Commits and tracking
 

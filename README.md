@@ -67,11 +67,22 @@ Read [AGENTS.md](AGENTS.md) and the [authoring guide](docs/authoring-guide.md) b
 Invoke-Pester -Path tests/pester -Output Detailed
 ```
 
+CI also runs the unit tests for the eval tooling. The evals themselves run an agent against a model, so they run on your machine only, use your Copilot allowance and never run in CI. After changing an agent or a skill's `description`, run the ones you affect (they need Node 22 and Copilot CLI):
+
+```powershell
+cd tests/evals
+npm ci
+npm run eval:routing -- --filter-pattern "adr"   # does a prompt load the skill?
+npm run eval:behaviour -- --filter-pattern "B-QE" # does an agent keep its rules?
+```
+
+See [tests/evals/README.md](tests/evals/README.md) for the prerequisites, the cost and the safety rules, and the [authoring guide](docs/authoring-guide.md#evals) for when to run and add them.
+
 ## Repository layout
 
 ```text
 .github/plugin/marketplace.json   Marketplace catalogue
-.github/workflows/ci.yml          Lint and Pester tests
+.github/workflows/ci.yml          Lint, Pester tests and eval unit tests
 .github/CODEOWNERS                Code owners (no owning team yet)
 docs/authoring-guide.md           Rules for agents, skills and scripts
 AGENTS.md                         Guidance for agents working on this repository
@@ -80,6 +91,7 @@ plugins/<plugin>/CHANGELOG.md     Plugin changes
 plugins/<plugin>/agents/*.agent.md
 plugins/<plugin>/skills/<skill>/  SKILL.md, references/, assets/, scripts/
 tests/pester/                     Lint, schemas and Pester tests
+tests/evals/                      Routing and behaviour evals, run locally (see its README)
 ```
 
 ## Licence
