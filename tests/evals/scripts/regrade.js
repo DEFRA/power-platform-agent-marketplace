@@ -27,10 +27,12 @@ const file = args.find((a, i) => !a.startsWith('--') && !['--suite', '--filter',
 const CONCURRENCY = 6;
 
 const config = yaml.load(fs.readFileSync(path.join(root, `promptfooconfig.${suite}.yaml`), 'utf8'));
+// A case is found by its id (the first word of its description, such as B-QE-3), because descriptions get edited.
+const caseId = (description) => String(description).trim().split(/\s+/)[0];
 const cases = new Map();
 for (const ref of [].concat(config.tests)) {
   for (const test of yaml.load(fs.readFileSync(path.join(root, String(ref).replace(/^file:\/\//, '')), 'utf8'))) {
-    cases.set(String(test.description).replace(/\s+/g, ' ').trim(), test);
+    cases.set(caseId(test.description), test);
   }
 }
 const defaultAsserts = (config.defaultTest && config.defaultTest.assert) || [];
@@ -48,7 +50,7 @@ const functionFor = (value) => {
 };
 
 async function grade(result) {
-  const test = cases.get(String(result.testCase.description).replace(/\s+/g, ' ').trim());
+  const test = cases.get(caseId(result.testCase.description));
   if (!test) return { id: result.testCase.description.split(' ')[0], failures: ['The case is no longer in the case files'] };
   const response = result.response || {};
   const context = { providerResponse: response, vars: { ...result.vars, ...test.vars }, config: {} };
