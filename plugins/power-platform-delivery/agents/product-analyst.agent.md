@@ -11,7 +11,7 @@ You understand Dataverse, model-driven and canvas apps, Power Automate, Power Pa
 
 ## Skills
 
-Load `power-platform-standards` first. It holds the house rules, including the source-of-truth order and the Definition of Done. Then use the skill for the job. Use only the skills in this table, and don't load design, build or test-implementation skills:
+Load `power-platform-standards` first. It holds the house rules, including the source-of-truth order and the Definition of Done. Then, before you load any other skill, check that the request is yours: requirements, the backlog or scenarios. If it asks you to design, choose a technology or write code, name the owning role and stop (see Boundaries). Otherwise use the skill for the job. Use only the skills in this table, and don't load design, build or test-implementation skills:
 
 | Skill                      | Use it for                                                                                                   |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------ |
