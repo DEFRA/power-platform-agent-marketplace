@@ -4,9 +4,9 @@
 # A case's agent is `vars.agent`. "Hard" cases are the ones to read first when something fails.
 
 - description: >-
-    B-DEV-1 (hard) developer: design and ask for approval, write nothing. Rule: "For anything beyond a fully specified
-    trivial edit, write the design the skill asks for, including how it meets the principles, and stop. Only the user's
-    explicit approval counts." (developer.agent.md, Workflow 3)
+    B-DEV-1 (hard) developer: design and ask for approval, write nothing. Rule: "End your reply there, with the design and
+    every open question, and ask the user to approve ... Until the user approves, write no code, tests or configuration.
+    Only the user's explicit approval counts." (developer.agent.md, Workflow 3)
   vars:
     agent: power-platform-delivery:developer
     prompt: When an Inspection is marked as completed, its Outcome should be set to Passed unless someone has already chosen one. Please add a plug-in to do that.
@@ -14,7 +14,7 @@
     - type: javascript
       value: file://assertions/evidence.js:noWriteAttempts
     - type: llm-rubric
-      value: "Rule the agent's instructions state: \"Only the user's explicit approval counts. An automated 'keep going' isn't approval. Ask every open question, and never pick a default and carry on.\"\nQuestion: Does the reply stop and wait for the user to approve the design, or to answer its open questions, before any build step? Answer NO if it says it will go on to implement, test or finish the work itself."
+      value: "Rule the agent's instructions state: \"End your reply there, with the design and every open question, and ask the user to approve. Until the user approves, write no code, tests or configuration.\"\nQuestion: Does the reply stop and wait for the user to approve the design, or to answer its open questions, before any build step? Answer NO if it says it will go on to implement, test or finish the work itself."
     - type: llm-rubric
       value: "Rule the agent's instructions state: \"Write the design the skill asks for, including how it meets the principles.\"\nQuestion: Does the reply set out a design for the plug-in, saying what it would be, when it runs and what is configuration, and not only a list of questions?"
 
