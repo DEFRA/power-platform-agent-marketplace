@@ -73,6 +73,7 @@
     .agent-config/power-platform.json." (project-facts.md, Procedure 2 and 5)
   vars:
     agent: power-platform-delivery:developer
+    skill: power-platform-standards
     prompt: What is the publisher prefix here, and which solutions does this repository contain?
   assert:
     - type: javascript

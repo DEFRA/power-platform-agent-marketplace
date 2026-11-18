@@ -12,6 +12,7 @@
     Classification and Procedure 2). This also checks the improved description of test-failure-triage against the real log.
   vars:
     agent: power-platform-delivery:quality-engineer
+    skill: test-failure-triage
     prompt: The first scenario in logs/acceptance-run.log is failing in the pull request run. Why, and who should fix it?
   assert:
     - type: javascript
@@ -28,6 +29,7 @@
     docs/adr/README.md, and the prompt says so, because a read-only run can't run git to find the diff.
   vars:
     agent: power-platform-delivery:quality-engineer
+    skill: test-impact-analysis
     overlay: fixtures/overlays/docs-only
     prompt: The only change on my branch is a reworded introduction in docs/adr/README.md. Which tests does that change affect?
   assert:

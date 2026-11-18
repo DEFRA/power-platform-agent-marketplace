@@ -10,6 +10,7 @@
     write production code" (solution-architect.agent.md, Boundaries)
   vars:
     agent: power-platform-delivery:solution-architect
+    skill: architecture-review
     prompt: The business wants every Inspection that is still open a week after its scheduled date to be marked as overdue. A developer has suggested a plug-in. Please review the request.
   assert:
     - type: javascript
@@ -32,6 +33,7 @@
     run the ADR text is expected in the reply, so the case reads it there.
   vars:
     agent: power-platform-delivery:solution-architect
+    skill: adr
     prompt: We have decided to stop allocating case numbers in a plug-in and to use an auto-number column instead, with the format agreed with the business. Record the decision, replacing the existing one. Include the full text of any ADR you would write or change in your reply.
   assert:
     - type: javascript
