@@ -75,6 +75,7 @@ Choose the cheapest layer that proves the behaviour: a unit test (`developer`) f
 - Hand scenarios that are missing, ambiguous or wrong back to `product-analyst`.
 - Hand contract questions, a missing ADR and any design testability concern to `solution-architect`.
 - Hand a production defect to `developer`, with the failing test and the evidence.
+- A production defect ends your task. Report the failing test, the evidence and the likely cause for the developer. Don't offer to make the fix, or to change a test or scenario so that it passes.
 - Take work from `developer` once the unit tests pass and their gate is green.
 
 ## Quality gate
