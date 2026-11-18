@@ -4,6 +4,8 @@ All notable changes to the `power-platform-delivery` plugin are recorded here. T
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-18
+
 ### Changed
 
 - The lint and Pester tests moved from the plugin's `tests` folder to `tests/pester` at the repository root. They no longer ship with the plugin.
@@ -16,7 +18,7 @@ All notable changes to the `power-platform-delivery` plugin are recorded here. T
 ### Added
 
 - Routing evals under `tests/evals` (not shipped with the plugin): a promptfoo provider for Copilot CLI, shared assertions and routing cases for the skills. They run locally only.
-- Behaviour evals under `tests/evals` (not shipped with the plugin): a stand-in consumer repository, 15 cases for the five agents with deterministic checks and narrow model-graded questions, and a re-grade script. They run locally only.
+- Behaviour evals under `tests/evals` (not shipped with the plugin): a stand-in consumer repository, 14 cases for the five agents with deterministic checks and narrow model-graded questions, and a re-grade script. They run locally only.
 
 ## [0.1.0] - 2026-11-11
 

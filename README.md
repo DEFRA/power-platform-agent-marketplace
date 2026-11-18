@@ -13,7 +13,7 @@ It currently offers one plugin, `power-platform-delivery`: an opinionated agenti
 
 ## power-platform-delivery
 
-The plugin ships four agents, a cheaper subagent and 21 skills. Agents describe a role and route to skills. Skills hold the procedures and can be used on their own as well as by an agent. The plugin's version is `0.1.0` and its changes are in the [changelog](plugins/power-platform-delivery/CHANGELOG.md).
+The plugin ships four agents, a cheaper subagent and 21 skills. Agents describe a role and route to skills. Skills hold the procedures and can be used on their own as well as by an agent. The plugin's version is `0.2.0` and its changes are in the [changelog](plugins/power-platform-delivery/CHANGELOG.md).
 
 ### Agents
 
