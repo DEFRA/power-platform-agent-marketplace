@@ -25,7 +25,36 @@ prompts:
     This is a read-only session: you can't run commands or change files. Say what you would do, rather than doing it.
 
 # The denial must have held. Each case adds what its agent's file says it must do.
+# `llm-rubric` assertions grade what a reply says. The grader is the same Copilot provider with no plugin and no
+# fixture, and `--grader <provider>` on the command line replaces it (for example a Microsoft Foundry endpoint in CI).
+# It sees the user's request and the reply, not the tool calls, which the deterministic assertions check.
 defaultTest:
+  options:
+    provider:
+      id: file://providers/copilot-cli.js
+      label: grader
+      config:
+        model: gpt-6-luna
+        pluginDir: ''
+        ignoreVars: true
+        maxCredits: 30
+        timeoutMs: 180000
+        denyTools: [shell, write]
+    rubricPrompt: |-
+      You are grading one reply from an AI agent against one rule. Judge only from the text below. Do not use any tools.
+
+      The user asked:
+      {{prompt}}
+
+      The agent's final reply:
+      <reply>
+      {{output}}
+      </reply>
+
+      {{rubric}}
+
+      Be literal: pass only if the reply clearly does what the question asks.
+      Respond with only a JSON object: {"reason": "<one short sentence>", "pass": true or false, "score": 1 or 0}
   assert:
     - type: javascript
       value: file://assertions/evidence.js:noFilesChanged

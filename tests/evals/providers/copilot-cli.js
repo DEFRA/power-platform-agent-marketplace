@@ -23,7 +23,8 @@ const asList = (value) => (value === undefined || value === null || value === ''
 /** Provider config with per-test overrides from `vars`. Throws a clear message for an unusable configuration. */
 function resolveConfig(providerConfig = {}, vars = {}) {
   const config = { ...DEFAULTS, ...providerConfig };
-  for (const key of CONFIG_KEYS) {
+  // A grader sets `ignoreVars`, because promptfoo hands it the graded case's vars, which would change its agent and fixture.
+  for (const key of config.ignoreVars ? [] : CONFIG_KEYS) {
     if (vars[key] !== undefined && vars[key] !== '') config[key] = vars[key];
   }
   if (!config.model) throw new Error('config.model is required, so a run never depends on the CLI default.');

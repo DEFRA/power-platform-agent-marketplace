@@ -2,15 +2,17 @@
 'use strict';
 // Grades the stored replies of an earlier run again, without running any agent.
 //
-//   node scripts/regrade.js [results/behaviour.json] [--suite behaviour] [--filter B-QE]
+//   node scripts/regrade.js [results/behaviour.json] [--suite behaviour] [--filter B-QE] [--grader <provider id>]
 //
-// Use it after changing an assertion or a judge question: the agents' replies and evidence are read from the results
-// file, the case's current assertions are run over them, and a summary is printed. Judge assertions call the model
-// (a few tenths of a credit each), everything else is free. Nothing is written.
+// Use it after changing an assertion or a rubric: the agents' replies and evidence are read from the results
+// file, the case's current assertions are run over them, and a summary is printed. `llm-rubric` assertions call the grader
+// (a few tenths of a credit each), everything else is free. `--grader` replaces the grader provider in the config,
+// as it does for `promptfoo eval`. Nothing is written.
 
 const fs = require('node:fs');
 const path = require('node:path');
 const yaml = require('js-yaml');
+const { assertions } = require('promptfoo');
 
 const root = path.join(__dirname, '..');
 const args = process.argv.slice(2);
@@ -19,8 +21,9 @@ const option = (name, fallback) => {
   return at === -1 ? fallback : args[at + 1];
 };
 const suite = option('--suite', 'behaviour');
+const graderOverride = option('--grader', '');
 const filter = option('--filter', '');
-const file = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--suite' && args[i - 1] !== '--filter') || path.join('results', `${suite}.json`);
+const file = args.find((a, i) => !a.startsWith('--') && !['--suite', '--filter', '--grader'].includes(args[i - 1])) || path.join('results', `${suite}.json`);
 const CONCURRENCY = 6;
 
 const config = yaml.load(fs.readFileSync(path.join(root, `promptfooconfig.${suite}.yaml`), 'utf8'));
@@ -31,6 +34,10 @@ for (const ref of [].concat(config.tests)) {
   }
 }
 const defaultAsserts = (config.defaultTest && config.defaultTest.assert) || [];
+// Provider files in the config are relative to this folder, as they are for `promptfoo eval`.
+process.chdir(root);
+const grading = { ...((config.defaultTest && config.defaultTest.options) || {}) };
+if (graderOverride) grading.provider = graderOverride;
 
 const functionFor = (value) => {
   const [, modulePath, name] = /^file:\/\/(.+?):(\w+)$/.exec(value) || [];
@@ -49,7 +56,9 @@ async function grade(result) {
   if (!response.output && !response.metadata) failures.push(`No reply was stored${result.error ? `: ${result.error}` : ''}`);
   else {
     for (const assertion of [...defaultAsserts, ...(test.assert || [])]) {
-      const outcome = await functionFor(assertion.value)(response.output, { ...context, config: assertion.config || {} });
+      const outcome = assertion.type === 'llm-rubric'
+        ? await assertions.matchesLlmRubric(assertion.value, response.output, grading, context.vars, assertion)
+        : await functionFor(assertion.value)(response.output, { ...context, config: assertion.config || {} });
       if (!outcome.pass) failures.push(outcome.reason);
     }
   }

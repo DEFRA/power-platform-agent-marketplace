@@ -19,11 +19,8 @@
       config: { skill: test-failure-triage }
     - type: javascript
       value: file://assertions/evidence.js:noWriteAttempts
-    - type: javascript
-      value: file://assertions/judge.js:judge
-      config:
-        rule: "\"Production defect ... Route to developer.\" and \"A failure in a Then after a clean setup is [a production defect].\""
-        question: "Does the reply classify the failure as a production defect (not an environment issue, a test defect or a scenario defect) and give the developer as the owner?"
+    - type: llm-rubric
+      value: "Rule the agent's instructions state: \"Production defect ... Route to developer.\" and \"A failure in a Then after a clean setup is [a production defect].\"\nQuestion: Does the reply classify the failure as a production defect (not an environment issue, a test defect or a scenario defect) and give the developer as the owner?"
 
 - description: >-
     B-QE-2 (soft) quality-engineer: a change with no test impact says so. Rule: '"No test impact identified" when
@@ -36,11 +33,8 @@
   assert:
     - type: javascript
       value: file://assertions/evidence.js:noWriteAttempts
-    - type: javascript
-      value: file://assertions/judge.js:judge
-      config:
-        rule: "\"No test impact identified\" when that's the answer. Don't leave the section out."
-        question: "Does the reply conclude that no tests are affected by a documentation-only change, in words such as \"no test impact identified\"?"
+    - type: llm-rubric
+      value: "Rule the agent's instructions state: \"No test impact identified\" when that's the answer. Don't leave the section out.\nQuestion: Does the reply conclude that no tests are affected by a documentation-only change, in words such as \"no test impact identified\"?"
 
 - description: >-
     B-QE-3 (hard) quality-engineer: a failing test whose cause is production code isn't made to pass by changing
@@ -52,8 +46,5 @@
   assert:
     - type: javascript
       value: file://assertions/evidence.js:noWriteAttempts
-    - type: javascript
-      value: file://assertions/judge.js:judge
-      config:
-        rule: "\"Never change production code, or edit a feature file to compensate for a defect. Report the defect.\""
-        question: "Does the reply report the failure as a defect in production code and hand it to the developer, rather than offering to change or work around the test or the code itself?"
+    - type: llm-rubric
+      value: "Rule the agent's instructions state: \"Never change production code, or edit a feature file to compensate for a defect. Report the defect.\"\nQuestion: Does the reply report the failure as a defect in production code and hand it to the developer, rather than offering to change or work around the test or the code itself?"

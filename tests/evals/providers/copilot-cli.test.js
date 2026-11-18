@@ -179,3 +179,12 @@ test('an empty pluginDir passes no --plugin-dir, so a run has no plugin', () => 
   assert.ok(!args.includes('--plugin-dir'));
   assert.ok(buildArgs(resolveConfig(base), 'p', { pluginDir: '/p', usageFile: '/u' }).includes('--plugin-dir'));
 });
+
+test('ignoreVars stops a case\'s vars from changing the config, as a grader needs', () => {
+  const vars = { agent: 'power-platform-delivery:developer', fixture: 'fixtures/x', model: 'other' };
+  assert.equal(resolveConfig(base, vars).agent, 'power-platform-delivery:developer');
+  const locked = resolveConfig({ ...base, ignoreVars: true }, vars);
+  assert.equal(locked.agent, undefined);
+  assert.equal(locked.fixture, undefined);
+  assert.equal(locked.model, 'gpt-6-luna');
+});

@@ -18,11 +18,8 @@
     - type: javascript
       value: file://assertions/evidence.js:replyMatches
       config: { pattern: 'plug-in', description: 'the plug-in option' }
-    - type: javascript
-      value: file://assertions/judge.js:judge
-      config:
-        rule: "\"Compare genuine alternatives, always including a lower-code one.\""
-        question: "Does the reply compare the plug-in with at least one lower-code or configuration option, such as a scheduled flow or a view?"
+    - type: llm-rubric
+      value: "Rule the agent's instructions state: \"Compare genuine alternatives, always including a lower-code one.\"\nQuestion: Does the reply compare the plug-in with at least one lower-code or configuration option, such as a scheduled flow or a view?"
     - type: javascript
       value: file://assertions/evidence.js:replyNotMatches
       config: { pattern: 'class \w+\s*:\s*IPlugin', flags: '', description: 'a plug-in class' }
@@ -43,16 +40,10 @@
     - type: javascript
       value: file://assertions/evidence.js:replyMatches
       config: { pattern: '0002', description: 'the next ADR number, 0002' }
-    - type: javascript
-      value: file://assertions/judge.js:judge
-      config:
-        rule: "\"Set the old one to Superseded and link each to the other.\""
-        question: "Does the reply show ADR 0001 with its status changed to Superseded, or say plainly that it would set 0001 to Superseded?"
-    - type: javascript
-      value: file://assertions/judge.js:judge
-      config:
-        rule: "\"Supersede in both directions ... link each to the other.\""
-        question: "Does the reply link the old ADR 0001 to the new ADR 0002 and the new ADR 0002 back to 0001?"
+    - type: llm-rubric
+      value: "Rule the agent's instructions state: \"Set the old one to Superseded and link each to the other.\"\nQuestion: Does the reply show ADR 0001 with its status changed to Superseded, or say plainly that it would set 0001 to Superseded?"
+    - type: llm-rubric
+      value: "Rule the agent's instructions state: \"Supersede in both directions ... link each to the other.\"\nQuestion: Does the reply link the old ADR 0001 to the new ADR 0002 and the new ADR 0002 back to 0001?"
     - type: javascript
       value: file://assertions/evidence.js:replyNotMatches
       config: { pattern: '(delete|remove)[ds]?\b[^.\n]*\b0001', description: 'deleting ADR 0001' }
